@@ -1,0 +1,13 @@
+{
+  "slf4j-simple-1.7.31.jar": "https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.31/slf4j-simple-1.7.31.jar",
+  "slf4j-api-1.7.31.jar": "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.31/slf4j-api-1.7.31.jar",
+  "slf4j-ext-1.7.31.jar": "https://repo1.maven.org/maven2/org/slf4j/slf4j-ext/1.7.31/slf4j-ext-1.7.31.jar",
+  "slf4j-site-1.7.28.jar": "https://repo1.maven.org/maven2/org/slf4j/slf4j-site/1.7.28/slf4j-site-1.7.28.jar",
+  "slf4j-migrator-1.7.31.jar": "https://repo1.maven.org/maven2/org/slf4j/slf4j-migrator/1.7.31/slf4j-migrator-1.7.31.jar",
+  "jsap-2.1.jar": "https://repo1.maven.org/maven2/com/martiansoftware/jsap/2.1/jsap-2.1.jar",
+  "fastutil-8.5.4.jar": "https://repo1.maven.org/maven2/it/unimi/dsi/fastutil/8.5.4/fastutil-8.5.4.jar",
+  "fastutil-extra-8.5.4.jar": "https://repo1.maven.org/maven2/it/unimi/dsi/fastutil-extra/8.5.4/fastutil-extra-8.5.4.jar",
+  "fastutil-core-8.5.4.jar": "https://repo1.maven.org/maven2/it/unimi/dsi/fastutil-core/8.5.4/fastutil-core-8.5.4.jar",
+  "webgraph.jar": "https://repo1.maven.org/maven2/it/unimi/dsi/webgraph/3.6.10/webgraph-3.6.10.jar",
+  "dsiutils.jar": "https://repo1.maven.org/maven2/it/unimi/dsi/dsiutils/2.6.17/dsiutils-2.6.17.jar"
+}

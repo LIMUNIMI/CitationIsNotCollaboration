@@ -24,17 +24,9 @@ setuptools.setup(
     "wheel",
   ],
   install_requires=[
+    "JPype1",
+    "chromatictools",
   ],
-  extras_require={
-    "devs": [
-      "sphinx",
-      "sphinx_rtd_theme",
-      "m2r2",
-      "recommonmark",
-      "pylint",
-      "coverage",
-    ],
-  },
   classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
