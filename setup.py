@@ -25,7 +25,6 @@ setuptools.setup(
   ],
   install_requires=[
     "JPype1",
-    "chromatictools",
   ],
   classifiers=[
     "Programming Language :: Python :: 3",
