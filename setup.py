@@ -5,6 +5,8 @@ with open("README.md", "r") as f:
   readme = f.read()
 with open("featgraph/__init__.py", "r") as f:
   version = f.read().split("__version__ = \"", 1)[-1].split("\"", 1)[0]
+with open("requirements.txt", "r") as f:
+  install_requires = list(filter(lambda x: x, f.read().split("\n")))
 
 
 setuptools.setup(
@@ -23,9 +25,7 @@ setuptools.setup(
   setup_requires=[
     "wheel",
   ],
-  install_requires=[
-    "JPype1",
-  ],
+  install_requires=install_requires,
   classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
