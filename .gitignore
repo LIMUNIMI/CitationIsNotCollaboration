@@ -1,0 +1,21 @@
+# Python
+venv
+__pycache__
+*.egg-info
+build
+dist
+.ipynb_checkpoints
+
+# Sphinx
+docs/build
+docs/pylintrc
+docs/source/*.rst
+!docs/source/index.rst
+!docs/source/changelog.rst
+
+# IDE
+.idea
+
+# Coverage
+.coverage
+htmlcov
