@@ -20,5 +20,7 @@ docs/source/*.rst
 .idea
 
 # Coverage
-.coverage
+.coverage*
+coverage.*
+!.coveragerc
 htmlcov
