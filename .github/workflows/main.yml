@@ -27,7 +27,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install
-      run: python -m pip install .
+      run: python -m pip install . --use-feature=in-tree-build
+    - name: Install test dependencies
+      run: python -m pip install -Ur test-requirements.txt
     - name: Test
       run: python -m unittest -v
 
@@ -37,9 +39,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install
-      run: python -m pip install .[cov]
+      run: python -m pip install . --use-feature=in-tree-build
+    - name: Install test dependencies
+      run: python -m pip install -Ur test-requirements.txt
     - name: Run coverage
-      run: python -m coverage run --source featgraph -m unittest
+      run: python -m coverage run
+    - name: Collect coverage from multithreading
+      run: python -m coverage combine
     - name: Make coverage JSON
       run: python -m coverage json
     - name: Install chromatictools
@@ -66,7 +72,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install
-      run: python -m pip install .[lint]
+      run: python -m pip install . --use-feature=in-tree-build
+    - name: Install lint dependencies
+      run: python -m pip install -Ur lint-requirements.txt
     - name: Download pylintrc
       run: make pylintrc
       working-directory: docs
@@ -93,13 +101,14 @@ jobs:
   sphinx:
     runs-on: ubuntu-latest
     container: sphinxdoc/sphinx
-#    container: sphinxdoc/sphinx-latexpdf
     steps:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
       - name: Install
-        run: python -m pip install .[docs]
+        run: python -m pip install . --use-feature=in-tree-build
+      - name: Install docs dependencies
+        run: python -m pip install -Ur docs-requirements.txt
       - name: Build HTML
         run: make html
         working-directory: docs
@@ -108,17 +117,6 @@ jobs:
         with:
           name: pages
           path: docs/build/html
-#      - name: Build latex
-#        run: make latexpdf
-#        working-directory: docs
-#      - name: Copy to 'manual.pdf'
-#        run: cp $(ls *.pdf) manual.pdf
-#        working-directory: docs/build/latex
-#      - name: Upload pdf
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: manual
-#          path: docs/build/latex/manual.pdf
 
   release-create:
     if: ${{ startsWith( github.ref , 'refs/tags/' ) }}
@@ -141,26 +139,6 @@ jobs:
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-#  manual-upload:
-#    runs-on: ubuntu-latest
-#    needs: [sphinx, release-create]
-#    steps:
-#      - name: Download artifact
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: manual
-#          path: manual
-#      - name: Upload artifact
-#        id: upload-manual
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ needs.release-create.outputs.upload_url }}
-#          asset_path: ./manual/manual.pdf
-#          asset_name: ${{ needs.release-create.outputs.version }}.pdf
-#          asset_content_type: application/pdf
 
   pages-deploy:
     runs-on: ubuntu-latest
