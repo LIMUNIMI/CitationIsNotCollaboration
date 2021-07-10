@@ -23,6 +23,7 @@ def test_start_jvm(tmp_root: str):
 
 
 class TestJWebGraph(unittest.TestCase):
+  """Tests related to WebGraph with JPype"""
   def test_download_to_file(self):
     """Test that binary files get downloaded correctly"""
     url = "https://gist.githubusercontent.com/ChromaticIsobar/" \
