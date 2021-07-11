@@ -65,14 +65,14 @@ jobs:
       with:
         name: coverage_badge
         path: badge.svg
-#     - name: Deploy badge
-#       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-#       uses: exuanbo/actions-deploy-gist@v1
-#       with:
-#         token: ${{ secrets.GIST_TOKEN }}
-#         gist_id: <gist_id>
-#         gist_file_name: featgraph-coverage-badge.svg
-#         file_path: badge.svg
+    - name: Deploy badge
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      uses: exuanbo/actions-deploy-gist@v1
+      with:
+        token: ${{ secrets.GIST_TOKEN }}
+        gist_id: 18a4dd9093b1c271ce6f9d117cc5ba40
+        gist_file_name: featgraph-coverage-badge.svg
+        file_path: badge.svg
 
   lint:
     runs-on: ubuntu-latest
@@ -102,14 +102,14 @@ jobs:
       with:
         name: pylint_badge
         path: badge.svg
-#     - name: Deploy badge
-#       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-#       uses: exuanbo/actions-deploy-gist@v1
-#       with:
-#         token: ${{ secrets.GIST_TOKEN }}
-#         gist_id: <gist_id>
-#         gist_file_name: featgraph-pylint-badge.svg
-#         file_path: badge.svg
+    - name: Deploy badge
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      uses: exuanbo/actions-deploy-gist@v1
+      with:
+        token: ${{ secrets.GIST_TOKEN }}
+        gist_id: 18a4dd9093b1c271ce6f9d117cc5ba40
+        gist_file_name: featgraph-pylint-badge.svg
+        file_path: badge.svg
 
 #  sphinx:
 #    runs-on: ubuntu-latest
