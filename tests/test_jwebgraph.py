@@ -19,7 +19,7 @@ def test_start_jvm(tmp_root: str):
     jvm_path=os.environ.get("FEATGRAPH_JAVA_PATH", None),
     root=tmp_root,
   )
-  importlib.import_module("it.unimi.dsi.webgraph")
+  importlib.import_module("it.unimi.dsi.webgraph").ASCIIGraph
   jpype.shutdownJVM()
 
 
