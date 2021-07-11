@@ -19,7 +19,7 @@ def test_start_jvm(tmp_root: str):
     jvm_path=os.environ.get("FEATGRAPH_JAVA_PATH", None),
     root=tmp_root,
   )
-  importlib.import_module("it.unimi.dsi.webgraph").ASCIIGraph
+  importlib.import_module("it.unimi.dsi.webgraph").ASCIIGraph  # pylint: disable=W0106
   jpype.shutdownJVM()
 
 
@@ -65,9 +65,10 @@ class TestJWebGraph(unittest.TestCase):
       "ancient.jar": "https://i.cannot.find/this/ancient/artifact/ancient.jar",
     }
     os.makedirs(tmp_root, exist_ok=True)
-    with self.subTest(step="exception"), self.assertRaises(requests.exceptions.RequestException):
-      jwebgraph.download_jars(deps=deps, root=tmp_root)
-    for k in deps.keys():
+    with self.subTest(step="exception"):
+      with self.assertRaises(requests.exceptions.RequestException):
+        jwebgraph.download_jars(deps=deps, root=tmp_root)
+    for k in deps:
       with self.subTest(step="cleanup", what=k):
         self.assertFalse(os.path.isfile(
           jwebgraph.path(k, root=tmp_root)
