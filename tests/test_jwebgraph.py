@@ -5,6 +5,7 @@ import unittest
 from unittest import mock
 import importlib
 import multiprocessing
+import requests
 import os
 import io
 
@@ -55,6 +56,22 @@ class TestJWebGraph(unittest.TestCase):
         self.assertEqual(dtf.call_count, n)
     for cp in jwebgraph.classpaths(root=tmp_root):
       os.remove(cp)
+    os.rmdir(tmp_root)
+
+  def test_download_fail(self):
+    """Test that temporary file is cleaned up on a download fail"""
+    tmp_root = os.path.abspath(".tmp_clAsSPatTh_dloadFAeel")
+    deps = {
+      "ancient.jar": "https://i.cannot.find/this/ancient/artifact/ancient.jar",
+    }
+    os.makedirs(tmp_root, exist_ok=True)
+    with self.subTest(step="exception"), self.assertRaises(requests.exceptions.RequestException):
+      jwebgraph.download_jars(deps=deps, root=tmp_root)
+    for k in deps.keys():
+      with self.subTest(step="cleanup", what=k):
+        self.assertFalse(os.path.isfile(
+          jwebgraph.path(k, root=tmp_root)
+        ))
     os.rmdir(tmp_root)
 
   def test_start_jvm(self):
