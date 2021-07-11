@@ -5,6 +5,8 @@ with open("README.md", "r") as f:
   readme = f.read()
 with open("featgraph/__init__.py", "r") as f:
   version = f.read().split("__version__ = \"", 1)[-1].split("\"", 1)[0]
+with open("requirements.txt", "r") as f:
+  install_requires = list(filter(lambda x: x, f.read().split("\n")))
 
 
 setuptools.setup(
@@ -23,22 +25,11 @@ setuptools.setup(
   setup_requires=[
     "wheel",
   ],
-  install_requires=[
-  ],
-  extras_require={
-    "devs": [
-      "sphinx",
-      "sphinx_rtd_theme",
-      "m2r2",
-      "recommonmark",
-      "pylint",
-      "coverage",
-    ],
-  },
+  install_requires=install_requires,
   classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
   ],
-  python_requires=">=3.8.0,<3.9.0",
+  python_requires=">=3.5.0,<3.9.0",
 )

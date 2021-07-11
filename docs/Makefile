@@ -3,6 +3,7 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 PROJECTDIR    = ../featgraph
+TESTDIR       = ../tests
 INDICES       = index.rst changelog.rst
 PYLINTRC      = https://google.github.io/styleguide/pylintrc
 
@@ -31,7 +32,7 @@ clean_rst:
 	rm -rf .tmp
 
 pylint: pylintrc
-	pylint $(PROJECTDIR) -r y --exit-zero --jobs 1 --persistent=n
+	pylint $(PROJECTDIR) $(TESTDIR) -r y --exit-zero --jobs 1 --persistent=n
 
 build:
 	mkdir $@

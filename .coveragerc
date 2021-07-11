@@ -1,0 +1,12 @@
+[run]
+command_line = -m unittest
+source = featgraph
+concurrency = multiprocessing
+# remember to call
+#   coverage combine
+# to collect all coverage reports from multiple processes
+data_file = .coverage
+
+[json]
+pretty_print = True
+output = coverage.json

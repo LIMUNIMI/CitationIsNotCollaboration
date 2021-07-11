@@ -6,6 +6,9 @@ build
 dist
 .ipynb_checkpoints
 
+# Java
+*.jar
+
 # Sphinx
 docs/build
 docs/pylintrc
@@ -17,5 +20,7 @@ docs/source/*.rst
 .idea
 
 # Coverage
-.coverage
+.coverage*
+coverage.*
+!.coveragerc
 htmlcov

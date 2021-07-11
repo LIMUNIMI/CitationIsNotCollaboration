@@ -1,14 +1,2 @@
-# Core
-
-
-# Docs
-sphinx
-sphinx_rtd_theme
-m2r2
-recommonmark
-
-# Pylint
-pylint
-
-# Coverage
-coverage
+JPype1
+requests
