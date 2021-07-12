@@ -9,6 +9,15 @@ dist
 # Java
 *.jar
 
+# Graphs
+*.arcs
+*.graph
+*.offsets
+*.properties
+*.indegree
+*.outdegree
+*.stats
+
 # Sphinx
 docs/build
 docs/pylintrc
