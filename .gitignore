@@ -21,6 +21,10 @@ dist
 *.stats
 *.ranks
 
+# Misc
+*.txt
+!*requirements.txt
+
 # Sphinx
 docs/build
 docs/pylintrc
