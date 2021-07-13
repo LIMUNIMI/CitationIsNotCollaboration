@@ -19,6 +19,7 @@ dist
 *.indegrees
 *.outdegrees
 *.stats
+*.ranks
 
 # Sphinx
 docs/build
