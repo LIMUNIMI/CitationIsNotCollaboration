@@ -16,6 +16,8 @@ dist
 *.properties
 *.indegree
 *.outdegree
+*.indegrees
+*.outdegrees
 *.stats
 
 # Sphinx
