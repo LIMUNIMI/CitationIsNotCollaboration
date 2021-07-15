@@ -41,17 +41,17 @@ class TestJWebGraph(unittest.TestCase):
     """Test that all jars get downloaded. Check overwrite behaviour, too"""
     tmp_root = os.path.abspath(".tmp_clAsSPatTh_dload")
     os.makedirs(tmp_root, exist_ok=True)
-    jwebgraph.download_jars(root=tmp_root)
+    jwebgraph.download_dependencies(root=tmp_root)
     n = 0
     for cp in jwebgraph.classpaths(root=tmp_root):
       n += 1
       with self.subTest(classpath=cp):
         self.assertTrue(os.path.isfile(cp))
     with mock.patch.object(jwebgraph, "download_to_file") as dtf:
-      jwebgraph.download_jars(root=tmp_root)
+      jwebgraph.download_dependencies(root=tmp_root)
       with self.subTest(overwrite=False):
         self.assertEqual(dtf.call_count, 0)
-      jwebgraph.download_jars(root=tmp_root, overwrite=True)
+      jwebgraph.download_dependencies(root=tmp_root, overwrite=True)
       with self.subTest(overwrite=True):
         self.assertEqual(dtf.call_count, n)
     for cp in jwebgraph.classpaths(root=tmp_root):
@@ -67,7 +67,7 @@ class TestJWebGraph(unittest.TestCase):
     os.makedirs(tmp_root, exist_ok=True)
     with self.subTest(step="exception"):
       with self.assertRaises(requests.exceptions.RequestException):
-        jwebgraph.download_jars(deps=deps, root=tmp_root)
+        jwebgraph.download_dependencies(deps=deps, root=tmp_root)
     for k in deps:
       with self.subTest(step="cleanup", what=k):
         self.assertFalse(os.path.isfile(
