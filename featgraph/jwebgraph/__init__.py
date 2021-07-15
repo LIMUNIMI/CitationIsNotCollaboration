@@ -85,12 +85,12 @@ def classpaths(
   )
 
 
-def download_jars(
+def download_dependencies(
   deps: Optional[Dict[str, str]] = None,
   overwrite: bool = False,
   root: Optional[str] = None,
 ):
-  """Download dependency library files
+  """Download dependency files
 
   Args:
     deps (dict): Dependency dictionary, as output by :func:`dependencies`.
@@ -134,7 +134,7 @@ def start_jvm(
     overwrite (bool): If :data:`True`, then overwrite existing jar files.
       Otherwise (default) skip download for existing files"""
   if download:
-    download_jars(
+    download_dependencies(
       deps=deps,
       overwrite=overwrite,
       root=root,
