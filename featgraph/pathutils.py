@@ -1,8 +1,8 @@
 """Utilities for handling file paths"""
 import os
 import glob
-from typing import Callable, Union, Optional
-import logging
+from featgraph import logger
+from typing import Callable, Union
 
 
 def notisfile(f: str, func: Union[Callable, bool] = os.path.isfile, msg: str = "Found '%s'. Skipping"):
@@ -25,7 +25,7 @@ def notisfile(f: str, func: Union[Callable, bool] = os.path.isfile, msg: str = "
   else:
     b = func(f)
   if b:
-    logging.info(msg, f)
+    logger.info(msg, f)
   return not b
 
 
