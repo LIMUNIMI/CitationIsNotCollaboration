@@ -1,9 +1,14 @@
 """Conversion functions for generating human-readable and BVGraph files
 from the original pickled dataset"""
 import os
+import sys
 import pickle
-from featgraph import pathutils, logger
+import argparse
+import importlib
+from chromatictools import cli
+from featgraph import pathutils, logger, jwebgraph
 from typing import Optional, Callable, Iterable, Tuple, Union, List
+import logging
 
 
 def make_ids_txt(dst: str, src: str, it: Optional[Callable[[Iterable], Iterable]] = None, overwrite: bool = False):
@@ -74,7 +79,7 @@ def make_metadata_txt(
       fname = dst(k) + ext
       written.append(fname)
       if overwrite or pathutils.notisfile(fname):
-        logger.info("Writing %s", fname)
+        logger.debug("Writing %s", fname)
         with open(fname, "w", encoding=encoding) as txt:
           with open(idf, "r") as ids:
             for a_id in (r.rstrip("\n") for r in ids):
@@ -132,3 +137,68 @@ def make_adjacency_txt(
             else:
               neighbors_i.append(n_i)
           txt.write(" ".join(map(str, neighbors_i)) + "\n")
+
+
+@cli.main(__name__, *sys.argv[1:])
+def main(*argv):
+  """Run conversion script"""
+  parser = argparse.ArgumentParser(
+    description="Convert original pickled dataset into text and BVGraph files"
+  )
+  parser.add_argument("adjacency_path", help="The path of the adjacency lists pickle file")
+  parser.add_argument("metadata_path", help="The path of the metadata pickle file")
+  parser.add_argument("dest_path", help="The destination base path for the BVGraph and text files")
+  parser.add_argument(
+    "--jvm-path", metavar="PATH",
+    help="The Java virtual machine full path"
+  )
+  parser.add_argument(
+    "-l", "--log-level", dest="log_level", metavar="LEVEL",
+    default="INFO", type=lambda s: str(s).upper(),
+    help="The logging level. Default is 'INFO'",
+  )
+  parser.add_argument(
+    "--no-tqdm", dest="tqdm", action="store_false",
+    help="Don't use tqdm progress bar",
+  )
+  args = parser.parse_args(argv)
+  try:
+    log_level = int(args.log_level)
+  except ValueError:
+    log_level = args.log_level
+  logging.basicConfig(
+    level=log_level,
+    format='%(asctime)s %(name)-12s %(levelname)-8s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+  )
+  logger.info(args)
+  if args.tqdm:
+    tqdm = importlib.import_module("tqdm").tqdm
+  else:
+    def tqdm(x, **kwargs):
+      return x
+
+  jwebgraph.start_jvm(jvm_path=args.jvm_path)
+  # Make destination directory
+  spotipath = pathutils.derived_paths(args.dest_path)
+  os.makedirs(os.path.dirname(spotipath()), exist_ok=True)
+  # Make ids file
+  make_ids_txt(
+    spotipath("ids", "txt"),
+    args.adjacency_path,
+    tqdm
+  )
+  # Make metadata files
+  make_metadata_txt(
+    spotipath,
+    args.metadata_path,
+    spotipath("ids", "txt"),
+    tqdm,
+  )
+  # Make adjacency lists file
+  make_adjacency_txt(
+    spotipath("adj", "txt"),
+    args.adjacency_path,
+    spotipath("ids", "txt"),
+    tqdm,
+  )
