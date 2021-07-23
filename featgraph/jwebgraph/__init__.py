@@ -2,7 +2,6 @@
 import logging
 
 import requests
-import inspect
 import multiprocessing
 from featgraph import logger
 # --- JPype -------------------------------------------------------------------
