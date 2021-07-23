@@ -5,14 +5,19 @@ from featgraph import logger
 from typing import Callable, Union
 
 
-def notisfile(f: str, func: Union[Callable, bool] = os.path.isfile, msg: str = "Found '%s'. Skipping"):
+def notisfile(
+  f: str, func: Union[Callable, bool] = os.path.isfile,
+  msg: str = "Found '%s'. Skipping"
+):
   """Check if file does not exist. If file is found, log a message
 
   Args:
     f (str): File path to check
-    func (bool or callable): If a boolean, then use this as the truth value for the file existence.
-      Otherwise, call this function to get the truth value. Defaults to :func:`os.path.isfile`
-    msg (str): Log message. It should have a string formattable field where the file name will be interpolated
+    func (bool or callable): If a boolean, then use this as the
+      truth value for the file existence. Otherwise, call this function
+      to get the truth value. Defaults to :func:`os.path.isfile`
+    msg (str): Log message. It should have a string formattable
+      field where the file name will be interpolated
 
   Example:
     >>> from featgraph.pathutils import notisfile
@@ -30,12 +35,14 @@ def notisfile(f: str, func: Union[Callable, bool] = os.path.isfile, msg: str = "
 
 
 def notisglob(f: str, func: Union[Callable, bool] = len, **kwargs):
-  """Check if no file that matches the expression exists. If a file is found, log a message
+  """Check if no file that matches the expression exists.
+  If a file is found, log a message
 
   Args:
     f (str): File pattern to check
-    func (bool or callable): If a boolean, then use this as the truth value for the file existence.
-      Otherwise, call this function to get the truth value. Defaults to :func:`len`
+    func (bool or callable): If a boolean, then use this as the truth
+      value for the file existence. Otherwise, call this function to
+      get the truth value. Defaults to :func:`len`
     kwargs: Keyword arguments for :func:`notisfile`
 
   Example:
