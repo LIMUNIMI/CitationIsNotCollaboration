@@ -5,13 +5,18 @@ import sys
 import pickle
 import argparse
 import importlib
+import itertools
+import functools
+import sortedcontainers
 from chromatictools import cli
 from featgraph import pathutils, logger, jwebgraph
 from typing import Optional, Callable, Iterable, Tuple, Union, List
 import logging
 
 
-def make_ids_txt(dst: str, src: str, it: Optional[Callable[[Iterable], Iterable]] = None, overwrite: bool = False):
+def make_ids_txt(
+  dst: str, src: str, it: Optional[Callable[[Iterable], Iterable]] = None, overwrite: bool = False
+) -> int:
   """Write the text file of artist ids
 
   Args:
@@ -19,15 +24,29 @@ def make_ids_txt(dst: str, src: str, it: Optional[Callable[[Iterable], Iterable]
     src (str): Source pickle file
     it (callable): Iterator wrapper function. If not :data:`None` the adjacency lists
       iterator will be wrapped using this function. Mainly intended for use with :data:`tqdm`
-    overwrite (bool): If :data:`True`, then overwrite existing destination file"""
+    overwrite (bool): If :data:`True`, then overwrite existing destination file
+
+  Returns:
+    int: The number of nodes"""
   if overwrite or pathutils.notisfile(dst):
     with open(dst, "w") as fout:
       with open(src, "rb") as fin:
+        logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(fin)
+        logger.info("Sorting keys")
+        ids = sortedcontainers.SortedSet(itertools.chain(
+          adjacency_lists.keys(),
+          itertools.chain.from_iterable(adjacency_lists.values())
+        ))
+        logger.info("Writing file: %s", dst)
         if it is not None:
-          adjacency_lists = it(adjacency_lists)
-        for k in adjacency_lists:
+          ids = it(ids)
+        for k in ids:
           fout.write(k + "\n")
+        return len(ids)
+  else:
+    with open(dst, "r") as fout:
+      return sum(1 for _ in fout)
 
 
 metadata_labels: Tuple[str, ...] = (
@@ -69,20 +88,22 @@ def make_metadata_txt(
   if not callable(dst):
     dst = pathutils.derived_paths(dst)
   with open(src, "rb") as f:
+    logger.info("Loading pickle file: %s", src)
     metadata = pickle.load(f)
     if labels is None:
       labels = metadata_labels
-    if it is not None:
-      labels = it(labels)
     for k in labels:
       i = metadata_labels.index(k)
       fname = dst(k) + ext
       written.append(fname)
       if overwrite or pathutils.notisfile(fname):
-        logger.debug("Writing %s", fname)
+        logger.info("Writing %s", fname)
         with open(fname, "w", encoding=encoding) as txt:
           with open(idf, "r") as ids:
-            for a_id in (r.rstrip("\n") for r in ids):
+            ids = (r.rstrip("\n") for r in ids)
+            if it is not None:
+              ids = it(ids)
+            for a_id in ids:
               txt.write(str(metadata[i].get(a_id, missing)) + "\n")
   return written
 
@@ -105,38 +126,22 @@ def make_adjacency_txt(
     append (bool): If :data:`True`, then start writing at end of file"""
   if overwrite or append or pathutils.notisfile(dst):
     with open(idf, "r") as f:
-      ids = list(map(lambda r: r.rstrip("\n"), f))
+      logger.info("Loading ids text file: %s", idf)
+      ids = sortedcontainers.SortedSet(r.rstrip("\n") for r in f)
     if overwrite and os.path.exists(dst):
       os.remove(dst)
     with open(dst, "a+") as txt:
       txt.seek(0)
-      it = iter(ids if it is None else it(ids))
-      if append:
-        for r, _ in zip(txt, it):
-          pass  # skip written lines
       with open(src, "rb") as f:
+        logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(f)
+        it = iter(ids if it is None else it(ids))
+        if append:
+          for r, _ in zip(txt, it):
+            pass  # skip written lines
         for a_id in it:
-          # KeyError should not happen here
-          # but better check for robustness.
-          # It would happen only if there is
-          # some inconsistency between the
-          # adjacency lists pickle file and
-          # the ids index text file
-          neighbors = adjacency_lists.get(a_id, [])
-          neighbors_i = []
-          for n in neighbors:
-            try:
-              # ValueError can happen here
-              # if successor has not an
-              # associated entry in the
-              # adjacency lists dict
-              n_i = ids.index(n)
-            except ValueError:
-              continue
-            else:
-              neighbors_i.append(n_i)
-          txt.write(" ".join(map(str, neighbors_i)) + "\n")
+          neighbors = map(ids.index, adjacency_lists.get(a_id, []))
+          txt.write(" ".join(map(str, neighbors)) + "\n")
 
 
 @cli.main(__name__, *sys.argv[1:])
@@ -172,18 +177,14 @@ def main(*argv):
     datefmt='%Y-%m-%d %H:%M:%S',
   )
   logger.info(args)
-  if args.tqdm:
-    tqdm = importlib.import_module("tqdm").tqdm
-  else:
-    def tqdm(x, **kwargs):
-      return x
+  tqdm = importlib.import_module("tqdm").tqdm if args.tqdm else None
 
   jwebgraph.start_jvm(jvm_path=args.jvm_path)
   # Make destination directory
   spotipath = pathutils.derived_paths(args.dest_path)
   os.makedirs(os.path.dirname(spotipath()), exist_ok=True)
   # Make ids file
-  make_ids_txt(
+  nnodes = make_ids_txt(
     spotipath("ids", "txt"),
     args.adjacency_path,
     tqdm
@@ -193,7 +194,7 @@ def main(*argv):
     spotipath,
     args.metadata_path,
     spotipath("ids", "txt"),
-    tqdm,
+    tqdm if tqdm is None else functools.partial(tqdm, total=nnodes),
   )
   # Make adjacency lists file
   make_adjacency_txt(
