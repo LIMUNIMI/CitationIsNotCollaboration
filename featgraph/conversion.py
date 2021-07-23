@@ -201,8 +201,8 @@ def main(*argv):
     help="The logging level. Default is 'INFO'",
   )
   parser.add_argument(
-    "--no-tqdm", dest="tqdm", action="store_false",
-    help="Don't use tqdm progress bar",
+    "--tqdm", action="store_true",
+    help="Use tqdm progress bar (you should install tqdm for this)",
   )
   args = parser.parse_args(argv)
   try:
