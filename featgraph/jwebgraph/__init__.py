@@ -1,5 +1,9 @@
 """Module for downloading and importing the WebGraph java library"""
+import logging
+
 import requests
+import inspect
+import multiprocessing
 from featgraph import logger
 # --- JPype -------------------------------------------------------------------
 # https://jpype.readthedocs.io/en/latest/quickguide.html
@@ -142,3 +146,89 @@ def start_jvm(
   for cp in classpaths(root=root, deps=deps):
     jpype.addClassPath(cp)
   jpype.startJVM(*(() if jvm_path is None else (jvm_path,)))
+
+
+class JVMProcess(multiprocessing.Process):
+  """Process that requires a JVM start
+
+  Args:
+    target (callable): Target function
+    return_value (:class:`multiprocessing.Value`): Value object for storing
+      the return value. Defaults to :data:`None` (do not store return value)
+    jvm_kwargs (dict): Keyword arguments for :func:`start_jvm`
+    logging_kwargs (dict): Keyword arguments for :func:`logging.basicConfig`.
+      Defaults to :data:`None` (do not configure logging in the subprocess)
+    kwargs: Keyword arguments for :class:`multiprocessing.Process`"""
+  class FunctionWrapper:
+    """Function wrapper used by :class:`JVMProcess`
+
+    Args:
+      target (callable): Target function
+      return_value (:class:`multiprocessing.Value`): Value object for storing
+        the return value. Defaults to :data:`None` (do not store return value)
+      jvm_kwargs (dict): Keyword arguments for :func:`start_jvm`
+      logging_kwargs (dict): Keyword arguments for :func:`logging.basicConfig`.
+        Defaults to :data:`None` (do not configure logging in the subprocess)"""
+    def __init__(
+      self, target,
+      return_value: Optional[multiprocessing.Value] = None,
+      jvm_kwargs: Optional[dict] = None,
+      logging_kwargs: Optional[dict] = None,
+    ):
+      self.target = target
+      self.return_value = return_value
+      self.jvm_kwargs = jvm_kwargs
+      self.logging_kwargs = logging_kwargs
+
+    def __call__(self, *args, **kwargs):
+      if self.logging_kwargs is not None:
+        logging.basicConfig(**self.logging_kwargs)
+      start_jvm(**(self.jvm_kwargs or {}))
+      rv = self.target(*args, **kwargs)
+      if self.return_value is not None:
+        self.return_value.value = rv
+
+  def __init__(
+    self,
+    target,
+    return_value: Optional[multiprocessing.Value] = None,
+    jvm_kwargs: Optional[dict] = None,
+    logging_kwargs: Optional[dict] = None,
+    **kwargs
+  ):
+    super().__init__(
+      target=self.FunctionWrapper(
+        target=target, return_value=return_value,
+        jvm_kwargs=jvm_kwargs, logging_kwargs=logging_kwargs,
+      ),
+      **kwargs
+    )
+
+
+def jvm_process_run(
+  target, args=None, kwargs=None, return_type: Optional[type] = None, **kw
+):
+  """Run a function in a :class:`JVMProcess`
+
+  Args:
+    target (callable): Target function
+    args: Positional arguments for the target function
+    kwargs: Keyword arguments for the target function
+    return_type: Return value type for :class:`multiprocessing.Value`.
+      Defaults to :data:`None` (do not store return value)
+    kw: Keyword arguments for :class:`JVMProcess`
+
+  Returns:
+    The return value of the function call if a :data:`return_type` is specified
+"""
+  return_value = None if return_type is None else multiprocessing.Value(
+    return_type
+  )
+  p = JVMProcess(
+    target=target, return_value=return_value,
+    args=args or (), kwargs=kwargs or {}, **kw
+  )
+  p.start()
+  p.join()
+  if return_value is not None:
+    return return_value.value

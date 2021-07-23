@@ -2,3 +2,4 @@ JPype1
 requests
 chromatictools
 sortedcontainers
+more-itertools

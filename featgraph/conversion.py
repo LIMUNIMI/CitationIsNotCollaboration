@@ -15,15 +15,18 @@ import logging
 
 
 def make_ids_txt(
-  dst: str, src: str, it: Optional[Callable[[Iterable], Iterable]] = None, overwrite: bool = False
+  dst: str, src: str,
+  it: Optional[Callable[[Iterable], Iterable]] = None,
+  overwrite: bool = False
 ) -> int:
   """Write the text file of artist ids
 
   Args:
     dst (str): Destination text file
     src (str): Source pickle file
-    it (callable): Iterator wrapper function. If not :data:`None` the adjacency lists
-      iterator will be wrapped using this function. Mainly intended for use with :data:`tqdm`
+    it (callable): Iterator wrapper function.
+      If not :data:`None` the adjacency lists iterator will be wrapped using
+      this function. Mainly intended for use with :data:`tqdm`
     overwrite (bool): If :data:`True`, then overwrite existing destination file
 
   Returns:
@@ -73,14 +76,16 @@ def make_metadata_txt(
     dst (str): Destination text file basepath
     src (str): Source pickle file
     idf (str): Graph node ids text filepath
-    it (callable): Iterator wrapper function. If not :data:`None` the adjacency lists
-      iterator will be wrapped using this function. Mainly intended for use with :data:`tqdm`
-    labels (iterable of str): Labels for which to write a file. If :data:`None` (default),
-      then write all metadata files
+    it (callable): Iterator wrapper function. If not :data:`None`
+      the adjacency lists iterator will be wrapped using this function.
+      Mainly intended for use with :data:`tqdm`
+    labels (iterable of str): Labels for which to write a file.
+      If :data:`None` (default), then write all metadata files
     ext (str): Common file extension. Default is :data:`".txt"`
     encoding: Encoding for output files. Default is :data:`"utf-8"`
     overwrite (bool): If :data:`True`, then overwrite existing destination file
-    missing (str): String to write in place of missing values. Default is :data:`""`
+    missing (str): String to write in place of missing values.
+      Default is :data:`""`
 
   Returns:
     list of str: Output file paths"""
@@ -108,40 +113,63 @@ def make_metadata_txt(
   return written
 
 
-def make_adjacency_txt(
+def make_asciigraph_txt(
   dst: str, src: str, idf: str,
   it: Optional[Callable[[Iterable], Iterable]] = None,
   overwrite: bool = False,
-  append: bool = True,
 ):
-  """Write the text file of adjacency lists
+  """Write the text file of adjacency lists (ASCIIGraph)
 
   Args:
     dst (str): Destination text file path
     src (str): Source pickle file
     idf (str): Graph node ids text filepath
-    it (callable): Iterator wrapper function. If not :data:`None` the adjacency lists
-      iterator will be wrapped using this function. Mainly intended for use with :data:`tqdm`
-    overwrite (bool): If :data:`True`, then overwrite existing destination file
-    append (bool): If :data:`True`, then start writing at end of file"""
-  if overwrite or append or pathutils.notisfile(dst):
+    it (callable): Iterator wrapper function. If not :data:`None`
+      the adjacency lists iterator will be wrapped using this function.
+      Mainly intended for use with :data:`tqdm`
+    overwrite (bool): If :data:`True`,
+      then overwrite existing destination file"""
+  if overwrite or pathutils.notisfile(dst):
     with open(idf, "r") as f:
       logger.info("Loading ids text file: %s", idf)
       ids = sortedcontainers.SortedSet(r.rstrip("\n") for r in f)
-    if overwrite and os.path.exists(dst):
-      os.remove(dst)
-    with open(dst, "a+") as txt:
-      txt.seek(0)
+    with open(dst, "w") as txt:
       with open(src, "rb") as f:
         logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(f)
-        it = iter(ids if it is None else it(ids))
-        if append:
-          for r, _ in zip(txt, it):
-            pass  # skip written lines
+        it = itertools.chain(
+          [len(ids)], iter(ids if it is None else it(ids))
+        )
         for a_id in it:
+          if isinstance(a_id, int):
+            txt.write(str(a_id) + "\n")
+            continue
           neighbors = map(ids.index, adjacency_lists.get(a_id, []))
           txt.write(" ".join(map(str, neighbors)) + "\n")
+
+
+def compress_to_bvgraph(
+  dst: str, src: Optional[str] = None,
+  overwrite: bool = False,
+):
+  """Compress a text file of adjacency lists (ASCIIGraph) into a BVGraph
+
+  Args:
+    dst (str): Destination BVGraph file basepath
+    src (str): Source text file basepath. If :data:`None`,
+      then use the same basepath as :data:`dst`
+    overwrite (bool): If :data:`True`,
+      then overwrite existing destination file"""
+  if src is None:
+    src = dst
+  srcpath = pathutils.derived_paths(src)
+  dstpath = pathutils.derived_paths(dst)
+  if overwrite or pathutils.notisfile(dstpath("graph")):
+    webgraph = importlib.import_module("it.unimi.dsi.webgraph")
+    logger.info("Loading ASCIIGraph: %s", srcpath("graph-txt"))
+    ascii_graph = webgraph.ASCIIGraph.load(srcpath())
+    logger.info("Compressing to BVGraph: %s", dstpath("graph"))
+    webgraph.BVGraph.store(ascii_graph, dstpath())
 
 
 @cli.main(__name__, *sys.argv[1:])
@@ -150,9 +178,18 @@ def main(*argv):
   parser = argparse.ArgumentParser(
     description="Convert original pickled dataset into text and BVGraph files"
   )
-  parser.add_argument("adjacency_path", help="The path of the adjacency lists pickle file")
-  parser.add_argument("metadata_path", help="The path of the metadata pickle file")
-  parser.add_argument("dest_path", help="The destination base path for the BVGraph and text files")
+  parser.add_argument(
+    "adjacency_path",
+    help="The path of the adjacency lists pickle file"
+  )
+  parser.add_argument(
+    "metadata_path",
+    help="The path of the metadata pickle file"
+  )
+  parser.add_argument(
+    "dest_path",
+    help="The destination base path for the BVGraph and text files"
+  )
   parser.add_argument(
     "--jvm-path", metavar="PATH",
     help="The Java virtual machine full path"
@@ -171,15 +208,14 @@ def main(*argv):
     log_level = int(args.log_level)
   except ValueError:
     log_level = args.log_level
-  logging.basicConfig(
+  logging_kwargs = dict(
     level=log_level,
-    format='%(asctime)s %(name)-12s %(levelname)-8s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
+    format="%(asctime)s %(name)-12s %(levelname)-8s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
   )
-  logger.info(args)
+  logging.basicConfig(**logging_kwargs)
   tqdm = importlib.import_module("tqdm").tqdm if args.tqdm else None
 
-  jwebgraph.start_jvm(jvm_path=args.jvm_path)
   # Make destination directory
   spotipath = pathutils.derived_paths(args.dest_path)
   os.makedirs(os.path.dirname(spotipath()), exist_ok=True)
@@ -197,9 +233,20 @@ def main(*argv):
     tqdm if tqdm is None else functools.partial(tqdm, total=nnodes),
   )
   # Make adjacency lists file
-  make_adjacency_txt(
-    spotipath("adj", "txt"),
+  make_asciigraph_txt(
+    spotipath("graph-txt"),
     args.adjacency_path,
     spotipath("ids", "txt"),
     tqdm,
+  )
+  # Compress to BVGraph
+  jwebgraph.jvm_process_run(
+    compress_to_bvgraph,
+    kwargs=dict(
+      dst=spotipath(),
+    ),
+    logging_kwargs=logging_kwargs,
+    jvm_kwargs=dict(
+      jvm_path=args.jvm_path,
+    ),
   )
