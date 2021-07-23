@@ -1,26 +1,19 @@
 """Test WebGraph java library correctly loading"""
 from featgraph import jwebgraph
-import jpype
-import unittest
 from unittest import mock
 import importlib
-import multiprocessing
+import unittest
 import requests
 import os
 import io
 
 
-def test_start_jvm(tmp_root: str):
+def test_import_webgraph(name: str, mod: str = "it.unimi.dsi.webgraph") -> bool:
   """Test that the jvm starts correctly and jar can be imported.
   This needs to be done in a separate thread to make sure that
   the JVM properly shuts down"""
-  os.makedirs(tmp_root, exist_ok=True)
-  jwebgraph.start_jvm(
-    jvm_path=os.environ.get("FEATGRAPH_JAVA_PATH", None),
-    root=tmp_root,
-  )
-  importlib.import_module("it.unimi.dsi.webgraph").ASCIIGraph  # pylint: disable=W0106
-  jpype.shutdownJVM()
+  cls = getattr(importlib.import_module(mod), name)
+  return cls.__name__ == ".".join((mod, name))
 
 
 class TestJWebGraph(unittest.TestCase):
@@ -78,10 +71,19 @@ class TestJWebGraph(unittest.TestCase):
   def test_start_jvm(self):
     """Test that the jvm starts correctly and jar can be imported"""
     tmp_root = os.path.abspath(".tmp_clAsSPatTh_jvm")
-    p = multiprocessing.Process(target=test_start_jvm, args=(tmp_root,))
-    p.start()
-    p.join()
-    self.assertEqual(p.exitcode, 0)
+    os.makedirs(tmp_root, exist_ok=True)
+
+    b = jwebgraph.jvm_process_run(
+      test_import_webgraph,
+      args=("BVGraph",),
+      jvm_kwargs=dict(
+        jvm_path=os.environ.get("FEATGRAPH_JAVA_PATH", None),
+        root=tmp_root,
+      ),
+      return_type="B",
+    )
+    self.assertEqual(b, 1)
+
     for cp in jwebgraph.classpaths(root=tmp_root):
       os.remove(cp)
     os.rmdir(tmp_root)
