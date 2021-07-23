@@ -1,6 +1,5 @@
 """Module for downloading and importing the WebGraph java library"""
 import logging
-
 import requests
 import multiprocessing
 from featgraph import logger
@@ -12,7 +11,7 @@ import jpype.imports
 import functools
 import json
 import os
-from typing import Optional, Iterable, Dict
+from typing import Optional, Iterable, Dict, Union
 
 
 _json_file: str = "dependencies.json"
@@ -205,7 +204,8 @@ class JVMProcess(multiprocessing.Process):
 
 
 def jvm_process_run(
-  target, args=None, kwargs=None, return_type: Optional[type] = None, **kw
+  target, args=None, kwargs=None,
+  return_type: Optional[Union[type, str]] = None, **kw
 ):
   """Run a function in a :class:`JVMProcess`
 
