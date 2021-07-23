@@ -137,6 +137,7 @@ def make_asciigraph_txt(
       with open(src, "rb") as f:
         logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(f)
+        logger.info("Writing ASCIIGraph file: %s", dst)
         it = itertools.chain(
           [len(ids)], iter(ids if it is None else it(ids))
         )
