@@ -219,7 +219,9 @@ def main(*argv):
 
   # Make destination directory
   spotipath = pathutils.derived_paths(args.dest_path)
-  os.makedirs(os.path.dirname(spotipath()), exist_ok=True)
+  spotidir = os.path.dirname(spotipath())
+  if spotidir:
+    os.makedirs(spotidir, exist_ok=True)
   # Make ids file
   nnodes = make_ids_txt(
     spotipath("ids", "txt"),
