@@ -1,8 +1,10 @@
 """Convenience classes for accessing artist metadata from text files"""
 from featgraph import pathutils
+import featgraph.misc
 import more_itertools
 import functools
 import json
+import importlib
 from typing import Optional, Callable, Sequence, Dict, Tuple, List
 
 
@@ -143,10 +145,20 @@ class Artist:
   @functools.lru_cache(maxsize=1)
   def neighbors(self) -> List["Artist"]:
     """Neighbors of the artist in the graph"""
+    try:
+      # default to ASCIIGraph file
+      indices = self._property_from_file("neighbors").split(" ")
+    except FileNotFoundError:
+      # fall back to BVGraph file
+      indices = featgraph.misc.IteratorWrapper(
+        importlib.import_module(
+          "featgraph.jwebgraph.utils"
+        ).BVGraph(self.basepath).load().successors(self.index),
+        "nextInt", -1
+      )
     return [
       Artist(basepath=self.basepath, index=int(i))
-      for i in self._property_from_file("neighbors").split(" ")
-      if i
+      for i in indices if i
     ]
 
   @property

@@ -283,6 +283,16 @@ class BVGraph:
       array of doubles: Array of Harmonic Centralities"""
     return load_as_doubles(self.path("hc", "ranks"), "Float")
 
+  def artist(self, **kwargs) -> metadata.Artist:
+    """Get an artist from the dataset
+
+    Args:
+      kwargs: Keyword arguments for :class:`featgraph.metadata.Artist`
+
+    Returns:
+      Artist: the Artist object wrapper"""
+    return metadata.Artist(self.base_path, **kwargs)
+
   def best(
     self, n: int, f: VectorOrCallable, reverse: bool = True
   ) -> List[metadata.Artist]:
@@ -305,6 +315,6 @@ class BVGraph:
     else:
       arg = arg[:n]
     return [
-      metadata.Artist(self.base_path, index=i)
+      self.artist(index=i)
       for i in arg
     ]

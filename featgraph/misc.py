@@ -37,3 +37,27 @@ def jaccard(a: Sequence, b: Sequence) -> float:
     float: Jaccard index"""
   i = len(set(a).intersection(b))
   return i / (len(a) + len(b) - i)
+
+
+class IteratorWrapper:
+  """Wrapper for an iterator. Mainly intended for wrapping Java iterators
+
+  Args:
+    it: Iterator
+    next_method (str): Name of the method used to iterate one step
+    end_value: Stop iteration when this value is found"""
+  def __init__(self, it, next_method: str = "__next__", end_value=None):
+    self.it = it
+    self.next_method = next_method
+    self.end_value = end_value
+
+  def __iter__(self):
+    """Start iteration (does nothing)"""
+    return self
+
+  def __next__(self):
+    """Iterate one step. Stop when end value is returned"""
+    v = getattr(self.it, self.next_method)()
+    if v == self.end_value:
+      raise StopIteration()
+    return v
