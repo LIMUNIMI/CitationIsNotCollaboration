@@ -4,8 +4,9 @@ from featgraph import pathutils, metadata
 import os
 import numpy as np
 import sys
+import featgraph.misc
 from featgraph.misc import VectorOrCallable
-from typing import Union, List
+from typing import Union, List, Sequence
 # imports from java
 try:
   from it.unimi.dsi import law, webgraph
@@ -13,6 +14,23 @@ try:
 except ModuleNotFoundError as e:
   if os.path.basename(sys.argv[0]) != "sphinx-build":
     raise ModuleNotFoundError("Java modules not found") from e
+
+
+def jaccard(
+  a: Sequence[metadata.Artist], b: Sequence[metadata.Artist]
+) -> float:
+  """Jaccard index between sets of artists
+
+  Args:
+    a: First set of artists
+    b: Second set of artists
+
+  Returns:
+    float: Jaccard index"""
+  return featgraph.misc.jaccard(
+    [x.index for x in a],
+    [x.index for x in b],
+  )
 
 
 def load_as_doubles(

@@ -24,3 +24,16 @@ def pretty_print_int(n: int, k: int = 3, sep: str = " ") -> str:
       yield c
       i += 1
   return "".join(reversed(list(_ppi_it(str(n)))))
+
+
+def jaccard(a: Sequence, b: Sequence) -> float:
+  """Jaccard index between sets
+
+  Args:
+    a: First set of values
+    b: Second set of values
+
+  Returns:
+    float: Jaccard index"""
+  i = len(set(a).intersection(b))
+  return i / (len(a) + len(b) - i)
