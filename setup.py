@@ -28,6 +28,7 @@ setuptools.setup(
     "requests",
     "chromatictools",
     "sortedcontainers",
+    "more-itertools",
   ],
   classifiers=[
     "Programming Language :: Python :: 3",
