@@ -1,4 +1,8 @@
-"""Miscellaneous functions"""
+"""Miscellaneous functions and classes"""
+from typing import Union, Callable, Sequence
+
+
+VectorOrCallable = Union[Callable[[], Sequence], Sequence]
 
 
 def pretty_print_int(n: int, k: int = 3, sep: str = " ") -> str:

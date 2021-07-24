@@ -30,6 +30,11 @@ setuptools.setup(
     "sortedcontainers",
     "more-itertools",
   ],
+  extras_require={
+    "plots": [
+      "matplotlib"
+    ]
+  },
   classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

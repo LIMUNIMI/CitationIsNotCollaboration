@@ -4,7 +4,8 @@ from featgraph import pathutils, metadata
 import os
 import numpy as np
 import sys
-from typing import Union, List, Callable, Sequence
+from featgraph.misc import VectorOrCallable
+from typing import Union, List
 # imports from java
 try:
   from it.unimi.dsi import law, webgraph
@@ -12,9 +13,6 @@ try:
 except ModuleNotFoundError as e:
   if os.path.basename(sys.argv[0]) != "sphinx-build":
     raise ModuleNotFoundError("Java modules not found") from e
-
-
-VectorOrCallable = Union[Callable[[], Sequence], Sequence]
 
 
 def load_as_doubles(
