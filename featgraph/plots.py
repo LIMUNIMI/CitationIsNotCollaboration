@@ -1,8 +1,8 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt
-import featgraph.jwebgraph.utils
-from featgraph import jwebgraph
 from featgraph.misc import VectorOrCallable
+from featgraph import jwebgraph
+import jwebgraph.utils
 from typing import Optional
 
 
