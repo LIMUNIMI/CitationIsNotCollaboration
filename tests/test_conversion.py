@@ -28,7 +28,6 @@ class TestConversion(
     self.adjacency_path = os.path.join(tmpdir, self.adjacency_path)
     self.metadata_path = os.path.join(tmpdir, self.metadata_path)
     self.base_path = os.path.join(tmpdir, self.base_path)
-    jvm_path = os.environ.get("FEATGRAPH_JAVA_PATH", None)
 
     self.setup_pickles_fn()
 
@@ -36,8 +35,11 @@ class TestConversion(
     conversion.main(
       self.adjacency_path, self.metadata_path, self.base_path,
       "-l", "WARNING",
-      *(() if jvm_path is None else ("--jvm-path", jvm_path)),
-      )
+      *(
+        () if testutils.jvm_path is None
+        else ("--jvm-path", testutils.jvm_path)
+      ),
+    )
 
     # check neighbors from asciigraph
     for k, v in self.adjacency_dict.items():
@@ -61,7 +63,7 @@ class TestConversion(
       ):
         b = jwebgraph.jvm_process_run(
           check_neighbors, args=(self.base_path, k, v),
-          return_type="B", jvm_kwargs=dict(jvm_path=jvm_path),
+          return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
         )
         if expected_failure:
           b = not b

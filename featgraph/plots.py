@@ -1,8 +1,8 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt
-from featgraph.misc import VectorOrCallable
+import featgraph.jwebgraph.utils  # pylint: disable=W0611 (false positive)
 from featgraph import jwebgraph
-import jwebgraph.utils
+from featgraph.misc import VectorOrCallable
 from typing import Optional
 
 

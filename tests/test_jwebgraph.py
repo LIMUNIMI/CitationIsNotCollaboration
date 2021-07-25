@@ -1,5 +1,6 @@
 """Test WebGraph java library correctly loading"""
 from featgraph import jwebgraph
+from tests import testutils
 from unittest import mock
 import importlib
 import unittest
@@ -77,7 +78,7 @@ class TestJWebGraph(unittest.TestCase):
       test_import_webgraph,
       args=("BVGraph",),
       jvm_kwargs=dict(
-        jvm_path=os.environ.get("FEATGRAPH_JAVA_PATH", None),
+        jvm_path=testutils.jvm_path,
         root=tmp_root,
       ),
       return_type="B",
