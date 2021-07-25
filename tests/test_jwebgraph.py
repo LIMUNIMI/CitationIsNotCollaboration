@@ -1,26 +1,21 @@
 """Test WebGraph java library correctly loading"""
-from featgraph import jwebgraph
-import jpype
-import unittest
+from featgraph import jwebgraph, metadata
+from tests import testutils
 from unittest import mock
+import numpy as np
 import importlib
-import multiprocessing
+import unittest
 import requests
 import os
 import io
 
 
-def test_start_jvm(tmp_root: str):
+def test_import_webgraph(name: str, mod: str = "it.unimi.dsi.webgraph") -> bool:
   """Test that the jvm starts correctly and jar can be imported.
   This needs to be done in a separate thread to make sure that
   the JVM properly shuts down"""
-  os.makedirs(tmp_root, exist_ok=True)
-  jwebgraph.start_jvm(
-    jvm_path=os.environ.get("FEATGRAPH_JAVA_PATH", None),
-    root=tmp_root,
-  )
-  importlib.import_module("it.unimi.dsi.webgraph").ASCIIGraph  # pylint: disable=W0106
-  jpype.shutdownJVM()
+  cls = getattr(importlib.import_module(mod), name)
+  return cls.__name__ == ".".join((mod, name))
 
 
 class TestJWebGraph(unittest.TestCase):
@@ -78,10 +73,85 @@ class TestJWebGraph(unittest.TestCase):
   def test_start_jvm(self):
     """Test that the jvm starts correctly and jar can be imported"""
     tmp_root = os.path.abspath(".tmp_clAsSPatTh_jvm")
-    p = multiprocessing.Process(target=test_start_jvm, args=(tmp_root,))
-    p.start()
-    p.join()
-    self.assertEqual(p.exitcode, 0)
+    os.makedirs(tmp_root, exist_ok=True)
+
+    b = jwebgraph.jvm_process_run(
+      test_import_webgraph,
+      args=("BVGraph",),
+      jvm_kwargs=dict(
+        jvm_path=testutils.jvm_path,
+        root=tmp_root,
+      ),
+      return_type="B",
+    )
+    self.assertEqual(b, 1)
+
     for cp in jwebgraph.classpaths(root=tmp_root):
       os.remove(cp)
     os.rmdir(tmp_root)
+
+
+def test_jaccard(a, b):
+  """Test Jaccard index"""
+  return importlib.import_module(
+    "featgraph.jwebgraph.utils"
+  ).jaccard(a, b)
+
+
+def test_load_as_doubles(
+  fname: str, n: int = 128, scale: float = 1024, seed: int = 42
+) -> int:
+  """Test loadAsDoubles"""
+  np.random.seed(seed)
+  a = (np.random.rand(n) * scale).astype(int)
+  with open(fname, "w") as f:
+    for x in a:
+      f.write("{:.0f}\n".format(x))
+  b = importlib.import_module(
+    "featgraph.jwebgraph.utils"
+  ).load_as_doubles(fname)
+  return sum(x != int(y) for x, y in zip(a, b))
+
+
+class TestUtils(
+  testutils.TestDataMixin,
+  unittest.TestCase
+):
+  """Test JWebGraph utils"""
+  def test_module_not_found(self):
+    """Test error if import with no jvm"""
+    with self.assertRaises(ModuleNotFoundError):
+      importlib.import_module("featgraph.jwebgraph.utils")
+
+  def test_jaccard(self):
+    """Test Jaccard index"""
+    path = "graPh-fAkePaTH"
+    for union in range(1, 4):
+      for intersection in range(union + 1):
+        na = (union - intersection) // 2 + intersection
+        a = [metadata.Artist(path, index=i) for i in range(na)]
+        b = [
+          metadata.Artist(path, index=i)
+          for i in range(na - intersection, union)
+        ]
+        with self.subTest(union=union, intersection=intersection):
+          self.assertEqual(
+            intersection/union,
+            jwebgraph.jvm_process_run(
+              test_jaccard,
+              jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+              return_type="d",
+              args=(a, b),
+            )
+          )
+
+  def test_load_as_doubles(self):
+    """Test loadAsDoubles"""
+    fname = ".tmp_load_As_dOuBl3z.txt"
+    self.assertEqual(0, jwebgraph.jvm_process_run(
+      test_load_as_doubles,
+      jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+      return_type="I",
+      kwargs=dict(fname=fname)
+    ))
+    os.remove(fname)

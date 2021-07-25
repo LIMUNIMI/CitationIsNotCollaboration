@@ -11,7 +11,7 @@ dist
 
 # Graphs
 *.arcs
-*.graph
+*.graph*
 *.offsets
 *.properties
 *.indegree
@@ -25,6 +25,7 @@ dist
 *.txt
 !*requirements.txt
 *.gz
+*.zip
 
 # Sphinx
 docs/build
