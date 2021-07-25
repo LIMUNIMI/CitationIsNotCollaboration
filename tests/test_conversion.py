@@ -15,9 +15,8 @@ def check_neighbors(base_path: str, aid: str, neighbors) -> bool:
 
 
 def run_bvgraph_func(
-  base_path: str, func: str,
-  exceptions=(), return_fail: bool = False,
-  *args, **kwargs
+  base_path: str, func: str, *args,
+  exceptions=(), return_fail: bool = False, **kwargs
 ):
   """Run a function on a BVGraph wrapper"""
   try:
