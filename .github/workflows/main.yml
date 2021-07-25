@@ -18,7 +18,6 @@ jobs:
     strategy:
       matrix:
         pyversion: [
-          "3.6",
           "3.7",
           "3.8",
         ]
