@@ -8,6 +8,9 @@ import os
 from typing import Optional
 
 
+jvm_path = os.environ.get("FEATGRAPH_JAVA_PATH", None)
+
+
 def random_string(n: int, m: Optional[int] = None, g: float = 1.0) -> str:
   """Generate a random string
 

@@ -132,7 +132,7 @@ class BVGraph:
 
     Returns:
       webgraph.BVGraph: The java BVGraph"""
-    if self._loaded is None:
+    if not self.loaded:
       self._loaded = webgraph.BVGraph.load(self.base_path)
     return self._loaded
 

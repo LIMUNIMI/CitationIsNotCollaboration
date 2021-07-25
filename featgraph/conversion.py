@@ -146,7 +146,7 @@ def make_asciigraph_txt(
             txt.write(str(a_id) + "\n")
             continue
           neighbors = map(ids.index, adjacency_lists.get(a_id, []))
-          txt.write(" ".join(map(str, neighbors)) + "\n")
+          txt.write(" ".join(map(str, sorted(neighbors))) + "\n")
 
 
 def compress_to_bvgraph(
