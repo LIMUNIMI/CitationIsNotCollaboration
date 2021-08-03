@@ -7,6 +7,7 @@ critical transitions in eigenvector centrality"*
 https://doi.org/10.1093/comnet/cnaa050"""
 import networkx as nx
 from networkx.generators import random_graphs
+import functools
 from typing import Optional
 
 
@@ -84,3 +85,22 @@ class SGCModel:
     Returns:
       DiGraph: The *community leaders* subgraph"""
     return nx.complete_graph(self.n_leader)
+
+  def __call__(self, seed=None):
+    """Generate a random graph using the Social Group Centrality model
+
+    Args:
+      seed (int): Seed for random number generator
+
+    Returns:
+      DiGraph: The random graph"""
+    masses = self.masses(seed=seed)
+    celeb = self.celeb()
+    leader = self.leader()
+
+    g = functools.reduce(
+      nx.disjoint_union,
+      (masses, celeb, leader)
+    )
+
+    return g
