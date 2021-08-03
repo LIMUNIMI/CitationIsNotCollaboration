@@ -3,3 +3,7 @@ requests
 chromatictools
 sortedcontainers
 more-itertools
+matplotlib
+networkx
+scipy
+numpy
