@@ -29,6 +29,9 @@ setuptools.setup(
     "chromatictools",
     "sortedcontainers",
     "more-itertools",
+    "networkx",
+    "scipy",
+    "numpy",
   ],
   extras_require={
     "plots": [
