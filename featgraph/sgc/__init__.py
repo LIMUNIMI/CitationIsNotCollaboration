@@ -5,6 +5,9 @@ This is the directed version of the Social Group Centrality model described in
 critical transitions in eigenvector centrality"*
 
 https://doi.org/10.1093/comnet/cnaa050"""
+import networkx as nx
+from networkx.generators import random_graphs
+from typing import Optional
 
 
 class SGCModel:
@@ -52,3 +55,32 @@ class SGCModel:
   def n_nodes(self) -> int:
     """Number of nodes of the output graph"""
     return self.n_masses + self.n_celeb + self.n_leader
+
+  def masses(self, seed: Optional[int] = None) -> nx.DiGraph:
+    """Generate the *masses* subgraph using Barabási–Albert preferential
+    attachment
+
+    Args:
+      seed (int): Seed for random number generator
+
+    Returns:
+      DiGraph: The *masses* subgraph"""
+    return random_graphs.barabasi_albert_graph(
+      n=self.n_masses,
+      m=self.m_masses,
+      seed=seed,
+    ).to_directed(as_view=True)
+
+  def celeb(self):
+    """Generate the *celebrities* subgraph as a clique
+
+    Returns:
+      DiGraph: The *celebrities* subgraph"""
+    return nx.complete_graph(self.n_celeb)
+
+  def leader(self):
+    """Generate the *community leaders* subgraph as a clique
+
+    Returns:
+      DiGraph: The *community leaders* subgraph"""
+    return nx.complete_graph(self.n_leader)
