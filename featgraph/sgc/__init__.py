@@ -8,7 +8,10 @@ https://doi.org/10.1093/comnet/cnaa050"""
 import networkx as nx
 from networkx.generators import random_graphs
 import functools
-from typing import Optional
+import itertools
+from scipy import stats
+import numpy as np
+from typing import Optional, Sequence
 
 
 class SGCModel:
@@ -86,6 +89,25 @@ class SGCModel:
       DiGraph: The *community leaders* subgraph"""
     return nx.complete_graph(self.n_leader)
 
+  def popularity(self, seed: Optional[int] = None) -> Sequence[float]:
+    """Generate popularity values
+
+    Args:
+      seed (int): Seed for random number generator
+
+    Returns:
+      array of float: The first values are the popularity values for the
+      *masses*, then the values for *celebrities* and *community leaders*"""
+    p = np.full(self.n_nodes, 100.)
+    p[:self.n_masses] = np.clip(
+      stats.expon.rvs(
+        scale=self.masses_exp_scale,
+        size=self.n_masses,
+        random_state=seed,
+      ), 0, 100
+    )
+    return p
+
   def __call__(self, seed=None):
     """Generate a random graph using the Social Group Centrality model
 
@@ -101,6 +123,20 @@ class SGCModel:
     g = functools.reduce(
       nx.disjoint_union,
       (masses, celeb, leader)
+    )
+
+    nx.set_node_attributes(
+      g, name="class",
+      values=dict(enumerate(itertools.chain(
+        itertools.repeat("masses", self.n_masses),
+        itertools.repeat("celebrities", self.n_celeb),
+        itertools.repeat("community leaders", self.n_leader),
+      ))),
+    )
+
+    nx.set_node_attributes(
+      g, name="popularity",
+      values=dict(enumerate(self.popularity(seed=seed))),
     )
 
     return g
