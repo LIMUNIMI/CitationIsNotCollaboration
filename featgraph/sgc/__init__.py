@@ -11,7 +11,7 @@ import functools
 import itertools
 from scipy import stats
 import numpy as np
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Callable, Iterable
 
 
 class SGCModel:
@@ -108,7 +108,56 @@ class SGCModel:
     )
     return p
 
-  def __call__(self, seed=None):
+  @staticmethod
+  def add_cross_class_edges(
+    g: nx.Graph,
+    elite_class: str,
+    p_any: float,
+    p_back_if_any: float = 1.,
+    masses_class: str = "masses",
+    masses_pop_filter: Optional[Callable[[float], bool]] = None,
+    seed: Optional[int] = None,
+  ):
+    """Add edges across two classes: an *elite* class and the *masses*
+
+    Args:
+      g (Graph): Graph to which to add edges
+      elite_class (str): Class name of *elite* nodes
+      p_any (float): Probability of any edge between a given pair of nodes
+      p_back_if_any (float): Probability of an *elite* node to reciprocate
+        an existing incoming edge with its symmetric
+      masses_class (str): Class name of the *masses*
+      masses_pop_filter (callable): Filter function for masses popularity.
+        If provided, the *elite* nodes will only be able to connect to the
+        *masses* that have a popularity value of :data:`p` for which
+        :data:`masses_pop_filter(p)` is :data:`True`
+      seed (int): Seed for random number generator"""
+    if seed is not None:
+      np.random.seed(seed=seed)
+
+    elite_vertices = (
+      i for i, c in g.nodes(data="class")
+      if c == elite_class
+    )
+
+    def mass_vertices() -> Iterable[int]:
+      """Return the mass vertices iterable"""
+      return (
+        i for i, d in g.nodes(data=True)
+        if d["class"] == masses_class and (
+          masses_pop_filter is None or masses_pop_filter(d["popularity"])
+        )
+      )
+
+    for ev in elite_vertices:
+      for mv in mass_vertices():
+        q = np.random.rand()
+        if q <= p_any:
+          g.add_edge(mv, ev)
+          if q <= p_back_if_any:
+            g.add_edge(ev, mv)
+
+  def __call__(self, seed: Optional[int] = None):
     """Generate a random graph using the Social Group Centrality model
 
     Args:
@@ -137,6 +186,25 @@ class SGCModel:
     nx.set_node_attributes(
       g, name="popularity",
       values=dict(enumerate(self.popularity(seed=seed))),
+    )
+
+    self.add_cross_class_edges(
+      g, elite_class="celebrities",
+      p_any=self.p_celeb, p_back_if_any=self.p_celeb_back,
+      masses_pop_filter=lambda p: p > self.masses_k_pop,
+      seed=seed,
+    )
+    self.add_cross_class_edges(
+      g, elite_class="community leaders",
+      p_any=self.p_leader, p_back_if_any=self.p_leader_back,
+      masses_pop_filter=lambda p: p <= self.masses_k_pop,
+      seed=seed,
+    )
+
+    g = nx.relabel_nodes(
+      g, dict(enumerate(
+        np.random.default_rng(seed=seed).permutation(self.n_nodes)
+      ))
     )
 
     return g
