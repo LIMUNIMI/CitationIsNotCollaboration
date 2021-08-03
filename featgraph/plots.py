@@ -125,7 +125,7 @@ def draw_sgc_graph(
     "community leaders": leader_c,
     "other": default_c,
   }
-  edge_lists = {k: [] for k in edge_colors.keys()}
+  edge_lists = {k: [] for k in edge_colors}
   node_class = nx.get_node_attributes(g, "class")
   for e in g.edges():
     if all(node_class[v] == "masses" for v in e):
