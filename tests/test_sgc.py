@@ -5,6 +5,7 @@ from featgraph import sgc, plots
 
 
 class TestSGC(unittest.TestCase):
+  """Tests Social Group Centrality model"""
   @classmethod
   def setUpClass(cls):
     cls.seed = 42
