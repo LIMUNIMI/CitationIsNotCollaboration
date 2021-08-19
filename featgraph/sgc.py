@@ -157,7 +157,7 @@ class SGCModel:
           if q <= p_back_if_any:
             g.add_edge(ev, mv)
 
-  def __call__(self, seed: Optional[int] = None):
+  def __call__(self, seed: Optional[int] = None) -> nx.DiGraph:
     """Generate a random graph using the Social Group Centrality model
 
     Args:
