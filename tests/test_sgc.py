@@ -1,13 +1,14 @@
 """Tests for Social Group Centrality model"""
 import unittest
-from featgraph import sgc
+import networkx as nx
+from featgraph import sgc, plots
 
 
 class TestSGC(unittest.TestCase):
   @classmethod
   def setUpClass(cls):
     cls.seed = 42
-    cls.model = sgc.SGCModel()
+    cls.model = sgc.SGCModel(n_masses=100)
     cls.graph = cls.model(seed=cls.seed)
 
   def test_correct_n_nodes(self):
@@ -37,4 +38,27 @@ class TestSGC(unittest.TestCase):
       sum(
         1 for _, c in self.graph.nodes(data="class") if c == "community leaders"
       )
+    )
+
+  def test_plot(self):
+    """Test the plot function"""
+    plots.draw_sgc_graph(
+      self.graph,
+    )
+
+  def test_plot_alt(self):
+    """Test the plot function with alternative arguments"""
+    g = self.graph.copy(as_view=False)
+
+    # add a cross-elite-class edge
+    def first_of(k: str) -> int:
+      return next(iter(
+        i for i, c in g.nodes(data="class")
+        if c == k
+      ))
+    g.add_edge(first_of("celebrities"), first_of("community leaders"))
+
+    plots.draw_sgc_graph(
+      g, pos_fn=nx.spectral_layout,
+      draw_nodes=True,
     )
