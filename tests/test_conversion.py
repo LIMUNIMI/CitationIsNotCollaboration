@@ -1,17 +1,10 @@
 """Test conversion functions"""
-from featgraph import conversion, pathutils, metadata, jwebgraph
+from featgraph import conversion, pathutils, jwebgraph
 from tests import testutils
 from unittest import mock
 import unittest
 import importlib
 import os
-
-
-def check_neighbors(base_path: str, aid: str, neighbors) -> bool:
-  """Check neighbors of node"""
-  a = sorted(n.aid for n in metadata.Artist(base_path, aid=aid).neighbors)
-  b = sorted(neighbors)
-  return a == b
 
 
 def run_bvgraph_func(
@@ -82,7 +75,7 @@ class TestConversion(
     # check neighbors from asciigraph
     for k, v in self.adjacency_dict.items():
       with self.subTest(check="neighbors", file="asciigraph", node=k):
-        self.assertTrue(check_neighbors(self.base_path, k, v))
+        self.assertTrue(testutils.check_neighbors(self.base_path, k, v))
 
     # delete asciigraph
     s = ("graph-txt",)
@@ -100,7 +93,7 @@ class TestConversion(
         expected_failure=expected_failure,
       ):
         b = jwebgraph.jvm_process_run(
-          check_neighbors, args=(self.base_path, k, v),
+          testutils.check_neighbors, args=(self.base_path, k, v),
           return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
         )
         if expected_failure:

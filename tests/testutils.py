@@ -2,10 +2,10 @@
 import numpy as np
 from pyfakefs import fake_filesystem_unittest
 from chromatictools import pickle
-from featgraph import conversion, pathutils
+from featgraph import conversion, pathutils, metadata
 import contextlib
 import os
-from typing import Optional
+from typing import Optional, Iterable
 
 
 jvm_path = os.environ.get("FEATGRAPH_JAVA_PATH", None)
@@ -115,3 +115,24 @@ class TestDataMixin:
     with fake_filesystem_unittest.Patcher():
       self.setup_pickles_fn(seed)
       yield
+
+
+def check_neighbors(
+  base_path: str,
+  node,
+  neighbors: Iterable,
+  attr: str = "aid",
+) -> bool:
+  """Check neighbors of node
+
+  Args:
+    base_path (str): Base path of BVGraph
+    node: Node to inspect (value of attribute :data:`attr`)
+    neighbors: Ground truth neighbors (values of attribute :data:`attr`)
+    attr (str): Attribute name for comparison"""
+  a = sorted(
+    getattr(n, attr)
+    for n in metadata.Artist(base_path, **{attr: node}).neighbors
+  )
+  b = sorted(neighbors)
+  return a == b
