@@ -28,6 +28,7 @@ class TestNx2Bv(
     )
     with self.check_files_exist(
       path("graph"), path("offsets"), path("properties"),
+      path("type", "txt"),
       os.path.dirname(path()), os.path.dirname(os.path.dirname(path())),
     ):
       with self.check_files_exist(path("graph-txt")):
