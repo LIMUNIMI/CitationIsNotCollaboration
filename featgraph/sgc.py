@@ -7,6 +7,7 @@ critical transitions in eigenvector centrality"*
 https://doi.org/10.1093/comnet/cnaa050"""
 import networkx as nx
 from networkx.generators import random_graphs
+from featgraph import nx2bv
 import functools
 import itertools
 from scipy import stats
@@ -208,3 +209,33 @@ class SGCModel:
     )
 
     return g
+
+
+def to_bv(
+  graph: nx.Graph,
+  bvgraph_basepath: str,
+  class_suffix: Sequence[str] = ("type", "txt"),
+  popularity_suffix: Sequence[str] = ("popularity", "txt"),
+  missing="",
+  overwrite: bool = False,
+):
+  """Convert a SGC networkx graph to a BVGraph
+
+  Args:
+    graph (Graph): Networkx graph object
+    class_suffix (tuple of str): Suffix for the node class file
+    popularity_suffix (tuple of str): Suffix for the node popularity file
+    bvgraph_basepath (str): Base path for the BVGraph files
+    missing: Value to print when node attribute value is missing
+    overwrite (bool): If :data:`True`,
+      then overwrite existing destination file"""
+  nx2bv.nx2bv(
+    graph=graph,
+    bvgraph_basepath=bvgraph_basepath,
+    missing=missing,
+    overwrite=overwrite,
+    attributes={
+      "class": class_suffix,
+      "popularity": popularity_suffix,
+    }
+  )

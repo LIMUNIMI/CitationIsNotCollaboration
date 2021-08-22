@@ -1,5 +1,5 @@
 """Test networkx to BVGraph conversion functions"""
-from featgraph import sgc, nx2bv, pathutils, jwebgraph
+from featgraph import sgc, pathutils, jwebgraph
 from tests import testutils
 import unittest
 import os
@@ -34,7 +34,7 @@ class TestNx2Bv(
       with self.check_files_exist(path("graph-txt")):
         # Convert
         jwebgraph.jvm_process_run(
-          nx2bv.nx2bv,
+          sgc.to_bv,
           kwargs=dict(
             graph=self.nxgraph,
             bvgraph_basepath=path(),
