@@ -1,6 +1,6 @@
 """Conversion utilities from networkx to BVGraph"""
 import networkx as nx
-from featgraph import pathutils, logger
+from featgraph import pathutils, logger, conversion
 import os
 
 
@@ -24,13 +24,20 @@ def make_asciigraph_txt(
         txt.write(" ".join(map(str, neighbors)) + "\n")
 
 
-def nx2bv(graph: nx.Graph, bvgraph_basepath: str):
+def nx2bv(
+  graph: nx.Graph,
+  bvgraph_basepath: str,
+  overwrite: bool = False,
+):
   """Convert a networkx graph to a BVGraph
 
   Args:
     graph (Graph): Networkx graph object
-    bvgraph_basepath (str): Base path for the BVGraph files"""
+    bvgraph_basepath (str): Base path for the BVGraph files
+    overwrite (bool): If :data:`True`,
+      then overwrite existing destination file"""
   dirname = os.path.dirname(bvgraph_basepath)
   os.makedirs(dirname, exist_ok=True)
   path = pathutils.derived_paths(bvgraph_basepath)
-  make_asciigraph_txt(graph, path("graph-txt"))
+  make_asciigraph_txt(graph, path("graph-txt"), overwrite=overwrite)
+  conversion.compress_to_bvgraph(bvgraph_basepath, overwrite=overwrite)
