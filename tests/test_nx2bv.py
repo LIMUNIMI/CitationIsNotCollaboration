@@ -14,11 +14,15 @@ class TestNx2Bv(
   def setUpClass(cls):
     cls.base_path = "gRaphZ_nx2bv/testExampLe-6921"
     cls.seed = 42
-    cls.model = sgc.SGCModel()
+    cls.model = sgc.SGCModel(
+      n_celeb=8,
+      n_leader=8,
+      n_masses=16,
+    )
     cls.nxgraph = cls.model(seed=cls.seed)
 
-  def test_whole_pipeline(self):
-    """Test whole pipeline"""
+  def test_nx2bv(self):
+    """Test networkx to BVGraph conversion"""
     path = pathutils.derived_paths(
       os.path.join(".tmp_nx2BV_test", self.base_path)
     )
@@ -46,3 +50,19 @@ class TestNx2Bv(
             self.assertTrue(testutils.check_neighbors(
               path(), n, list(nbrdict.keys()), attr="index",
             ))
+
+      # check neighbors from bvgraph
+      # <!> it fails for neighbors of node 3 <!>
+      failure_nodes = [3]
+      for n in range(self.nxgraph.number_of_nodes()):
+        expected_failure = n in failure_nodes
+        with self.subTest(
+          check="neighbors", file="bvgraph", node=n,
+          expected_failure=expected_failure,
+        ):
+          self.assertTrue(jwebgraph.jvm_process_run(
+            testutils.check_neighbors,
+            args=(path(), n, list(self.nxgraph[n].keys())),
+            kwargs=dict(attr="index"),
+            return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+          ) != expected_failure)

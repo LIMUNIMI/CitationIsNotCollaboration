@@ -114,13 +114,10 @@ class TestConversion(
           check="neighbors", file="bvgraph", node=k,
           expected_failure=expected_failure,
         ):
-          b = jwebgraph.jvm_process_run(
+          self.assertTrue(jwebgraph.jvm_process_run(
             testutils.check_neighbors, args=(self.base_path, k, v),
             return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-          )
-          if expected_failure:
-            b = not b
-          self.assertTrue(b)
+          ) != expected_failure)
 
       # --- check BVGraph wrapper ---
       def check_fail(func: str):
