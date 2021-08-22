@@ -1,11 +1,14 @@
 """Test networkx to BVGraph conversion functions"""
-from featgraph import sgc, nx2bv, pathutils
+from featgraph import sgc, nx2bv, pathutils, jwebgraph
 from tests import testutils
 import unittest
 import os
 
 
-class TestNx2Bv(unittest.TestCase):
+class TestNx2Bv(
+  testutils.TestDataMixin,
+  unittest.TestCase
+):
   """Test networkx to BVGraph conversion functions"""
   @classmethod
   def setUpClass(cls):
@@ -19,19 +22,26 @@ class TestNx2Bv(unittest.TestCase):
     path = pathutils.derived_paths(
       os.path.join(".tmp_nx2BV_test", self.base_path)
     )
+    with self.check_files_exist(
+      os.path.dirname(path()), os.path.dirname(os.path.dirname(path())),
+    ):
+      with self.check_files_exist(path("graph-txt")):
+        # Convert
+        jwebgraph.jvm_process_run(
+          nx2bv.nx2bv,
+          kwargs=dict(
+            graph=self.nxgraph,
+            bvgraph_basepath=path(),
+            overwrite=True,
+          ),
+          jvm_kwargs=dict(
+            jvm_path=testutils.jvm_path,
+          ),
+        )
 
-    nx2bv.nx2bv(self.nxgraph, path())
-    # check neighbors from asciigraph
-    for n, nbrdict in self.nxgraph.adjacency():
-      with self.subTest(check="neighbors", file="asciigraph", node=n):
-        self.assertTrue(testutils.check_neighbors(
-          path(), n, list(nbrdict.keys()), attr="index",
-        ))
-
-    # delete asciigraph
-    s = ("graph-txt",)
-    with self.subTest(check_exists=s):
-      self.assertTrue(os.path.isfile(path(*s)))
-    os.remove(path(*s))
-    os.rmdir(os.path.dirname(path()))
-    os.rmdir(os.path.dirname(os.path.dirname(path())))
+        # check neighbors from asciigraph
+        for n, nbrdict in self.nxgraph.adjacency():
+          with self.subTest(check="neighbors", file="asciigraph", node=n):
+            self.assertTrue(testutils.check_neighbors(
+              path(), n, list(nbrdict.keys()), attr="index",
+            ))

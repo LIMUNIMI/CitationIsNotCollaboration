@@ -1,4 +1,6 @@
 """Utilities for tests"""
+import unittest
+
 import numpy as np
 from pyfakefs import fake_filesystem_unittest
 from chromatictools import pickle
@@ -107,13 +109,33 @@ class TestDataMixin:
     os.makedirs(os.path.dirname(self.base_path), exist_ok=True)
 
   @contextlib.contextmanager
-  def test_data(self, seed: int = 42):
+  def fake_test_data(self, seed: int = 42):
     """Context manager for using test data on a fake filesystem
 
     Args:
       seed (int): RNG seed"""
     with fake_filesystem_unittest.Patcher():
       self.setup_pickles_fn(seed)
+      yield
+
+  @contextlib.contextmanager
+  def check_files_exist(
+    self, *files: str,
+    remove: bool = True,
+  ):
+    """On exit, test that files exist and then, eventually, remove it"""
+    if len(files) > 0:
+      with self.check_files_exist(*files[1:], remove=remove):
+        yield
+        exists = os.path.exists(files[0])
+        if remove and exists:
+          if os.path.isfile(files[0]):
+            os.remove(files[0])
+          else:
+            os.rmdir(files[0])
+        with self.subTest(check_exists=files[0]):
+          self.assertTrue(exists)
+    else:
       yield
 
 
