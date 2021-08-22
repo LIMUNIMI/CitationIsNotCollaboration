@@ -28,7 +28,7 @@ class TestNx2Bv(
     )
     with self.check_files_exist(
       path("graph"), path("offsets"), path("properties"),
-      path("type", "txt"),
+      path("type", "txt"), path("popularity", "txt"),
       os.path.dirname(path()), os.path.dirname(os.path.dirname(path())),
     ):
       with self.check_files_exist(path("graph-txt")):
@@ -67,3 +67,11 @@ class TestNx2Bv(
             kwargs=dict(attr="index"),
             return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
           ) != expected_failure)
+
+      # check popularity values
+      with open(path("popularity", "txt")) as f:
+        for i, v in enumerate(map(float, f)):
+          with self.subTest(check="popularity", node=i, bound="lower"):
+            self.assertGreaterEqual(v, 0.0)
+          with self.subTest(check="popularity", node=i, bound="upper"):
+            self.assertLessEqual(v, 100.0)
