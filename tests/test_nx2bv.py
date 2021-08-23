@@ -68,10 +68,14 @@ class TestNx2Bv(
             return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
           ) != expected_failure)
 
+      # check class values
+      with open(path("type", "txt")) as f:
+        for i, s in enumerate(r.rstrip("\n") for r in f):
+          with self.subTest(check="class", node=i):
+            self.assertEqual(s, self.nxgraph.nodes[i].get("class"))
+
       # check popularity values
       with open(path("popularity", "txt")) as f:
         for i, v in enumerate(map(float, f)):
-          with self.subTest(check="popularity", node=i, bound="lower"):
-            self.assertGreaterEqual(v, 0.0)
-          with self.subTest(check="popularity", node=i, bound="upper"):
-            self.assertLessEqual(v, 100.0)
+          with self.subTest(check="popularity", node=i):
+            self.assertEqual(v, self.nxgraph.nodes[i].get("popularity"))
