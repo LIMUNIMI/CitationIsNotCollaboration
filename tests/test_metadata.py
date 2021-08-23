@@ -15,7 +15,7 @@ class TestMetadata(
 
   def test_metadata_handle(self):
     """Test reading metadata"""
-    with self.test_data():
+    with self.fake_test_data():
       self.make_ids_fn()
       self.make_metadata_fn()
       conversion.make_asciigraph_txt(
@@ -50,7 +50,7 @@ class TestMetadata(
 
   def test_noinput_error(self):
     """Test error on no specification"""
-    with self.test_data():
+    with self.fake_test_data():
       self.make_ids_fn()
       self.make_metadata_fn()
       with self.assertRaises(ValueError):
@@ -58,7 +58,7 @@ class TestMetadata(
 
   def test_miss_error(self):
     """Test error on artist ID miss"""
-    with self.test_data():
+    with self.fake_test_data():
       self.make_ids_fn()
       self.make_metadata_fn()
       with self.assertRaises(ValueError):
@@ -66,7 +66,7 @@ class TestMetadata(
 
   def test_index_provided(self):
     """Test that the index is returned correctly"""
-    with self.test_data():
+    with self.fake_test_data():
       self.make_ids_fn()
       self.make_metadata_fn()
       for i in range(self.nnodes):
@@ -77,7 +77,7 @@ class TestMetadata(
 
   def test_index_outofrange(self):
     """Test that the index out of range causes error"""
-    with self.test_data():
+    with self.fake_test_data():
       self.make_ids_fn()
       self.make_metadata_fn()
       with self.assertRaises(EOFError):

@@ -2,10 +2,10 @@
 import numpy as np
 from pyfakefs import fake_filesystem_unittest
 from chromatictools import pickle
-from featgraph import conversion, pathutils
+from featgraph import conversion, pathutils, metadata
 import contextlib
 import os
-from typing import Optional
+from typing import Optional, Iterable
 
 
 jvm_path = os.environ.get("FEATGRAPH_JAVA_PATH", None)
@@ -68,11 +68,11 @@ def test_data(seed: int = 42):
     "f": ["e"],
   }
   np.random.seed(seed)
-  metadata = [
+  meta = [
     dict(zip(adjacency_dict.keys(), v))
     for v in random_metadata(len(adjacency_dict))
   ]
-  return adjacency_dict, metadata
+  return adjacency_dict, meta
 
 
 class TestDataMixin:
@@ -107,7 +107,7 @@ class TestDataMixin:
     os.makedirs(os.path.dirname(self.base_path), exist_ok=True)
 
   @contextlib.contextmanager
-  def test_data(self, seed: int = 42):
+  def fake_test_data(self, seed: int = 42):
     """Context manager for using test data on a fake filesystem
 
     Args:
@@ -115,3 +115,44 @@ class TestDataMixin:
     with fake_filesystem_unittest.Patcher():
       self.setup_pickles_fn(seed)
       yield
+
+  @contextlib.contextmanager
+  def check_files_exist(
+    self, *files: str,
+    remove: bool = True,
+  ):
+    """On exit, test that files exist and then, eventually, remove it"""
+    if len(files) > 0:
+      with self.check_files_exist(*files[1:], remove=remove):
+        yield
+        exists = os.path.exists(files[0])
+        if remove and exists:
+          if os.path.isfile(files[0]):
+            os.remove(files[0])
+          else:
+            os.rmdir(files[0])
+        with self.subTest(check_exists=files[0]):
+          self.assertTrue(exists)
+    else:
+      yield
+
+
+def check_neighbors(
+  base_path: str,
+  node,
+  neighbors: Iterable,
+  attr: str = "aid",
+) -> bool:
+  """Check neighbors of node
+
+  Args:
+    base_path (str): Base path of BVGraph
+    node: Node to inspect (value of attribute :data:`attr`)
+    neighbors: Ground truth neighbors (values of attribute :data:`attr`)
+    attr (str): Attribute name for comparison"""
+  a = sorted(
+    getattr(n, attr)
+    for n in metadata.Artist(base_path, **{attr: node}).neighbors
+  )
+  b = sorted(neighbors)
+  return a == b

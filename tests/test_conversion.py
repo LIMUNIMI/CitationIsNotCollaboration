@@ -1,17 +1,10 @@
 """Test conversion functions"""
-from featgraph import conversion, pathutils, metadata, jwebgraph
+from featgraph import conversion, pathutils, jwebgraph
 from tests import testutils
 from unittest import mock
 import unittest
 import importlib
 import os
-
-
-def check_neighbors(base_path: str, aid: str, neighbors) -> bool:
-  """Check neighbors of node"""
-  a = sorted(n.aid for n in metadata.Artist(base_path, aid=aid).neighbors)
-  b = sorted(neighbors)
-  return a == b
 
 
 def run_bvgraph_func(
@@ -66,145 +59,141 @@ class TestConversion(
     self.adjacency_path = os.path.join(tmpdir, self.adjacency_path)
     self.metadata_path = os.path.join(tmpdir, self.metadata_path)
     self.base_path = os.path.join(tmpdir, self.base_path)
-
     self.setup_pickles_fn()
 
-    # convert
-    conversion.main(
-      self.adjacency_path, self.metadata_path, self.base_path,
-      "-l", "WARNING",
-      *(
-        () if testutils.jvm_path is None
-        else ("--jvm-path", testutils.jvm_path)
-      ),
-    )
-
-    # check neighbors from asciigraph
-    for k, v in self.adjacency_dict.items():
-      with self.subTest(check="neighbors", file="asciigraph", node=k):
-        self.assertTrue(check_neighbors(self.base_path, k, v))
-
-    # delete asciigraph
-    s = ("graph-txt",)
-    with self.subTest(check_exists=s):
-      self.assertTrue(os.path.isfile(self.path(*s)))
-    os.remove(self.path(*s))
-
-    # check neighbors from bvgraph
-    # <!> it fails for neighbors of node e <!>
-    failure_nodes = ["e"]
-    for k, v in self.adjacency_dict.items():
-      expected_failure = k in failure_nodes
-      with self.subTest(
-        check="neighbors", file="bvgraph", node=k,
-        expected_failure=expected_failure,
-      ):
-        b = jwebgraph.jvm_process_run(
-          check_neighbors, args=(self.base_path, k, v),
-          return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+    with self.check_files_exist(
+      self.path("followers", "txt"),
+      self.path("graph"),
+      self.path("ids", "txt"),
+      self.path("offsets"),
+      self.path("properties"),
+      self.path("genre", "txt"),
+      self.path("name", "txt"),
+      self.path("popularity", "txt"),
+      self.path("type", "txt"),
+      self.path("transpose", "graph"),
+      self.path("transpose", "offsets"),
+      self.path("transpose", "properties"),
+      self.path("stats", "stats"),
+      self.path("stats", "indegree"),
+      self.path("stats", "indegrees"),
+      self.path("stats", "outdegree"),
+      self.path("stats", "outdegrees"),
+      self.path("pagerank-85", "properties"),
+      self.path("pagerank-85", "ranks"),
+      self.path("nf", "txt"),
+      self.path("hc", "ranks"),
+      os.path.dirname(self.path()),
+      self.adjacency_path,
+      self.metadata_path,
+      os.path.dirname(self.adjacency_path),
+      os.path.dirname(os.path.dirname(self.path())),
+    ):
+      with self.check_files_exist(self.path("graph-txt")):
+        # convert
+        conversion.main(
+          self.adjacency_path, self.metadata_path, self.base_path,
+          "-l", "WARNING",
+          *(
+            () if testutils.jvm_path is None
+            else ("--jvm-path", testutils.jvm_path)
+          ),
         )
-        if expected_failure:
-          b = not b
-        self.assertTrue(b)
 
-    # --- check BVGraph wrapper ---
-    def check_fail(func: str):
-      with self.subTest(check_fail=func):
-        self.assertFalse(jwebgraph.jvm_process_run(
-          run_bvgraph_func, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+        # check neighbors from asciigraph
+        for k, v in self.adjacency_dict.items():
+          with self.subTest(check="neighbors", file="asciigraph", node=k):
+            self.assertTrue(testutils.check_neighbors(self.base_path, k, v))
+
+      # check neighbors from bvgraph
+      # <!> it fails for neighbors of node e <!>
+      failure_nodes = ["e"]
+      for k, v in self.adjacency_dict.items():
+        expected_failure = k in failure_nodes
+        with self.subTest(
+          check="neighbors", file="bvgraph", node=k,
+          expected_failure=expected_failure,
+        ):
+          self.assertTrue(jwebgraph.jvm_process_run(
+            testutils.check_neighbors, args=(self.base_path, k, v),
+            return_type="B", jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+          ) != expected_failure)
+
+      # --- check BVGraph wrapper ---
+      def check_fail(func: str):
+        with self.subTest(check_fail=func):
+          self.assertFalse(jwebgraph.jvm_process_run(
+            run_bvgraph_func, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+            return_type="B",
+            kwargs=dict(
+              base_path=self.base_path,
+              func=func,
+              exceptions=Exception,
+              return_fail=True,
+            )
+          ))
+      # check graph name
+      with self.subTest(check="graph name"):
+        self.assertTrue(jwebgraph.jvm_process_run(
+          check_graph_name, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
           return_type="B",
           kwargs=dict(
             base_path=self.base_path,
-            func=func,
-            exceptions=Exception,
-            return_fail=True,
           )
         ))
-    # check graph name
-    with self.subTest(check="graph name"):
-      self.assertTrue(jwebgraph.jvm_process_run(
-        check_graph_name, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-        return_type="B",
-        kwargs=dict(
-          base_path=self.base_path,
-        )
-      ))
-    # check nnodes
-    with self.subTest(check="nnodes"):
-      self.assertEqual(self.nnodes, jwebgraph.jvm_process_run(
-        run_bvgraph_func, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-        return_type="I",
-        kwargs=dict(
-          base_path=self.base_path,
-          func="numNodes",
-        )
-      ))
-    # reconstruct offsets
-    s = ("offsets",)
-    with self.subTest(check_exists=s, when="pre-reconstruct"):
-      self.assertTrue(os.path.isfile(self.path(*s)))
-    os.remove(self.path(*s))
-    with self.subTest(check_exists=s, when="pre-reconstruct"):
-      self.assertFalse(os.path.isfile(self.path(*s)))
-    check_fail("reconstruct_offsets")
-    # transpose
-    check_fail("compute_transpose")
-    # degrees
-    check_fail("compute_degrees")
-    check_fail("outdegrees")
-    check_fail("indegrees")
-    # pagerank
-    check_fail("compute_pagerank")
-    check_fail("pagerank")
-    # neighborhood
-    check_fail("compute_neighborhood")
-    check_fail("distances")
-    # harmonicc
-    check_fail("compute_harmonicc")
-    check_fail("harmonicc")
-    # best
-    with self.subTest(check="best", what="indegrees"):
-      self.assertEqual("b", jwebgraph.jvm_process_run(
-        check_best, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-        return_type="u",
-        kwargs=dict(base_path=self.base_path, func="indegrees"),
-      ))
-    with self.subTest(check="best", what="outdegrees", reverse=False):
-      self.assertEqual("b", jwebgraph.jvm_process_run(
-        check_best, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-        return_type="u",
-        kwargs=dict(base_path=self.base_path, func="outdegrees", reverse=False),
-      ))
-    # -----------------------------
-
-    # check and delete files
-    for s in (
-      ("followers", "txt"), ("graph",),
-      ("ids", "txt"), ("offsets",),
-      ("properties",), ("genre", "txt"),
-      ("name", "txt"),  # ("graph-txt",),
-      ("popularity", "txt"), ("type", "txt"),
-      ("transpose", "graph"), ("transpose", "offsets"),
-      ("transpose", "properties"), ("stats", "stats"),
-      ("stats", "indegree"), ("stats", "indegrees"),
-      ("stats", "outdegree"), ("stats", "outdegrees"),
-      ("pagerank-85", "properties"), ("pagerank-85", "ranks"),
-      ("nf", "txt"), ("hc", "ranks"),
-    ):
-      with self.subTest(check_exists=s):
+      # check nnodes
+      with self.subTest(check="nnodes"):
+        self.assertEqual(self.nnodes, jwebgraph.jvm_process_run(
+          run_bvgraph_func, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+          return_type="I",
+          kwargs=dict(
+            base_path=self.base_path,
+            func="numNodes",
+          )
+        ))
+      # reconstruct offsets
+      s = ("offsets",)
+      with self.subTest(check_exists=s, when="pre-reconstruct"):
         self.assertTrue(os.path.isfile(self.path(*s)))
       os.remove(self.path(*s))
-
-    # clean up directories and pickles
-    os.rmdir(os.path.dirname(self.path()))
-    os.remove(self.adjacency_path)
-    os.remove(self.metadata_path)
-    os.rmdir(os.path.dirname(self.adjacency_path))
-    os.rmdir(os.path.dirname(os.path.dirname(self.path())))
+      with self.subTest(check_exists=s, when="pre-reconstruct"):
+        self.assertFalse(os.path.isfile(self.path(*s)))
+      check_fail("reconstruct_offsets")
+      # transpose
+      check_fail("compute_transpose")
+      # degrees
+      check_fail("compute_degrees")
+      check_fail("outdegrees")
+      check_fail("indegrees")
+      # pagerank
+      check_fail("compute_pagerank")
+      check_fail("pagerank")
+      # neighborhood
+      check_fail("compute_neighborhood")
+      check_fail("distances")
+      # harmonicc
+      check_fail("compute_harmonicc")
+      check_fail("harmonicc")
+      # best
+      with self.subTest(check="best", what="indegrees"):
+        self.assertEqual("b", jwebgraph.jvm_process_run(
+          check_best, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+          return_type="u",
+          kwargs=dict(base_path=self.base_path, func="indegrees"),
+        ))
+      with self.subTest(check="best", what="outdegrees", reverse=False):
+        self.assertEqual("b", jwebgraph.jvm_process_run(
+          check_best, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+          return_type="u",
+          kwargs=dict(
+            base_path=self.base_path, func="outdegrees", reverse=False
+          ),
+        ))
+      # -----------------------------
 
   def test_make_ids(self):
     """Test making ids file"""
-    with self.test_data():
+    with self.fake_test_data():
       nnodes = self.make_ids_fn()
       with self.subTest(check="number of nodes", cache="miss"):
         self.assertEqual(nnodes, self.nnodes)
@@ -223,7 +212,7 @@ class TestConversion(
 
   def test_make_metadata(self):
     """Test making metadata files"""
-    with self.test_data():
+    with self.fake_test_data():
       self.make_ids_fn()
       self.make_metadata_fn()
       for k in conversion.metadata_labels:
