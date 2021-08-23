@@ -17,6 +17,7 @@ import logging
 def make_ids_txt(
   dst: str, src: str,
   it: Optional[Callable[[Iterable], Iterable]] = None,
+  encoding="utf-8",
   overwrite: bool = False
 ) -> int:
   """Write the text file of artist ids
@@ -27,12 +28,13 @@ def make_ids_txt(
     it (callable): Iterator wrapper function.
       If not :data:`None` the adjacency lists iterator will be wrapped using
       this function. Mainly intended for use with :data:`tqdm`
+    encoding: Encoding for text files. Default is :data:`"utf-8"`
     overwrite (bool): If :data:`True`, then overwrite existing destination file
 
   Returns:
     int: The number of nodes"""
   if overwrite or pathutils.notisfile(dst):
-    with open(dst, "w") as fout:
+    with open(dst, "w", encoding=encoding) as fout:
       with open(src, "rb") as fin:
         logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(fin)
@@ -48,7 +50,7 @@ def make_ids_txt(
           fout.write(k + "\n")
         return len(ids)
   else:
-    with open(dst, "r") as fout:
+    with open(dst, "r", encoding="utf-8") as fout:
       return sum(1 for _ in fout)
 
 
@@ -104,7 +106,7 @@ def make_metadata_txt(
       if overwrite or pathutils.notisfile(fname):
         logger.info("Writing %s", fname)
         with open(fname, "w", encoding=encoding) as txt:
-          with open(idf, "r") as ids:
+          with open(idf, "r", encoding=encoding) as ids:
             ids = (r.rstrip("\n") for r in ids)
             if it is not None:
               ids = it(ids)
@@ -116,6 +118,7 @@ def make_metadata_txt(
 def make_asciigraph_txt(
   dst: str, src: str, idf: str,
   it: Optional[Callable[[Iterable], Iterable]] = None,
+  encoding="utf-8",
   overwrite: bool = False,
 ):
   """Write the text file of adjacency lists (ASCIIGraph)
@@ -127,13 +130,14 @@ def make_asciigraph_txt(
     it (callable): Iterator wrapper function. If not :data:`None`
       the adjacency lists iterator will be wrapped using this function.
       Mainly intended for use with :data:`tqdm`
+    encoding: Encoding for output files. Default is :data:`"utf-8"`
     overwrite (bool): If :data:`True`,
       then overwrite existing destination file"""
   if overwrite or pathutils.notisfile(dst):
-    with open(idf, "r") as f:
+    with open(idf, "r", encoding=encoding) as f:
       logger.info("Loading ids text file: %s", idf)
       ids = sortedcontainers.SortedSet(r.rstrip("\n") for r in f)
-    with open(dst, "w") as txt:
+    with open(dst, "w", encoding=encoding) as txt:
       with open(src, "rb") as f:
         logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(f)

@@ -52,17 +52,21 @@ def path(*args, root: Optional[str] = None) -> str:
   return os.path.join(root, *args)
 
 
-def dependencies(file: Optional[str] = None) -> Dict[str, str]:
+def dependencies(
+  file: Optional[str] = None,
+  encoding="utf-8",
+) -> Dict[str, str]:
   """Get the dependency dictionary
 
   Args:
     file (str): The file path. If :data:`None` (default), then
       use default file path
+    encoding: Encoding of the JSON text file. Default is :data:`"utf-8"`
 
   Returns:
     dict: Dependency dictionary where keys are file names and values are URLs"""
   filepath = path(_json_file) if file is None else file
-  with open(filepath, "r") as fp:
+  with open(filepath, "r", encoding=encoding) as fp:
     return json.load(fp)
 
 

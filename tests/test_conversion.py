@@ -200,7 +200,7 @@ class TestConversion(
       with mock.patch.object(pathutils, "notisfile", return_value=False):
         with self.subTest(check="number of nodes", cache="hit"):
           self.assertEqual(self.make_ids_fn(), self.nnodes)
-      with open(self.path("ids", "txt")) as f:
+      with open(self.path("ids", "txt"), encoding="utf-8") as f:
         with self.subTest(check="ids file content"):
           self.assertEqual(
             f.read(),
@@ -217,5 +217,5 @@ class TestConversion(
       self.make_metadata_fn()
       for k in conversion.metadata_labels:
         with self.subTest(check="file length", file=k):
-          with open(self.path(k, "txt"), "r") as f:
+          with open(self.path(k, "txt"), "r", encoding="utf-8") as f:
             self.assertEqual(len(list(f)), self.nnodes)

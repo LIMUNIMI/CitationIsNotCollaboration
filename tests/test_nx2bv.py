@@ -69,13 +69,13 @@ class TestNx2Bv(
           ) != expected_failure)
 
       # check class values
-      with open(path("type", "txt")) as f:
+      with open(path("type", "txt"), encoding="utf-8") as f:
         for i, s in enumerate(r.rstrip("\n") for r in f):
           with self.subTest(check="class", node=i):
             self.assertEqual(s, self.nxgraph.nodes[i].get("class"))
 
       # check popularity values
-      with open(path("popularity", "txt")) as f:
+      with open(path("popularity", "txt"), encoding="utf-8") as f:
         for i, v in enumerate(map(float, f)):
           with self.subTest(check="popularity", node=i):
             self.assertEqual(v, self.nxgraph.nodes[i].get("popularity"))

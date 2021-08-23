@@ -104,7 +104,7 @@ def test_load_as_doubles(
   """Test loadAsDoubles"""
   np.random.seed(seed)
   a = (np.random.rand(n) * scale).astype(int)
-  with open(fname, "w") as f:
+  with open(fname, "w", encoding="utf-8") as f:
     for x in a:
       f.write("{:.0f}\n".format(x))
   b = importlib.import_module(
