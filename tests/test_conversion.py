@@ -185,7 +185,9 @@ class TestConversion(
         self.assertEqual("b", jwebgraph.jvm_process_run(
           check_best, jvm_kwargs=dict(jvm_path=testutils.jvm_path),
           return_type="u",
-          kwargs=dict(base_path=self.base_path, func="outdegrees", reverse=False),
+          kwargs=dict(
+            base_path=self.base_path, func="outdegrees", reverse=False
+          ),
         ))
       # -----------------------------
 

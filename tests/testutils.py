@@ -1,6 +1,4 @@
 """Utilities for tests"""
-import unittest
-
 import numpy as np
 from pyfakefs import fake_filesystem_unittest
 from chromatictools import pickle
@@ -70,11 +68,11 @@ def test_data(seed: int = 42):
     "f": ["e"],
   }
   np.random.seed(seed)
-  metadata = [
+  meta = [
     dict(zip(adjacency_dict.keys(), v))
     for v in random_metadata(len(adjacency_dict))
   ]
-  return adjacency_dict, metadata
+  return adjacency_dict, meta
 
 
 class TestDataMixin:
