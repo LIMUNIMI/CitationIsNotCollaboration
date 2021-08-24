@@ -285,6 +285,41 @@ class BVGraph:
       array of doubles: Array of Harmonic Centralities"""
     return load_as_doubles(self.path("hc", "ranks"), "Float")
 
+  def compute_closenessc(self, **kwargs):
+    """Compute the Harmonic Centrality with HyperBall
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-c", path=self.path("closenessc", "ranks"), **kwargs)
+
+  def closenessc(self):
+    """Load the Harmonic Centrality vector from file
+
+    Returns:
+      array of doubles: Array of Harmonic Centralities"""
+    return load_as_doubles(self.path("closenessc", "ranks"), "Float")
+
+  def popularity(self, missing_value=str(-20)):
+    with open(self.path("popularity", "txt"), "r") as f:
+      return [float(r.rstrip("\n") or missing_value) for r in f]
+
+  def popularity_filter_map(self, threshold):
+    '''Filter the graph nodes using the check_func and setting the threshold'''
+    pop_values = self.popularity(missing_value=-20)
+    # popularity at index i is the same popularity at graph.artist(index=i).popularity - if last is None, pop is -20
+    filtered_nodes = list(filter(lambda i: (pop_values[i] > threshold), range(len(pop_values))))
+    return filtered_nodes
+
+  def compute_filtering(self, overwrite: bool = False):
+    """Compute the transpose of the graph
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run"""
+    path = self.path("map")
+    if overwrite or pathutils.notisglob(path + "*"):
+      webgraph.Transform.main(["mapOffline", self.base_path, self.popularity_filter_map(95), path])
+
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset
 
