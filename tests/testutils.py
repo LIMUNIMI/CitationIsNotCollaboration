@@ -7,7 +7,6 @@ import contextlib
 import os
 from typing import Optional, Iterable
 
-
 jvm_path = os.environ.get("FEATGRAPH_JAVA_PATH", None)
 
 
@@ -21,10 +20,10 @@ def random_string(n: int, m: Optional[int] = None, g: float = 1.0) -> str:
     g (float): Exponent for string length distribution"""
   if m is None:
     m = n
-  return "".join(np.random.choice(
-    list(map(chr, range(ord("a"), ord("z") + 1))),
-    int(m + (np.random.rand()**g) * (n - m))
-  ))
+  return "".join(
+      np.random.choice(list(map(chr, range(ord("a"),
+                                           ord("z") + 1))),
+                       int(m + (np.random.rand()**g) * (n - m))))
 
 
 def random_metadata(n: int):
@@ -33,24 +32,18 @@ def random_metadata(n: int):
   Args:
     n (int): Number of nodes"""
   return [
-    # popularity
-    (np.random.rand(n) * 100).astype(int),
-    # genre
-    [
-      [
-        random_string(3, 6, 0.5)
-        for _ in range(int(np.random.rand() * 4))
-      ] for _ in range(n)
-    ],
-    # name
-    [
-      random_string(4, 12, 2).capitalize()
-      for _ in range(n)
-    ],
-    # type
-    np.full(n, "artist"),
-    # followers
-    (np.random.rand(n) ** 2 * 1000).astype(int),
+      # popularity
+      (np.random.rand(n) * 100).astype(int),
+      # genre
+      [[random_string(3, 6, 0.5)
+        for _ in range(int(np.random.rand() * 4))]
+       for _ in range(n)],
+      # name
+      [random_string(4, 12, 2).capitalize() for _ in range(n)],
+      # type
+      np.full(n, "artist"),
+      # followers
+      (np.random.rand(n)**2 * 1000).astype(int),
   ]
 
 
@@ -60,23 +53,24 @@ def test_data(seed: int = 42):
   Args:
     seed (int): RNG seed"""
   adjacency_dict = {
-    "a": ["b", "e"],
-    "b": ["c"],
-    "c": ["b", "d"],
-    "d": ["c", "f"],
-    "e": ["a", "b"],
-    "f": ["e"],
+      "a": ["b", "e"],
+      "b": ["c"],
+      "c": ["b", "d"],
+      "d": ["c", "f"],
+      "e": ["a", "b"],
+      "f": ["e"],
   }
   np.random.seed(seed)
   meta = [
-    dict(zip(adjacency_dict.keys(), v))
-    for v in random_metadata(len(adjacency_dict))
+      dict(zip(adjacency_dict.keys(), v))
+      for v in random_metadata(len(adjacency_dict))
   ]
   return adjacency_dict, meta
 
 
 class TestDataMixin:
   """Mixin class for test cases that need example graph data"""
+
   def make_ids_fn(self):
     """Call :func:`conversion.make_ids_txt`"""
     return conversion.make_ids_txt(
@@ -88,10 +82,10 @@ class TestDataMixin:
   def make_metadata_fn(self):
     """Call :func:`conversion.make_metadata_txt`"""
     return conversion.make_metadata_txt(
-      self.path(),
-      self.metadata_path,
-      self.path("ids", "txt"),
-      lambda x: x,
+        self.path(),
+        self.metadata_path,
+        self.path("ids", "txt"),
+        lambda x: x,
     )
 
   def setup_pickles_fn(self, seed: int = 42):
@@ -118,8 +112,9 @@ class TestDataMixin:
 
   @contextlib.contextmanager
   def check_files_exist(
-    self, *files: str,
-    remove: bool = True,
+      self,
+      *files: str,
+      remove: bool = True,
   ):
     """On exit, test that files exist and then, eventually, remove it"""
     if len(files) > 0:
@@ -138,10 +133,10 @@ class TestDataMixin:
 
 
 def check_neighbors(
-  base_path: str,
-  node,
-  neighbors: Iterable,
-  attr: str = "aid",
+    base_path: str,
+    node,
+    neighbors: Iterable,
+    attr: str = "aid",
 ) -> bool:
   """Check neighbors of node
 
@@ -151,8 +146,8 @@ def check_neighbors(
     neighbors: Ground truth neighbors (values of attribute :data:`attr`)
     attr (str): Attribute name for comparison"""
   a = sorted(
-    getattr(n, attr)
-    for n in metadata.Artist(base_path, **{attr: node}).neighbors
-  )
+      getattr(n, attr) for n in metadata.Artist(base_path, **{
+          attr: node
+      }).neighbors)
   b = sorted(neighbors)
   return a == b
