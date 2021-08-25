@@ -7,6 +7,38 @@ We are using
 [`git-flow`](https://nvie.com/posts/a-successful-git-branching-model/)
 branching model. Consider using automated tools to manage your branches
 
+### Feature branches
+Merged feature branches should not overlap.
+To avoid this, consider rebasing your feature branch with respect to `develop`
+before merging, or use `git flow feature rebase` if you are using `git-flow`
+automated tools.
+
+This is ok, because branches have not been merged yet
+```
+    o---o---o  develop
+        |\
+        | o---o---o---o---o  feature/a
+         \
+          o---o---o---o  feature/b
+```
+
+This is not ok, because branches overlap
+```
+    o---o---o---------------o--o  develop
+        |\                 /  /
+        | o---o---o---o---o  / feature/a
+         \                  /
+          o-----o---o------o  feature/b
+```
+
+This is ok, because branches have been correctly rebased
+```
+    o---o---o-------------------o---------------o  develop
+             \                 / \             /
+              o---o---o---o---o   o---o---o---o
+                feature/a           feature/b
+```
+
 ### Binary files
 As a general rule, we should avoid versioning binary files directly using git.
 Where possible, provide download links instead.
