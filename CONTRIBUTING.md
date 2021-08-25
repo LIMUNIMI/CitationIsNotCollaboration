@@ -7,6 +7,11 @@ We are using
 [`git-flow`](https://nvie.com/posts/a-successful-git-branching-model/)
 branching model. Consider using automated tools to manage your branches
 
+### Commit frequency vs size
+When possible, prefer a big number of small (self-contained) commits over a
+small number of big commits. This usually helps the other contributors in
+understanding what you are have done.
+
 ### Feature branches
 Merged feature branches should not overlap.
 To avoid this, consider rebasing your feature branch with respect to `develop`
