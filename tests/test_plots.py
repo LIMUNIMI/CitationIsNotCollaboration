@@ -8,13 +8,12 @@ import numpy as np
 
 def test_scatter(*args, **kwargs):
   """Test scatterplot"""
-  importlib.import_module(
-    "featgraph.plots"
-  ).scatter(*args, **kwargs)
+  importlib.import_module("featgraph.plots").scatter(*args, **kwargs)
 
 
 class TestPlots(unittest.TestCase):
   """Tests for plots"""
+
   def setUp(self):
     self.ndots = 5
     np.random.seed(42)
@@ -23,30 +22,24 @@ class TestPlots(unittest.TestCase):
 
   def test_scatter(self):
     """Test scatterplot"""
-    jwebgraph.jvm_process_run(
-      test_scatter,
-      jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-      args=(
-        self.x,
-        self.y,
-      ),
-      kwargs=dict(
-        label="random scatter",
-        xlabel="N_0",
-        ylabel="N_1",
-      )
-    )
+    jwebgraph.jvm_process_run(test_scatter,
+                              jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+                              args=(
+                                  self.x,
+                                  self.y,
+                              ),
+                              kwargs=dict(
+                                  label="random scatter",
+                                  xlabel="N_0",
+                                  ylabel="N_1",
+                              ))
 
   def test_scatter_nokt(self):
     """Test scatterplot with no Kendall tau"""
-    jwebgraph.jvm_process_run(
-      test_scatter,
-      jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-      args=(
-        self.x,
-        self.y,
-      ),
-      kwargs=dict(
-        kendall_tau=False
-      )
-    )
+    jwebgraph.jvm_process_run(test_scatter,
+                              jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+                              args=(
+                                  self.x,
+                                  self.y,
+                              ),
+                              kwargs=dict(kendall_tau=False))

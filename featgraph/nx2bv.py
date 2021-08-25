@@ -6,9 +6,10 @@ from typing import Optional, Dict, Sequence
 
 
 def make_asciigraph_txt(
-  graph: nx.Graph, path: str,
-  encoding="utf-8",
-  overwrite: bool = False,
+    graph: nx.Graph,
+    path: str,
+    encoding="utf-8",
+    overwrite: bool = False,
 ):
   """Write the text file of adjacency lists (ASCIIGraph)
 
@@ -27,14 +28,12 @@ def make_asciigraph_txt(
         txt.write(" ".join(map(str, neighbors)) + "\n")
 
 
-def make_attribute_txt(
-  graph: nx.Graph,
-  path: str,
-  attr: str,
-  missing="",
-  encoding="utf-8",
-  overwrite: bool = False
-):
+def make_attribute_txt(graph: nx.Graph,
+                       path: str,
+                       attr: str,
+                       missing="",
+                       encoding="utf-8",
+                       overwrite: bool = False):
   """Write the text file for a node attribute
 
   Args:
@@ -53,12 +52,12 @@ def make_attribute_txt(
 
 
 def nx2bv(
-  graph: nx.Graph,
-  bvgraph_basepath: str,
-  attributes: Optional[Dict[str, Sequence[str]]] = None,
-  missing="",
-  encoding="utf-8",
-  overwrite: bool = False,
+    graph: nx.Graph,
+    bvgraph_basepath: str,
+    attributes: Optional[Dict[str, Sequence[str]]] = None,
+    missing="",
+    encoding="utf-8",
+    overwrite: bool = False,
 ):
   """Convert a networkx graph to a BVGraph
 
@@ -76,13 +75,15 @@ def nx2bv(
   dirname = os.path.dirname(bvgraph_basepath)
   os.makedirs(dirname, exist_ok=True)
   path = pathutils.derived_paths(bvgraph_basepath)
-  make_asciigraph_txt(
-    graph, path("graph-txt"),
-    encoding=encoding, overwrite=overwrite
-  )
+  make_asciigraph_txt(graph,
+                      path("graph-txt"),
+                      encoding=encoding,
+                      overwrite=overwrite)
   conversion.compress_to_bvgraph(bvgraph_basepath, overwrite=overwrite)
   for k, suffix in attributes.items():
-    make_attribute_txt(
-      graph, path(*suffix), k,
-      encoding=encoding, overwrite=overwrite, missing=missing
-    )
+    make_attribute_txt(graph,
+                       path(*suffix),
+                       k,
+                       encoding=encoding,
+                       overwrite=overwrite,
+                       missing=missing)

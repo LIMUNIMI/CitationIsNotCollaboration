@@ -32,18 +32,19 @@ class SGCModel:
       below the threshold will be eligible for connection with *community
       leaders*
     """
+
   def __init__(
-    self,
-    n_masses: int = 10000,
-    n_celeb: int = 16,
-    n_leader: int = 16,
-    m_masses: int = 12,
-    masses_exp_scale: float = 20.,
-    masses_k_pop: float = 50.,
-    p_celeb: float = 0.01,
-    p_leader: float = 0.1,
-    p_celeb_back: float = 1.,
-    p_leader_back: float = 1.,
+      self,
+      n_masses: int = 10000,
+      n_celeb: int = 16,
+      n_leader: int = 16,
+      m_masses: int = 12,
+      masses_exp_scale: float = 20.,
+      masses_k_pop: float = 50.,
+      p_celeb: float = 0.01,
+      p_leader: float = 0.1,
+      p_celeb_back: float = 1.,
+      p_leader_back: float = 1.,
   ):
     self.n_masses = n_masses
     self.n_celeb = n_celeb
@@ -71,9 +72,9 @@ class SGCModel:
     Returns:
       DiGraph: The *masses* subgraph"""
     return random_graphs.barabasi_albert_graph(
-      n=self.n_masses,
-      m=self.m_masses,
-      seed=seed,
+        n=self.n_masses,
+        m=self.m_masses,
+        seed=seed,
     ).to_directed(as_view=True)
 
   def celeb(self):
@@ -101,23 +102,22 @@ class SGCModel:
       *masses*, then the values for *celebrities* and *community leaders*"""
     p = np.full(self.n_nodes, 100.)
     p[:self.n_masses] = np.clip(
-      stats.expon.rvs(
-        scale=self.masses_exp_scale,
-        size=self.n_masses,
-        random_state=seed,
-      ), 0, 100
-    )
+        stats.expon.rvs(
+            scale=self.masses_exp_scale,
+            size=self.n_masses,
+            random_state=seed,
+        ), 0, 100)
     return p
 
   @staticmethod
   def add_cross_class_edges(
-    g: nx.Graph,
-    elite_class: str,
-    p_any: float,
-    p_back_if_any: float = 1.,
-    masses_class: str = "masses",
-    masses_pop_filter: Optional[Callable[[float], bool]] = None,
-    seed: Optional[int] = None,
+      g: nx.Graph,
+      elite_class: str,
+      p_any: float,
+      p_back_if_any: float = 1.,
+      masses_class: str = "masses",
+      masses_pop_filter: Optional[Callable[[float], bool]] = None,
+      seed: Optional[int] = None,
   ):
     """Add edges across two classes: an *elite* class and the *masses*
 
@@ -136,19 +136,12 @@ class SGCModel:
     if seed is not None:
       np.random.seed(seed=seed)
 
-    elite_vertices = (
-      i for i, c in g.nodes(data="class")
-      if c == elite_class
-    )
+    elite_vertices = (i for i, c in g.nodes(data="class") if c == elite_class)
 
     def mass_vertices() -> Iterable[int]:
       """Return the mass vertices iterable"""
-      return (
-        i for i, d in g.nodes(data=True)
-        if d["class"] == masses_class and (
-          masses_pop_filter is None or masses_pop_filter(d["popularity"])
-        )
-      )
+      return (i for i, d in g.nodes(data=True) if d["class"] == masses_class and
+              (masses_pop_filter is None or masses_pop_filter(d["popularity"])))
 
     for ev in elite_vertices:
       for mv in mass_vertices():
@@ -170,54 +163,59 @@ class SGCModel:
     celeb = self.celeb()
     leader = self.leader()
 
-    g = functools.reduce(
-      nx.disjoint_union,
-      (masses, celeb, leader)
+    g = functools.reduce(nx.disjoint_union, (masses, celeb, leader))
+
+    nx.set_node_attributes(
+        g,
+        name="class",
+        values=dict(
+            enumerate(
+                itertools.chain(
+                    itertools.repeat("masses", self.n_masses),
+                    itertools.repeat("celebrities", self.n_celeb),
+                    itertools.repeat("community leaders", self.n_leader),
+                ))),
     )
 
     nx.set_node_attributes(
-      g, name="class",
-      values=dict(enumerate(itertools.chain(
-        itertools.repeat("masses", self.n_masses),
-        itertools.repeat("celebrities", self.n_celeb),
-        itertools.repeat("community leaders", self.n_leader),
-      ))),
-    )
-
-    nx.set_node_attributes(
-      g, name="popularity",
-      values=dict(enumerate(self.popularity(seed=seed))),
+        g,
+        name="popularity",
+        values=dict(enumerate(self.popularity(seed=seed))),
     )
 
     self.add_cross_class_edges(
-      g, elite_class="celebrities",
-      p_any=self.p_celeb, p_back_if_any=self.p_celeb_back,
-      masses_pop_filter=lambda p: p > self.masses_k_pop,
-      seed=seed,
+        g,
+        elite_class="celebrities",
+        p_any=self.p_celeb,
+        p_back_if_any=self.p_celeb_back,
+        masses_pop_filter=lambda p: p > self.masses_k_pop,
+        seed=seed,
     )
     self.add_cross_class_edges(
-      g, elite_class="community leaders",
-      p_any=self.p_leader, p_back_if_any=self.p_leader_back,
-      masses_pop_filter=lambda p: p <= self.masses_k_pop,
-      seed=seed,
+        g,
+        elite_class="community leaders",
+        p_any=self.p_leader,
+        p_back_if_any=self.p_leader_back,
+        masses_pop_filter=lambda p: p <= self.masses_k_pop,
+        seed=seed,
     )
 
     g = nx.relabel_nodes(
-      g, dict(enumerate(
-        np.random.default_rng(seed=seed).permutation(self.n_nodes)
-      ))
-    )
+        g,
+        dict(
+            enumerate(
+                np.random.default_rng(seed=seed).permutation(self.n_nodes))))
 
     return g
 
 
 def to_bv(
-  graph: nx.Graph,
-  bvgraph_basepath: str,
-  class_suffix: Sequence[str] = ("type", "txt"),
-  popularity_suffix: Sequence[str] = ("popularity", "txt"),
-  missing="",
-  overwrite: bool = False,
+    graph: nx.Graph,
+    bvgraph_basepath: str,
+    class_suffix: Sequence[str] = ("type", "txt"),
+    popularity_suffix: Sequence[str] = ("popularity", "txt"),
+    missing="",
+    overwrite: bool = False,
 ):
   """Convert a SGC networkx graph to a BVGraph
 
@@ -229,13 +227,11 @@ def to_bv(
     missing: Value to print when node attribute value is missing
     overwrite (bool): If :data:`True`,
       then overwrite existing destination file"""
-  nx2bv.nx2bv(
-    graph=graph,
-    bvgraph_basepath=bvgraph_basepath,
-    missing=missing,
-    overwrite=overwrite,
-    attributes={
-      "class": class_suffix,
-      "popularity": popularity_suffix,
-    }
-  )
+  nx2bv.nx2bv(graph=graph,
+              bvgraph_basepath=bvgraph_basepath,
+              missing=missing,
+              overwrite=overwrite,
+              attributes={
+                  "class": class_suffix,
+                  "popularity": popularity_suffix,
+              })

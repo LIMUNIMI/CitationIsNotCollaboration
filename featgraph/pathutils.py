@@ -5,10 +5,9 @@ from featgraph import logger
 from typing import Callable, Union
 
 
-def notisfile(
-  f: str, func: Union[Callable, bool] = os.path.isfile,
-  msg: str = "Found '%s'. Skipping"
-):
+def notisfile(f: str,
+              func: Union[Callable, bool] = os.path.isfile,
+              msg: str = "Found '%s'. Skipping"):
   """Check if file does not exist. If file is found, log a message
 
   Args:
@@ -71,8 +70,10 @@ def derived_paths(f: str, sep: str = ".") -> Callable[[str], str]:
     'db.csv'
     >>> dbpath("readme", "md")
     'db.readme.md'"""
+
   def derived_paths_(*suffix: str) -> str:
     if len(suffix) < 1:
       return f
     return sep.join((f, *suffix))
+
   return derived_paths_

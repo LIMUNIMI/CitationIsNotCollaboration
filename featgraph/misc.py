@@ -1,7 +1,6 @@
 """Miscellaneous functions and classes"""
 from typing import Union, Callable, Sequence
 
-
 VectorOrCallable = Union[Callable[[], Sequence], Sequence]
 
 
@@ -15,6 +14,7 @@ def pretty_print_int(n: int, k: int = 3, sep: str = " ") -> str:
 
   Returns:
     str: Pretty string"""
+
   def _ppi_it(s: str):
     i = 0
     for c in reversed(s):
@@ -23,6 +23,7 @@ def pretty_print_int(n: int, k: int = 3, sep: str = " ") -> str:
         yield sep
       yield c
       i += 1
+
   return "".join(reversed(list(_ppi_it(str(n)))))
 
 
@@ -46,6 +47,7 @@ class IteratorWrapper:
     it: Iterator
     next_method (str): Name of the method used to iterate one step
     end_value: Stop iteration when this value is found"""
+
   def __init__(self, it, next_method: str = "__next__", end_value=None):
     self.it = it
     self.next_method = next_method

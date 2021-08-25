@@ -20,6 +20,7 @@ def test_import_webgraph(name: str, mod: str = "it.unimi.dsi.webgraph") -> bool:
 
 class TestJWebGraph(unittest.TestCase):
   """Tests related to WebGraph with JPype"""
+
   def test_download_to_file(self):
     """Test that binary files get downloaded correctly"""
     url = "https://gist.githubusercontent.com/ChromaticIsobar/" \
@@ -57,7 +58,8 @@ class TestJWebGraph(unittest.TestCase):
     """Test that temporary file is cleaned up on a download fail"""
     tmp_root = os.path.abspath(".tmp_clAsSPatTh_dloadFAeel")
     deps = {
-      "ancient.jar": "https://i.cannot.find/this/ancient/artifact/ancient.jar",
+        "ancient.jar":
+            "https://i.cannot.find/this/ancient/artifact/ancient.jar",
     }
     os.makedirs(tmp_root, exist_ok=True)
     with self.subTest(step="exception"):
@@ -65,9 +67,7 @@ class TestJWebGraph(unittest.TestCase):
         jwebgraph.download_dependencies(deps=deps, root=tmp_root)
     for k in deps:
       with self.subTest(step="cleanup", what=k):
-        self.assertFalse(os.path.isfile(
-          jwebgraph.path(k, root=tmp_root)
-        ))
+        self.assertFalse(os.path.isfile(jwebgraph.path(k, root=tmp_root)))
     os.rmdir(tmp_root)
 
   def test_start_jvm(self):
@@ -76,13 +76,13 @@ class TestJWebGraph(unittest.TestCase):
     os.makedirs(tmp_root, exist_ok=True)
 
     b = jwebgraph.jvm_process_run(
-      test_import_webgraph,
-      args=("BVGraph",),
-      jvm_kwargs=dict(
-        jvm_path=testutils.jvm_path,
-        root=tmp_root,
-      ),
-      return_type="B",
+        test_import_webgraph,
+        args=("BVGraph",),
+        jvm_kwargs=dict(
+            jvm_path=testutils.jvm_path,
+            root=tmp_root,
+        ),
+        return_type="B",
     )
     self.assertEqual(b, 1)
 
@@ -93,31 +93,27 @@ class TestJWebGraph(unittest.TestCase):
 
 def test_jaccard(a, b):
   """Test Jaccard index"""
-  return importlib.import_module(
-    "featgraph.jwebgraph.utils"
-  ).jaccard(a, b)
+  return importlib.import_module("featgraph.jwebgraph.utils").jaccard(a, b)
 
 
-def test_load_as_doubles(
-  fname: str, n: int = 128, scale: float = 1024, seed: int = 42
-) -> int:
+def test_load_as_doubles(fname: str,
+                         n: int = 128,
+                         scale: float = 1024,
+                         seed: int = 42) -> int:
   """Test loadAsDoubles"""
   np.random.seed(seed)
   a = (np.random.rand(n) * scale).astype(int)
   with open(fname, "w", encoding="utf-8") as f:
     for x in a:
       f.write("{:.0f}\n".format(x))
-  b = importlib.import_module(
-    "featgraph.jwebgraph.utils"
-  ).load_as_doubles(fname)
+  b = importlib.import_module("featgraph.jwebgraph.utils").load_as_doubles(
+      fname)
   return sum(x != int(y) for x, y in zip(a, b))
 
 
-class TestUtils(
-  testutils.TestDataMixin,
-  unittest.TestCase
-):
+class TestUtils(testutils.TestDataMixin, unittest.TestCase):
   """Test JWebGraph utils"""
+
   def test_module_not_found(self):
     """Test error if import with no jvm"""
     with self.assertRaises(ModuleNotFoundError):
@@ -131,27 +127,26 @@ class TestUtils(
         na = (union - intersection) // 2 + intersection
         a = [metadata.Artist(path, index=i) for i in range(na)]
         b = [
-          metadata.Artist(path, index=i)
-          for i in range(na - intersection, union)
+            metadata.Artist(path, index=i)
+            for i in range(na - intersection, union)
         ]
         with self.subTest(union=union, intersection=intersection):
           self.assertEqual(
-            intersection/union,
-            jwebgraph.jvm_process_run(
-              test_jaccard,
-              jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-              return_type="d",
-              args=(a, b),
-            )
-          )
+              intersection / union,
+              jwebgraph.jvm_process_run(
+                  test_jaccard,
+                  jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+                  return_type="d",
+                  args=(a, b),
+              ))
 
   def test_load_as_doubles(self):
     """Test loadAsDoubles"""
     fname = ".tmp_load_As_dOuBl3z.txt"
-    self.assertEqual(0, jwebgraph.jvm_process_run(
-      test_load_as_doubles,
-      jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-      return_type="I",
-      kwargs=dict(fname=fname)
-    ))
+    self.assertEqual(
+        0,
+        jwebgraph.jvm_process_run(test_load_as_doubles,
+                                  jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+                                  return_type="I",
+                                  kwargs=dict(fname=fname)))
     os.remove(fname)
