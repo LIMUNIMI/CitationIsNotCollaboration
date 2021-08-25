@@ -4,7 +4,7 @@ from featgraph.pathutils import notisfile, notisglob, derived_paths
 from featgraph import conversion
 from functools import partial
 import os
-
+import jpype
 
 # start jvm
 jvm_path = None
@@ -98,13 +98,36 @@ def centrality_filter(graph, type, threshold):
 
 
 ids_pop = popularity_filter(graph, threshold=95)
-print(ids_pop)
+print("Ids of the nodes filtered by popularity: ", ids_pop)
 
 ids_genre = genre_filter(graph, threshold=["'deep southern trap'", "'swedish indie rock'"], key='or')
 # here, for threshold is important for now to have the double '' inside the str
-print(ids_genre)
+print("Ids of the nodes filtered by genre: ", ids_genre)
 
 ids_c = centrality_filter(graph, type = 'hc', threshold=310000.000)
-print(ids_c)
+print("Ids of the nodes filtered by centrality: ", ids_c)
 
-graph.compute_filtering()
+
+
+
+def map_nodes(n, filtered_nodes):
+    map = jpype.JInt[n]
+    for i in range(n):
+        if i not in filtered_nodes:
+            map[i] = -1
+        else:
+            map[i] = i
+    return map
+
+n = graph.numNodes()
+map_pop = map_nodes(n, ids_pop)
+print("Map generated")
+
+subgraph_pop = graph.transform_map(map_pop)
+print("Subgraph generated")
+
+key = "popularity"
+print(type(subgraph_pop))
+dest_path = "graphs/spotify-2018"
+subgraph_path = dest_path + "map-" + key
+subgraph_pop.store(graph.__class__, subgraph_pop, subgraph_path)

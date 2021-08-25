@@ -299,26 +299,25 @@ class BVGraph:
       array of doubles: Array of Harmonic Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
-  def popularity(self, missing_value=str(-20)):
-    with open(self.path("popularity", "txt"), "r") as f:
-      return [float(r.rstrip("\n") or missing_value) for r in f]
+  def transform_map(self, map_array):
+    """Transform a graph according to the mapping in map_array. If map[i] == -1, the node is removed.
 
-  def popularity_filter_map(self, threshold):
-    '''Filter the graph nodes using the check_func and setting the threshold'''
-    pop_values = self.popularity(missing_value=-20)
-    # popularity at index i is the same popularity at graph.artist(index=i).popularity - if last is None, pop is -20
-    filtered_nodes = list(filter(lambda i: (pop_values[i] > threshold), range(len(pop_values))))
-    return filtered_nodes
+        Args:
+          map_array (int[]): contains the mapping of the nodes to be transformed
+            output file is found. Otherwise always run
+        Returns:
+          the ImmutableGraph transformed according to the map in map_array"""
+    return webgraph.Transform.map(self.load(), map_array)
 
-  def compute_filtering(self, overwrite: bool = False):
-    """Compute the transpose of the graph
+  def store_subgraph(self, key, overwrite: bool = False):
+    """Store the properties file of the subgraph
 
-    Args:
-      overwrite (bool): If :data:`False` (default), then skip if the
-        output file is found. Otherwise always run"""
-    path = self.path("map")
+        Args:
+          overwrite (bool): If :data:`False` (default), then skip if the
+            output file is found. Otherwise always run"""
+    path = self.path("map-" + key)
     if overwrite or pathutils.notisglob(path + "*"):
-      webgraph.Transform.main(["mapOffline", self.base_path, self.popularity_filter_map(95), path])
+      webgraph.BVGraph.store(BVGraph, self, path)
 
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset
