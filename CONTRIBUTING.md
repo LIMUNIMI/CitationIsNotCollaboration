@@ -7,6 +7,13 @@ We are using
 [`git-flow`](https://nvie.com/posts/a-successful-git-branching-model/)
 branching model. Consider using automated tools to manage your branches
 
+### Binary files
+As a general rule, we should avoid versioning binary files directly using git.
+Where possible, provide download links instead.
+E.g. the `featgraph` package uses the
+[`dependencies.json`](featgraph/jwebgraph/dependencies.json) file to download
+the jar files for Java dependencies, instead of storing the jar files directly.
+
 ## Tests
 Your code should pass all unit tests before it is merged onto `develop`.
 Install the Python packages required to run unit tests with
