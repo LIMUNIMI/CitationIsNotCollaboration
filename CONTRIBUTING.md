@@ -2,6 +2,11 @@
 The following is a set of guidelines for contributing to FeatGraph on GitHub.
 These are mostly guidelines, not rules. So, use your best judgment.
 
+## Git
+We are using
+[`git-flow`](https://nvie.com/posts/a-successful-git-branching-model/)
+branching model. Consider using automated tools to manage your branches
+
 ## Tests
 Your code should pass all unit tests before it is merged onto `develop`.
 Install the Python packages required to run unit tests with
