@@ -18,3 +18,13 @@ To update the `pylintrc` file, download it from Google's repository
 ```
 wget https://google.github.io/styleguide/pylintrc -O pylintrc
 ```
+
+#### Format code
+Format your code with the yapf auto-formatter.
+Format rules are in the [`.style.yapf`](.style.yapf) file.
+As for [code style](#code-style), we are using Google's style.
+
+To reformat the codebase, run this command from the repository root directory
+```
+yapf -ir feagraph tests
+```
