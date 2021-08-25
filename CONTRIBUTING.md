@@ -4,6 +4,11 @@ These are mostly guidelines, not rules. So, use your best judgment.
 
 ## Styleguides
 ### Python
+Install the Python packages required to automate style check and formatting with
+```
+pip install -Ur style-requirements.txt
+```
+
 #### Code style
 Check your code style with `pylint`.
 We are using the `pylintrc` from
