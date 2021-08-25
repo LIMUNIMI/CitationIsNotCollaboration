@@ -14,6 +14,10 @@ These are mostly guidelines, not rules. So, use your best judgment.
  * [Unit Tests](#unit-tests)
  * [Coverage](#coverage)
 
+[Docs](#docs)
+ * [Docstring style](#docstring-style)
+ * [GitHub Pages](#github-pages)
+
 [Styleguides](#styleguides)
  * [Code style](#code-style)
  * [Code format](#code-format)
@@ -112,6 +116,29 @@ coverage html
 coverage xml
 coverage json
 ```
+
+## Docs
+Documentation is generated from docstrings with `sphinx`.
+Install the Python packages required to make documentation with
+```
+pip install -Ur docs-requirements.txt
+```
+
+Build the HTML documentation running this command in the
+[`docs`](docs) directory
+```
+make clean
+make html
+```
+
+### Docstring style
+We are adopting [Google Style Python Docstrings](
+https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
+)
+
+### GitHub Pages
+Documentation is automatically built at every commit on `develop` or `master`,
+and published on [GitHub Pages](https://chromaticisobar.github.io/featgraph)
 
 ## Styleguides
 Install the Python packages required to automate style check and formatting with
