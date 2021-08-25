@@ -2,6 +2,21 @@
 The following is a set of guidelines for contributing to FeatGraph on GitHub.
 These are mostly guidelines, not rules. So, use your best judgment.
 
+#### Table Of Contents
+
+[Git](#git)
+ * [Commit frequency vs size](#commit-frequency-vs-size)
+ * [Feature branches](#feature-branches)
+ * [Binary files](#binary-files)
+
+[Tests](#tests)
+ * [Unit Tests](#unit-tests)
+ * [Coverage](#coverage)
+
+[Styleguides](#styleguides)
+ * [Code style](#code-style)
+ * [Code format](#code-format)
+
 ## Git
 We are using
 [`git-flow`](https://nvie.com/posts/a-successful-git-branching-model/)
@@ -99,7 +114,7 @@ To update the `pylintrc` file, download it from Google's repository
 wget https://google.github.io/styleguide/pylintrc -O pylintrc
 ```
 
-### Format code
+### Code format
 Format your code with the yapf auto-formatter.
 Format rules are in the [`.style.yapf`](.style.yapf) file.
 As for [code style](#code-style), we are using Google's style.
