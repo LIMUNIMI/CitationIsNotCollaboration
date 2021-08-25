@@ -107,25 +107,27 @@ jobs:
         gist_file_name: featgraph-pylint-badge.svg
         file_path: badge.svg
 
-#  sphinx:
-#    runs-on: ubuntu-latest
-#    container: sphinxdoc/sphinx
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          persist-credentials: false
-#      - name: Install
-#        run: python -m pip install . --use-feature=in-tree-build
-#      - name: Install docs dependencies
-#        run: python -m pip install -Ur docs-requirements.txt
-#      - name: Build HTML
-#        run: make html
-#        working-directory: docs
-#      - name: Upload HTML
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: pages
-#          path: docs/build/html
+  sphinx:
+    runs-on: ubuntu-latest
+    container: sphinxdoc/sphinx:3.2.1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Update pip
+        run: python -m pip install -U pip
+      - name: Install
+        run: python -m pip install . --use-feature=in-tree-build
+      - name: Install docs dependencies
+        run: python -m pip install -Ur docs-requirements.txt
+      - name: Build HTML
+        run: make html
+        working-directory: docs
+      - name: Upload HTML
+        uses: actions/upload-artifact@v1
+        with:
+          name: pages
+          path: docs/build/html
 
 #  release-create:
 #    if: ${{ startsWith( github.ref , 'refs/tags/' ) }}
