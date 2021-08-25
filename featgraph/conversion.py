@@ -14,12 +14,11 @@ from typing import Optional, Callable, Iterable, Tuple, Union, List
 import logging
 
 
-def make_ids_txt(
-  dst: str, src: str,
-  it: Optional[Callable[[Iterable], Iterable]] = None,
-  encoding="utf-8",
-  overwrite: bool = False
-) -> int:
+def make_ids_txt(dst: str,
+                 src: str,
+                 it: Optional[Callable[[Iterable], Iterable]] = None,
+                 encoding="utf-8",
+                 overwrite: bool = False) -> int:
   """Write the text file of artist ids
 
   Args:
@@ -39,10 +38,10 @@ def make_ids_txt(
         logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(fin)
         logger.info("Sorting keys")
-        ids = sortedcontainers.SortedSet(itertools.chain(
-          adjacency_lists.keys(),
-          itertools.chain.from_iterable(adjacency_lists.values())
-        ))
+        ids = sortedcontainers.SortedSet(
+            itertools.chain(
+                adjacency_lists.keys(),
+                itertools.chain.from_iterable(adjacency_lists.values())))
         logger.info("Writing file: %s", dst)
         if it is not None:
           ids = it(ids)
@@ -55,22 +54,24 @@ def make_ids_txt(
 
 
 metadata_labels: Tuple[str, ...] = (
-  "popularity",
-  "genre",
-  "name",
-  "type",
-  "followers",
+    "popularity",
+    "genre",
+    "name",
+    "type",
+    "followers",
 )
 
 
 def make_metadata_txt(
-  dst: Union[str, Callable], src: str, idf: str,
-  it: Optional[Callable[[Iterable], Iterable]] = None,
-  labels: Optional[Iterable[str]] = None,
-  ext: str = ".txt",
-  encoding="utf-8",
-  overwrite: bool = False,
-  missing: str = "",
+    dst: Union[str, Callable],
+    src: str,
+    idf: str,
+    it: Optional[Callable[[Iterable], Iterable]] = None,
+    labels: Optional[Iterable[str]] = None,
+    ext: str = ".txt",
+    encoding="utf-8",
+    overwrite: bool = False,
+    missing: str = "",
 ) -> List[str]:
   """Write the metadata text files
 
@@ -116,10 +117,12 @@ def make_metadata_txt(
 
 
 def make_asciigraph_txt(
-  dst: str, src: str, idf: str,
-  it: Optional[Callable[[Iterable], Iterable]] = None,
-  encoding="utf-8",
-  overwrite: bool = False,
+    dst: str,
+    src: str,
+    idf: str,
+    it: Optional[Callable[[Iterable], Iterable]] = None,
+    encoding="utf-8",
+    overwrite: bool = False,
 ):
   """Write the text file of adjacency lists (ASCIIGraph)
 
@@ -142,9 +145,7 @@ def make_asciigraph_txt(
         logger.info("Loading pickle file: %s", src)
         adjacency_lists = pickle.load(f)
         logger.info("Writing ASCIIGraph file: %s", dst)
-        it = itertools.chain(
-          [len(ids)], iter(ids if it is None else it(ids))
-        )
+        it = itertools.chain([len(ids)], iter(ids if it is None else it(ids)))
         for a_id in it:
           if isinstance(a_id, int):
             txt.write(str(a_id) + "\n")
@@ -154,8 +155,9 @@ def make_asciigraph_txt(
 
 
 def compress_to_bvgraph(
-  dst: str, src: Optional[str] = None,
-  overwrite: bool = False,
+    dst: str,
+    src: Optional[str] = None,
+    overwrite: bool = False,
 ):
   """Compress a text file of adjacency lists (ASCIIGraph) into a BVGraph
 
@@ -181,32 +183,31 @@ def compress_to_bvgraph(
 def main(*argv):
   """Run conversion script"""
   parser = argparse.ArgumentParser(
-    description="Convert original pickled dataset into text and BVGraph files"
+      description="Convert original pickled dataset into text and BVGraph files"
+  )
+  parser.add_argument("adjacency_path",
+                      help="The path of the adjacency lists pickle file")
+  parser.add_argument("metadata_path",
+                      help="The path of the metadata pickle file")
+  parser.add_argument(
+      "dest_path",
+      help="The destination base path for the BVGraph and text files")
+  parser.add_argument("--jvm-path",
+                      metavar="PATH",
+                      help="The Java virtual machine full path")
+  parser.add_argument(
+      "-l",
+      "--log-level",
+      dest="log_level",
+      metavar="LEVEL",
+      default="INFO",
+      type=lambda s: str(s).upper(),
+      help="The logging level. Default is 'INFO'",
   )
   parser.add_argument(
-    "adjacency_path",
-    help="The path of the adjacency lists pickle file"
-  )
-  parser.add_argument(
-    "metadata_path",
-    help="The path of the metadata pickle file"
-  )
-  parser.add_argument(
-    "dest_path",
-    help="The destination base path for the BVGraph and text files"
-  )
-  parser.add_argument(
-    "--jvm-path", metavar="PATH",
-    help="The Java virtual machine full path"
-  )
-  parser.add_argument(
-    "-l", "--log-level", dest="log_level", metavar="LEVEL",
-    default="INFO", type=lambda s: str(s).upper(),
-    help="The logging level. Default is 'INFO'",
-  )
-  parser.add_argument(
-    "--tqdm", action="store_true",
-    help="Use tqdm progress bar (you should install tqdm for this)",
+      "--tqdm",
+      action="store_true",
+      help="Use tqdm progress bar (you should install tqdm for this)",
   )
   args = parser.parse_args(argv)
   try:
@@ -214,9 +215,9 @@ def main(*argv):
   except ValueError:
     log_level = args.log_level
   logging_kwargs = dict(
-    level=log_level,
-    format="%(asctime)s %(name)-12s %(levelname)-8s: %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
+      level=log_level,
+      format="%(asctime)s %(name)-12s %(levelname)-8s: %(message)s",
+      datefmt="%Y-%m-%d %H:%M:%S",
   )
   logging.basicConfig(**logging_kwargs)
   tqdm = importlib.import_module("tqdm").tqdm if args.tqdm else None
@@ -227,33 +228,25 @@ def main(*argv):
   if spotidir:
     os.makedirs(spotidir, exist_ok=True)
   # Make ids file
-  nnodes = make_ids_txt(
-    spotipath("ids", "txt"),
-    args.adjacency_path,
-    tqdm
-  )
+  nnodes = make_ids_txt(spotipath("ids", "txt"), args.adjacency_path, tqdm)
   # Make metadata files
   make_metadata_txt(
-    spotipath,
-    args.metadata_path,
-    spotipath("ids", "txt"),
-    tqdm if tqdm is None else functools.partial(tqdm, total=nnodes),
+      spotipath,
+      args.metadata_path,
+      spotipath("ids", "txt"),
+      tqdm if tqdm is None else functools.partial(tqdm, total=nnodes),
   )
   # Make adjacency lists file
   make_asciigraph_txt(
-    spotipath("graph-txt"),
-    args.adjacency_path,
-    spotipath("ids", "txt"),
-    tqdm,
+      spotipath("graph-txt"),
+      args.adjacency_path,
+      spotipath("ids", "txt"),
+      tqdm,
   )
   # Compress to BVGraph
   jwebgraph.jvm_process_run(
-    compress_to_bvgraph,
-    kwargs=dict(
-      dst=spotipath(),
-    ),
-    logging_kwargs=logging_kwargs,
-    jvm_kwargs=dict(
-      jvm_path=args.jvm_path,
-    ),
+      compress_to_bvgraph,
+      kwargs=dict(dst=spotipath(),),
+      logging_kwargs=logging_kwargs,
+      jvm_kwargs=dict(jvm_path=args.jvm_path,),
   )

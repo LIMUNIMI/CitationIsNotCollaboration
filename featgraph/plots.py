@@ -7,16 +7,16 @@ from typing import Optional, Callable, Dict, Tuple, Any
 
 
 def scatter(
-  x: VectorOrCallable,
-  y: VectorOrCallable,
-  kendall_tau: bool = True,
-  ax: Optional[plt.Axes] = None,
-  xlabel: Optional[str] = None,
-  ylabel: Optional[str] = None,
-  xscale: str = "linear",
-  yscale: str = "linear",
-  label: Optional[str] = None,
-  **kwargs,
+    x: VectorOrCallable,
+    y: VectorOrCallable,
+    kendall_tau: bool = True,
+    ax: Optional[plt.Axes] = None,
+    xlabel: Optional[str] = None,
+    ylabel: Optional[str] = None,
+    xscale: str = "linear",
+    yscale: str = "linear",
+    label: Optional[str] = None,
+    **kwargs,
 ) -> plt.Axes:
   r"""Scatterplot of two scores
 
@@ -37,11 +37,7 @@ def scatter(
     Axes: Plot axes"""
   if ax is None:
     ax = plt.gca()
-  ax.scatter(
-    x() if callable(x) else x,
-    y() if callable(y) else y,
-    **kwargs
-  )
+  ax.scatter(x() if callable(x) else x, y() if callable(y) else y, **kwargs)
   ax.set_xscale(xscale)
   ax.set_yscale(yscale)
   # Kendall Tau
@@ -71,23 +67,22 @@ def scatter(
 
 
 def draw_sgc_graph(
-  g: nx.Graph,
-  ax: Optional[plt.Axes] = None,
-  masses_c="C0",
-  celeb_c="C1",
-  leader_c="C2",
-  default_c="k",
-  pos_fn: Callable[
-    [nx.Graph], Dict[int, Tuple[float, float]]
-  ] = nx.spring_layout,
-  node_alpha: float = 1,
-  edge_alpha: float = .1,
-  draw_nodes: bool = False,
-  legend: bool = True,
-  seed: Optional[int] = None,
-  edges_kwargs: Optional[Dict[str, Any]] = None,
-  nodes_kwargs: Optional[Dict[str, Any]] = None,
-  **kwargs,
+    g: nx.Graph,
+    ax: Optional[plt.Axes] = None,
+    masses_c="C0",
+    celeb_c="C1",
+    leader_c="C2",
+    default_c="k",
+    pos_fn: Callable[[nx.Graph], Dict[int, Tuple[float,
+                                                 float]]] = nx.spring_layout,
+    node_alpha: float = 1,
+    edge_alpha: float = .1,
+    draw_nodes: bool = False,
+    legend: bool = True,
+    seed: Optional[int] = None,
+    edges_kwargs: Optional[Dict[str, Any]] = None,
+    nodes_kwargs: Optional[Dict[str, Any]] = None,
+    **kwargs,
 ):
   """Draw a graph output with a Social Group Centrality model
 
@@ -120,10 +115,10 @@ def draw_sgc_graph(
     pos = pos_fn(g)
   # decide edge colors
   edge_colors = {
-    "masses": masses_c,
-    "celebrities": celeb_c,
-    "community leaders": leader_c,
-    "other": default_c,
+      "masses": masses_c,
+      "celebrities": celeb_c,
+      "community leaders": leader_c,
+      "other": default_c,
   }
   edge_lists = {k: [] for k in edge_colors}
   node_class = nx.get_node_attributes(g, "class")
@@ -140,33 +135,30 @@ def draw_sgc_graph(
   for k, v in edge_lists.items():
     if v:
       c = edge_colors[k]
-      nx.draw_networkx_edges(
-        g, pos, ax=ax,
-        edgelist=v,
-        edge_color=c,
-        alpha=edge_alpha,
-        **({} if edges_kwargs is None else edges_kwargs),
-        **kwargs
-      )
+      nx.draw_networkx_edges(g,
+                             pos,
+                             ax=ax,
+                             edgelist=v,
+                             edge_color=c,
+                             alpha=edge_alpha,
+                             **({} if edges_kwargs is None else edges_kwargs),
+                             **kwargs)
   # draw nodes
   if draw_nodes:
     for k, c in edge_colors.items():
-      nodelist = [
-        i for i, ki in g.nodes(data="class")
-        if ki == k
-      ]
+      nodelist = [i for i, ki in g.nodes(data="class") if ki == k]
       if nodelist:
-        nx.draw_networkx_nodes(
-          g, pos, ax=ax,
-          nodelist=nodelist,
-          node_color=c,
-          alpha=node_alpha,
-          **({} if nodes_kwargs is None else nodes_kwargs),
-          **kwargs
-        )
+        nx.draw_networkx_nodes(g,
+                               pos,
+                               ax=ax,
+                               nodelist=nodelist,
+                               node_color=c,
+                               alpha=node_alpha,
+                               **({} if nodes_kwargs is None else nodes_kwargs),
+                               **kwargs)
   if legend:
     ax.legend(handles=[
-      patches.Patch(label=k, facecolor=edge_colors[k])
-      for k in ("masses", "celebrities", "community leaders")
+        patches.Patch(label=k, facecolor=edge_colors[k])
+        for k in ("masses", "celebrities", "community leaders")
     ])
   return ax

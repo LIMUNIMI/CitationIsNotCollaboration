@@ -16,9 +16,8 @@ except ModuleNotFoundError as e:
     raise ModuleNotFoundError("Java modules not found") from e
 
 
-def jaccard(
-  a: Sequence[metadata.Artist], b: Sequence[metadata.Artist]
-) -> float:
+def jaccard(a: Sequence[metadata.Artist],
+            b: Sequence[metadata.Artist]) -> float:
   """Jaccard index between sets of artists
 
   Args:
@@ -28,15 +27,15 @@ def jaccard(
   Returns:
     float: Jaccard index"""
   return featgraph.misc.jaccard(
-    [x.index for x in a],
-    [x.index for x in b],
+      [x.index for x in a],
+      [x.index for x in b],
   )
 
 
 def load_as_doubles(
-  path: str,
-  input_type: Union[type, str] = "String",
-  reverse: bool = False,
+    path: str,
+    input_type: Union[type, str] = "String",
+    reverse: bool = False,
 ):
   """Loads a vector of doubles, either in binary or textual form.
 
@@ -53,9 +52,7 @@ def load_as_doubles(
     array of double: The data read from the file"""
   if isinstance(input_type, str):
     input_type = getattr(java.lang, input_type)
-  return law.stat.KendallTau.loadAsDoubles(
-    path, input_type, reverse
-  )
+  return law.stat.KendallTau.loadAsDoubles(path, input_type, reverse)
 
 
 def kendall_tau(x: VectorOrCallable, y: VectorOrCallable):
@@ -75,8 +72,8 @@ def kendall_tau(x: VectorOrCallable, y: VectorOrCallable):
   Returns:
     double: Kendall's :math:`\tau`"""
   return law.stat.KendallTau.INSTANCE.compute(
-    x() if callable(x) else x,
-    y() if callable(y) else y,
+      x() if callable(x) else x,
+      y() if callable(y) else y,
   )
 
 
@@ -99,6 +96,7 @@ class BVGraph:
   Args:
     base_path (str): Base path for graph files
     sep (str): Separator for graph file suffixes"""
+
   def __init__(self, base_path: str, sep: str = "."):
     self.base_path = base_path
     self.sep = sep
@@ -119,8 +117,7 @@ class BVGraph:
   def __str__(self) -> str:
     """Pretty-print graph name and path pattern"""
     return "{} '{}' at '{}{}*'".format(
-      type(self).__name__, self.basename, self.base_path, self.sep
-    )
+        type(self).__name__, self.basename, self.base_path, self.sep)
 
   @property
   def loaded(self) -> bool:
@@ -195,9 +192,7 @@ class BVGraph:
     Returns:
       str: File path"""
     alpha = _pagerank_alpha_preprocess(alpha)
-    return self.path(
-      "pagerank-{:02.0f}".format(100 * alpha), *suffix
-    )
+    return self.path("pagerank-{:02.0f}".format(100 * alpha), *suffix)
 
   def compute_pagerank(self, alpha: float = 0.85, overwrite: bool = False):
     r"""Compute PageRank of a graph given its transpose
@@ -209,8 +204,10 @@ class BVGraph:
     alpha = _pagerank_alpha_preprocess(alpha)
     if overwrite or pathutils.notisglob(self.pagerank_path("*", alpha=alpha)):
       law.rank.PageRankParallelGaussSeidel.main([
-        "--alpha", "{:.2f}".format(alpha),
-        self.path("transpose"), self.pagerank_path(alpha=alpha),
+          "--alpha",
+          "{:.2f}".format(alpha),
+          self.path("transpose"),
+          self.pagerank_path(alpha=alpha),
       ])
 
   def pagerank(self, alpha: float = 0.85):
@@ -223,9 +220,11 @@ class BVGraph:
       array of doubles: Array of PageRank values"""
     return load_as_doubles(self.pagerank_path("ranks", alpha=alpha), "Double")
 
-  def hyperball(
-    self, command: str, path: str, nbits: int = 8, transpose: bool = True
-  ):
+  def hyperball(self,
+                command: str,
+                path: str,
+                nbits: int = 8,
+                transpose: bool = True):
     r"""Run HyperBall on the graph
 
     Args:
@@ -238,10 +237,13 @@ class BVGraph:
       graph_paths = reversed(graph_paths)
     if pathutils.notisfile(path):
       webgraph.algo.HyperBall.main([
-        "--log2m", "{:.0f}".format(nbits),
-        "--offline", "--external",
-        command, path,
-        *graph_paths,
+          "--log2m",
+          "{:.0f}".format(nbits),
+          "--offline",
+          "--external",
+          command,
+          path,
+          *graph_paths,
       ])
 
   def compute_neighborhood(self, **kwargs):
@@ -293,9 +295,10 @@ class BVGraph:
       Artist: the Artist object wrapper"""
     return metadata.Artist(self.base_path, **kwargs)
 
-  def best(
-    self, n: int, f: VectorOrCallable, reverse: bool = True
-  ) -> List[metadata.Artist]:
+  def best(self,
+           n: int,
+           f: VectorOrCallable,
+           reverse: bool = True) -> List[metadata.Artist]:
     """Compute the best-scoring nodes for a function
 
     Args:
@@ -314,7 +317,4 @@ class BVGraph:
       arg = reversed(arg[-n:])
     else:
       arg = arg[:n]
-    return [
-      self.artist(index=i)
-      for i in arg
-    ]
+    return [self.artist(index=i) for i in arg]

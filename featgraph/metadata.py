@@ -27,20 +27,22 @@ class Artist:
     popularity_file_suffix (sequence of str): Suffix for popularity file
     type_file_suffix (sequence of str): Suffix for type file
     encoding: File encoding. Defaults to :data:`"utf-8"`"""
+
   def __init__(
-    self, basepath: str,
-    index: Optional[int] = None,
-    aid: Optional[str] = None,
-    name: Optional[str] = None,
-    sep: str = ".",
-    followers_file_suffix: Sequence[str] = ("followers", "txt"),
-    genre_file_suffix: Sequence[str] = ("genre", "txt"),
-    adj_file_suffix: Sequence[str] = ("graph-txt",),
-    id_file_suffix: Sequence[str] = ("ids", "txt"),
-    name_file_suffix: Sequence[str] = ("name", "txt"),
-    popularity_file_suffix: Sequence[str] = ("popularity", "txt"),
-    type_file_suffix: Sequence[str] = ("type", "txt"),
-    encoding="utf-8",
+      self,
+      basepath: str,
+      index: Optional[int] = None,
+      aid: Optional[str] = None,
+      name: Optional[str] = None,
+      sep: str = ".",
+      followers_file_suffix: Sequence[str] = ("followers", "txt"),
+      genre_file_suffix: Sequence[str] = ("genre", "txt"),
+      adj_file_suffix: Sequence[str] = ("graph-txt",),
+      id_file_suffix: Sequence[str] = ("ids", "txt"),
+      name_file_suffix: Sequence[str] = ("name", "txt"),
+      popularity_file_suffix: Sequence[str] = ("popularity", "txt"),
+      type_file_suffix: Sequence[str] = ("type", "txt"),
+      encoding="utf-8",
   ):
     self.basepath = basepath
     self.sep = sep
@@ -75,13 +77,13 @@ class Artist:
     - file suffix
     - file offset"""
     return {
-      "followers": (None, self.followers_file_suffix, 0),
-      "genre": (None, self.genre_file_suffix, 0),
-      "neighbors": (None, self.adj_file_suffix, -1),
-      "aid": (self._aid, self.id_file_suffix, 0),
-      "name": (self._name, self.name_file_suffix, 0),
-      "popularity": (None, self.popularity_file_suffix, 0),
-      "type": (None, self.type_file_suffix, 0),
+        "followers": (None, self.followers_file_suffix, 0),
+        "genre": (None, self.genre_file_suffix, 0),
+        "neighbors": (None, self.adj_file_suffix, -1),
+        "aid": (self._aid, self.id_file_suffix, 0),
+        "name": (self._name, self.name_file_suffix, 0),
+        "popularity": (None, self.popularity_file_suffix, 0),
+        "type": (None, self.type_file_suffix, 0),
     }
 
   @property
@@ -99,8 +101,7 @@ class Artist:
           if n == v:
             return i + offset
       raise ValueError("No artist was found for {} '{}' in file '{}'".format(
-        k, v, fname
-      ))
+          k, v, fname))
     raise ValueError("Please, specify at least one of: index, aid, name")
 
   def _property_from_file(self, kp: str) -> str:
@@ -119,10 +120,8 @@ class Artist:
       v = more_itertools.nth(f, self.index - offset)
       if v is None:
         raise EOFError(
-          "Ran out of input while looking for row {} in file '{}'".format(
-            self.index, fname
-          )
-        )
+            "Ran out of input while looking for row {} in file '{}'".format(
+                self.index, fname))
       return v.rstrip("\n")
 
   @property
@@ -151,15 +150,9 @@ class Artist:
     except FileNotFoundError:
       # fall back to BVGraph file
       indices = featgraph.misc.IteratorWrapper(
-        importlib.import_module(
-          "featgraph.jwebgraph.utils"
-        ).BVGraph(self.basepath).load().successors(self.index),
-        "nextInt", -1
-      )
-    return [
-      Artist(basepath=self.basepath, index=int(i))
-      for i in indices if i
-    ]
+          importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
+              self.basepath).load().successors(self.index), "nextInt", -1)
+    return [Artist(basepath=self.basepath, index=int(i)) for i in indices if i]
 
   @property
   @functools.lru_cache(maxsize=1)
