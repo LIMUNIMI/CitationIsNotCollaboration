@@ -14,10 +14,10 @@ import featgraph.jwebgraph.utils
 
 # make conversion if not done yet
 do_convert = False
+adjacency_path = "Spotify_pickle/collaboration_network_edge_list.pickle"
+metadata_path = "Spotify_pickle/artist_data.pickle"
+dest_path = "graphs/spotify-2018"
 if do_convert == True:
-    adjacency_path = "Spotify_pickle/collaboration_network_edge_list.pickle"
-    metadata_path = "Spotify_pickle/artist_data.pickle"
-    dest_path = "graphs/spotify-2018"
     spotipath = derived_paths(dest_path)
     os.makedirs(os.path.dirname(spotipath()), exist_ok=True)
     nnodes = conversion.make_ids_txt(
@@ -96,20 +96,6 @@ def centrality_filter(graph, type, threshold):
     filtered_nodes = list(filter(lambda i: (c_values[i] > threshold), range(len(c_values))))
     return filtered_nodes
 
-
-ids_pop = popularity_filter(graph, threshold=95)
-print("Ids of the nodes filtered by popularity: ", ids_pop)
-
-ids_genre = genre_filter(graph, threshold=["'deep southern trap'", "'swedish indie rock'"], key='or')
-# here, for threshold is important for now to have the double '' inside the str
-print("Ids of the nodes filtered by genre: ", ids_genre)
-
-ids_c = centrality_filter(graph, type = 'hc', threshold=310000.000)
-print("Ids of the nodes filtered by centrality: ", ids_c)
-
-
-
-
 def map_nodes(n, filtered_nodes):
     map = jpype.JInt[n]
     c = 0
@@ -118,18 +104,72 @@ def map_nodes(n, filtered_nodes):
             map[i] = -1
         else:
             map[i] = c
-            c +=1
+            c += 1
     return map
 
+def update_txt_metadata(src_path, key, type_filter, threshold, lines_to_keep):
+    """Function for the creation of the metadata file for the filtered graph:
+
+    Args:
+        src_path: source path of the metadata file of the original graph
+        key: the type of metadate you want to retrieve
+        type_filter: the type of filter you used to filter the graph
+        threshold: the threshold for type_filter you used to filter the graph
+        lines_to_keep: the indices of the nodes you filtered and for which you want to retrieve the metadata
+    """
+    new_path = src_path + '.mapped.' + type_filter + '-' + str(threshold) + '.' + key
+    print("Creating file: %s" % (new_path))
+    src_path = src_path + '.' + key
+    fn = open(src_path + '.txt', 'r')
+    fn1 = open(new_path + '.txt', 'w')
+
+    cont = fn.readlines()
+    for i in range(0, len(cont)):
+        if i in lines_to_keep:
+            fn1.write(cont[i])
+        else:
+            pass
+
+    fn.close()
+    fn1.close()
+
+# Filter the nodes for different attributes and thresholds
+threshold_pop = 95
+ids_pop = popularity_filter(graph, threshold_pop)
+print("Ids of the nodes filtered by popularity: ", ids_pop)
+
+threshold_genre = ["'deep southern trap'", "'swedish indie rock'"]
+ids_genre = genre_filter(graph, threshold_genre, key='or')
+# here, for threshold is important for now to have the double '' inside the str
+print("Ids of the nodes filtered by genre: ", ids_genre)
+
+threshold_centrality = 310000.000
+type_centr = 'hc'
+ids_c = centrality_filter(graph, type_centr, threshold_centrality)
+print("Ids of the nodes filtered by centrality: ", ids_c)
+
+# Generate the filtered graph - creating a map array to pass to the trasnform_map function
 n = graph.numNodes()
 map_pop = map_nodes(n, ids_pop)
-print("Numero nodi ids_pop: %d" % (len(ids_pop)))
 print("Map generated")
-
 subgraph_pop = graph.transform_map(map_pop)
 print("Subgraph generated")
+
+# Create the metadata file for the new filtered graph
+type_filt = 'popularity'
+update_txt_metadata(dest_path, 'ids', type_filt, threshold_pop, ids_pop)
+update_txt_metadata(dest_path, 'type', type_filt, threshold_pop, ids_pop)
+update_txt_metadata(dest_path, 'name', type_filt, threshold_pop, ids_pop)
+update_txt_metadata(dest_path, 'popularity', type_filt, threshold_pop, ids_pop)
+update_txt_metadata(dest_path, 'genre', type_filt, threshold_pop, ids_pop)
+update_txt_metadata(dest_path, 'followers', type_filt, threshold_pop, ids_pop)
 
 key = "popularity"
 dest_path = "graphs/spotify-2018"
 subgraph_path = dest_path + "-map-" + key
 jwebgraph.utils.store_subgraph(subgraph_pop, subgraph_path)
+
+
+#subgraph = jwebgraph.utils.BVGraph(subgraph_path)
+#subgraph.__init__(subgraph_path, ".")
+#print(subgraph.artist(id=0).genre)
