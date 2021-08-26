@@ -2,6 +2,7 @@
 from the original pickled dataset"""
 import os
 import sys
+import json
 import pickle
 import argparse
 import importlib
@@ -62,6 +63,16 @@ metadata_labels: Tuple[str, ...] = (
 )
 
 
+metadata_fmt = {
+  "genre": json.dumps
+}
+
+
+metadata_missing = {
+  "genre": []
+}
+
+
 def make_metadata_txt(
     dst: Union[str, Callable],
     src: str,
@@ -71,7 +82,6 @@ def make_metadata_txt(
     ext: str = ".txt",
     encoding="utf-8",
     overwrite: bool = False,
-    missing: str = "",
 ) -> List[str]:
   """Write the metadata text files
 
@@ -87,8 +97,6 @@ def make_metadata_txt(
     ext (str): Common file extension. Default is :data:`".txt"`
     encoding: Encoding for output files. Default is :data:`"utf-8"`
     overwrite (bool): If :data:`True`, then overwrite existing destination file
-    missing (str): String to write in place of missing values.
-      Default is :data:`""`
 
   Returns:
     list of str: Output file paths"""
@@ -101,6 +109,8 @@ def make_metadata_txt(
     if labels is None:
       labels = metadata_labels
     for k in labels:
+      fmt = metadata_fmt.get(k, str)
+      missing = metadata_missing.get(k, "")
       i = metadata_labels.index(k)
       fname = dst(k) + ext
       written.append(fname)
@@ -112,7 +122,7 @@ def make_metadata_txt(
             if it is not None:
               ids = it(ids)
             for a_id in ids:
-              txt.write(str(metadata[i].get(a_id, missing)) + "\n")
+              txt.write(fmt(metadata[i].get(a_id, missing)) + "\n")
   return written
 
 
