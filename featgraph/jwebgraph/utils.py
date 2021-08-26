@@ -1,5 +1,9 @@
 """Utility wrappers for Java functions.
 The JVM should be started before importing this module"""
+import json
+
+import jpype
+
 from featgraph import pathutils, metadata
 import os
 import numpy as np
@@ -326,6 +330,133 @@ class BVGraph:
           the ImmutableGraph transformed according to the map in map_array"""
     return webgraph.Transform.map(self.load(), map_array)
 
+  def popularity(self, missing_value: int):
+    """Function that retrieve the popularity inside the popularity.txt file of the graph
+
+        Args:
+          missing_value (int): value to assign to an artist in case her popularity is unknown
+        Returns:
+          the string (str) containing the popularities of the artists of the graph"""
+    missing_value = str(missing_value)
+    with open(self.path("popularity", "txt"), "r") as f:
+      return [float(r.rstrip("\n") or missing_value) for r in f]
+
+  def genre(self):
+    """Function that retrieve the genre inside the genre json file of the graph
+
+        Returns:
+          the json containing the genres of the artists of the graph"""
+    with open(self.path("genre", "json"), "r") as f:
+      return [json.loads(r.rstrip("\n")) for r in f]
+
+  def popularity_filter(self, threshold):
+    """Filter the graph nodes based on thei popularity, according to the specified threshold
+
+        Args:
+          threshold (int): the threshold to filter the artists based on their popularity values
+        Returns:
+          filtered_nodes (int list): the list containing the indices of the filtered nodes"""
+    pop_values = self.popularity(missing_value=-20)
+    filtered_nodes = list(
+      filter(lambda i: (pop_values[i] > threshold), range(len(pop_values))))
+    return filtered_nodes
+
+  def genre_filter(self, threshold, key):
+    """Filter the graph nodes based on their genre, according to the specified threshold
+
+        Args:
+          threshold (int): the threshold to filter the artists based on their genre values
+          key (str): a str that indicates if we want to select the nodes considering AND or OR to evaluate the genre
+              values of an artist
+        Returns:
+          filtered_nodes (int list): the list containing the indices of the filtered nodes"""
+    genre_values = self.genre()
+    if key == 'and':
+      filtered_nodes = list(
+        filter(lambda i: (all(x in genre_values[i] for x in threshold)),
+               range(len(genre_values))))
+    elif key == 'or':
+      filtered_nodes = list(
+        filter(lambda i: (any(x in genre_values[i] for x in threshold)),
+               range(len(genre_values))))
+    return filtered_nodes
+
+  def centrality(self, type_c):
+    """Filter the graph nodes based on their genre, according to the specified threshold
+
+      Args:
+        type_c (str): a str indicating which kind of centrality to consider
+      Returns:
+        c_values (int list): a list containing the (specified) centrality values for each artist"""
+    if type_c == "pagerank":
+      c_values = self.pagerank()
+    elif type_c == "hc":
+      c_values = self.harmonicc()
+    elif type_c == "closenessc":
+      c_values = self.closenessc()
+    else:
+      print("Unknown centrality")
+    return c_values
+
+  def centrality_filter(self, type_c, threshold):
+    """Filter the graph nodes based on their centrality, according to the specified threshold
+
+        Args:
+          type_c (str): a str indicating the type of centrality to consider
+          threshold (int): the threshold to filter the artists based on their centrality values
+        Returns:
+          filtered_nodes (int list): the list containing the indices of the filtered nodes"""
+    c_values = self.centrality(type_c)
+    filtered_nodes = list(
+      filter(lambda i: (c_values[i] > threshold), range(len(c_values))))
+    return filtered_nodes
+
+  def map_nodes(self, filtered_nodes):
+    """Create the map_array, which is a list to be passed to transform_map to filter the graph.
+       If map[i] == -1, the node is removed. Else, assign to the nodes to keep an incremental value starting from zero.
+
+        Args:
+          n_nodes (int): the total number of nodes in the original graph
+          filtered_nodes (int list): a list containing the indices of the nodes of the graph to keep
+        Returns:
+          map (jpype.JInt[]): an array containing the a value for each node, whether it is removed or not"""
+    n_nodes = self.numNodes()
+    map_array = jpype.JInt[n_nodes]
+    c = 0
+    for i in range(n_nodes):
+      if i not in filtered_nodes:
+        map_array[i] = -1
+      else:
+        map_array[i] = c
+        c += 1
+    return map_array
+
+  def update_txt_metadata(self, src_path, key, type_filter, threshold, lines_to_keep):
+    """Function for the creation of the metadata file for the filtered graph:
+
+    Args:
+        src_path: source path of the metadata file of the original graph
+        key: the type of metadata you want to retrieve
+        type_filter: the type of filter you used to filter the graph
+        threshold: the threshold for type_filter you used to filter the graph
+        lines_to_keep: the indices of the nodes you filtered and for which you want to retrieve the metadata
+    """
+    new_path = src_path + '.mapped-' + type_filter + '-' + str(threshold) + '.' + key
+    print("Creating file: %s" % (new_path))
+    src_path = src_path + '.' + key
+    fn = open(src_path + '.txt', 'r')
+    fn1 = open(new_path + '.txt', 'w')
+
+    cont = fn.readlines()
+    for i in range(0, len(cont)):
+      if i in lines_to_keep:
+        fn1.write(cont[i])
+      else:
+        pass
+
+    fn.close()
+    fn1.close()
+
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset
 
@@ -377,3 +508,4 @@ def store_subgraph(graph, subgraph_path, overwrite: bool = True):
 #  for m, b in zip(metric, it):
 #    if b:
 #      yield m
+
