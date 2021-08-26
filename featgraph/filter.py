@@ -112,22 +112,24 @@ print("Ids of the nodes filtered by centrality: ", ids_c)
 
 def map_nodes(n, filtered_nodes):
     map = jpype.JInt[n]
+    c = 0
     for i in range(n):
         if i not in filtered_nodes:
             map[i] = -1
         else:
-            map[i] = i
+            map[i] = c
+            c +=1
     return map
 
 n = graph.numNodes()
 map_pop = map_nodes(n, ids_pop)
+print("Numero nodi ids_pop: %d" % (len(ids_pop)))
 print("Map generated")
 
 subgraph_pop = graph.transform_map(map_pop)
 print("Subgraph generated")
 
 key = "popularity"
-print(type(subgraph_pop))
 dest_path = "graphs/spotify-2018"
-subgraph_path = dest_path + "map-" + key
-subgraph_pop.store(graph.__class__, subgraph_pop, subgraph_path)
+subgraph_path = dest_path + "-map-" + key
+jwebgraph.utils.store_subgraph(subgraph_pop, subgraph_path)

@@ -309,16 +309,6 @@ class BVGraph:
           the ImmutableGraph transformed according to the map in map_array"""
     return webgraph.Transform.map(self.load(), map_array)
 
-  def store_subgraph(self, key, overwrite: bool = False):
-    """Store the properties file of the subgraph
-
-        Args:
-          overwrite (bool): If :data:`False` (default), then skip if the
-            output file is found. Otherwise always run"""
-    path = self.path("map-" + key)
-    if overwrite or pathutils.notisglob(path + "*"):
-      webgraph.BVGraph.store(BVGraph, self, path)
-
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset
 
@@ -352,3 +342,14 @@ class BVGraph:
     else:
       arg = arg[:n]
     return [self.artist(index=i) for i in arg]
+
+
+def store_subgraph(graph, subgraph_path, overwrite: bool = True):
+    """Store the properties file of the subgraph
+
+        Args:
+          overwrite (bool): If :data:`False` (default), then skip if the
+            output file is found. Otherwise always run"""
+    path = subgraph_path #self.path("map-" + key)
+    if overwrite or pathutils.notisglob(path + "*"):
+      webgraph.BVGraph.store(graph, path)
