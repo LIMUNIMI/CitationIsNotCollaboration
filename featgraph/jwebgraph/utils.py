@@ -6,7 +6,7 @@ import numpy as np
 import sys
 import featgraph.misc
 from featgraph.misc import VectorOrCallable
-from typing import Union, List, Sequence
+from typing import Union, List, Sequence, Iterable
 # imports from java
 try:
   from it.unimi.dsi import law, webgraph
@@ -286,18 +286,35 @@ class BVGraph:
     return load_as_doubles(self.path("hc", "ranks"), "Float")
 
   def compute_closenessc(self, **kwargs):
-    """Compute the Harmonic Centrality with HyperBall
+    """Compute the Closeness Centrality with HyperBall
 
     Args:
       kwargs: Keyword arguments for :meth:`hyperball`"""
     self.hyperball(command="-c", path=self.path("closenessc", "ranks"), **kwargs)
 
   def closenessc(self):
-    """Load the Harmonic Centrality vector from file
+    """Load the Closeness Centrality vector from file
 
     Returns:
-      array of doubles: Array of Harmonic Centralities"""
+      array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
+
+  # TODO
+  # es. it = filter(lambda p: p > 10, self.popularity())
+  # def transform_map(self, dest_path: str, it: Iterable[bool]) -> "BVGraph":
+  #   a = init java array
+  #   j = 0
+  #   for i, f in enumerate(it):
+  #     if f:
+  #       a[i] = j
+  #       j += 1
+  #       print metadata to files
+  #     else:
+  #       a[i] = -1
+  #       skip metadata rows
+  #   transform graph
+  #   store graph
+  #   return BVGraph(base_path=dest_path, sep=self.sep)
 
   def transform_map(self, map_array):
     """Transform a graph according to the mapping in map_array. If map[i] == -1, the node is removed.
@@ -353,3 +370,10 @@ def store_subgraph(graph, subgraph_path, overwrite: bool = True):
     path = subgraph_path #self.path("map-" + key)
     if overwrite or pathutils.notisglob(path + "*"):
       webgraph.BVGraph.store(graph, path)
+
+# TODO
+# filter_metric(graph.harmonicc(), ...)
+# def filter_metric(metric, it):
+#  for m, b in zip(metric, it):
+#    if b:
+#      yield m
