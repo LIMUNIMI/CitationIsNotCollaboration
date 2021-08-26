@@ -56,15 +56,11 @@ class TestNx2Bv(testutils.TestDataMixin, unittest.TestCase):
                 ))
 
       # check neighbors from bvgraph
-      # <!> it fails for neighbors of node 3 <!>
-      failure_nodes = [3]
       for n in range(self.nxgraph.number_of_nodes()):
-        expected_failure = n in failure_nodes
         with self.subTest(
             check="neighbors",
             file="bvgraph",
             node=n,
-            expected_failure=expected_failure,
         ):
           self.assertTrue(
               jwebgraph.jvm_process_run(
@@ -73,7 +69,7 @@ class TestNx2Bv(testutils.TestDataMixin, unittest.TestCase):
                   kwargs=dict(attr="index"),
                   return_type="B",
                   jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-              ) != expected_failure)
+              ))
 
       # check class values
       with open(path("type", "txt"), encoding="utf-8") as f:

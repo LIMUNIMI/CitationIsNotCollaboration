@@ -107,15 +107,11 @@ class TestConversion(
             self.assertTrue(testutils.check_neighbors(self.base_path, k, v))
 
       # check neighbors from bvgraph
-      # <!> it fails for neighbors of node e <!>
-      failure_nodes = ["e"]
       for k, v in self.adjacency_dict.items():
-        expected_failure = k in failure_nodes
         with self.subTest(
             check="neighbors",
             file="bvgraph",
             node=k,
-            expected_failure=expected_failure,
         ):
           self.assertTrue(
               jwebgraph.jvm_process_run(
@@ -123,7 +119,7 @@ class TestConversion(
                   args=(self.base_path, k, v),
                   return_type="B",
                   jvm_kwargs=dict(jvm_path=testutils.jvm_path),
-              ) != expected_failure)
+              ))
 
       # --- check BVGraph wrapper ---
       def check_fail(func: str):

@@ -146,13 +146,14 @@ class Artist:
     """Neighbors of the artist in the graph"""
     try:
       # default to ASCIIGraph file
-      indices = self._property_from_file("neighbors").split(" ")
+      indices = (
+          int(i) for i in self._property_from_file("neighbors").split(" ") if i)
     except FileNotFoundError:
       # fall back to BVGraph file
       indices = featgraph.misc.IteratorWrapper(
           importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
               self.basepath).load().successors(self.index), "nextInt", -1)
-    return [Artist(basepath=self.basepath, index=int(i)) for i in indices if i]
+    return [Artist(basepath=self.basepath, index=i) for i in indices]
 
   @property
   @functools.lru_cache(maxsize=1)
