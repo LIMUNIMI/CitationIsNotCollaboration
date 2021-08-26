@@ -2,6 +2,7 @@
 import featgraph.misc
 import itertools
 import unittest
+from pyfakefs import fake_filesystem_unittest
 
 
 class TestMisc(unittest.TestCase):
@@ -40,3 +41,14 @@ class TestMisc(unittest.TestCase):
                 iter(itertools.chain(range(5), itertools.repeat(None))))),
         list(range(5)),
     )
+
+  def test_multicontext(self):
+    """Test multicontext wrapper"""
+    with fake_filesystem_unittest.Patcher():
+      filenames = list(
+          map("multicontext-test-file-{:02.0f}.txt".format, range(16)))
+      with featgraph.misc.multicontext(
+          open(fn, mode="w", encoding="utf-8") for fn in filenames) as files:
+        for f, fn in zip(files, filenames):
+          with self.subTest(fname=fn):
+            self.assertEqual(f.name, fn)

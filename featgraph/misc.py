@@ -1,5 +1,6 @@
 """Miscellaneous functions and classes"""
-from typing import Union, Callable, Sequence
+import contextlib
+from typing import Union, Callable, Sequence, Iterator, ContextManager
 
 VectorOrCallable = Union[Callable[[], Sequence], Sequence]
 
@@ -63,3 +64,22 @@ class IteratorWrapper:
     if v == self.end_value:
       raise StopIteration()
     return v
+
+
+@contextlib.contextmanager
+def multicontext(it: Iterator[ContextManager]):
+  """Context manager wrapper for multiple contexts managers
+
+  Args:
+    it: Iterator of context managers to wrap
+
+  Yields:
+    tuple: The tuple of values yielded by the individual context managers"""
+  try:
+    cm = next(it)
+  except StopIteration:
+    yield ()
+  else:
+    with cm as value:
+      with multicontext(it) as values:
+        yield (value, *values)
