@@ -140,6 +140,7 @@ class Artist:
     s = self._property_from_file("genre")
     return json.loads(s)
 
+
   @property
   @functools.lru_cache(maxsize=1)
   def neighbors(self) -> List["Artist"]:

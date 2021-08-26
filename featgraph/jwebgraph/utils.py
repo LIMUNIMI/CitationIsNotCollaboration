@@ -303,6 +303,27 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
+  # do not need, delete after transform_map is ready!
+  def map_nodes(self, filtered_nodes):
+    """Create the map_array, which is a list to be passed to transform_map to filter the graph.
+       If map[i] == -1, the node is removed. Else, assign to the nodes to keep an incremental value starting from zero.
+
+        Args:
+          n_nodes (int): the total number of nodes in the original graph
+          filtered_nodes (int list): a list containing the indices of the nodes of the graph to keep
+        Returns:
+          map (jpype.JInt[]): an array containing the a value for each node, whether it is removed or not"""
+    n_nodes = self.numNodes()
+    map_array = jpype.JInt[n_nodes]
+    c = 0
+    for i in range(n_nodes):
+      if i not in filtered_nodes:
+        map_array[i] = -1
+      else:
+        map_array[i] = c
+        c += 1
+    return map_array
+
   # TODO
   # es. it = filter(lambda p: p > 10, self.popularity())
   # def transform_map(self, dest_path: str, it: Iterable[bool]) -> "BVGraph":
@@ -320,15 +341,53 @@ class BVGraph:
   #   store graph
   #   return BVGraph(base_path=dest_path, sep=self.sep)
 
-  def transform_map(self, map_array):
+  def transform_map(self, dest_path: str, it: list, overwrite: bool = False) -> "BVGraph":
     """Transform a graph according to the mapping in map_array. If map[i] == -1, the node is removed.
 
         Args:
-          map_array (int[]): contains the mapping of the nodes to be transformed
-            output file is found. Otherwise always run
+          dest_path (str): path where to save the filtered graph
+          it (Iterable[bool]): iterable containing a Boolean value indicating if the node is kept or removed
+          overwrite (bool): bool to indicate if the function overwrites the existing files or not
         Returns:
-          the ImmutableGraph transformed according to the map in map_array"""
-    return webgraph.Transform.map(self.load(), map_array)
+          a BVGraph which is the filtered graph
+          """
+    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
+    new_path = dest_path + '.'
+    d_r_files = {}
+    d_w_files = {}
+    for key in metadata_list:
+      src_path = self.base_path + '.' + key
+      new_path = dest_path + '.' + key
+      d_r_files[src_path] = open(src_path + '.txt', 'r')
+      d_w_files[new_path] = open(new_path + '.txt', 'w')
+      src_path = src_path.replace(key, '')
+      new_path = new_path.replace(key, '')
+    n_nodes = self.numNodes()
+    map_array = jpype.JInt[n_nodes]
+    j = 0
+    for i in n_nodes:
+      if i in it:
+        map_array[i] = j
+        j += 1
+    #       print metadata to files - line by line
+        for key in metadata_list:
+          src_path = src_path + '.' + key
+          new_path = dest_path + '.' + key
+          cont = d_r_files[src_path].readlines()[i]
+          d_w_files[new_path].write(cont)
+          cont.clear()
+      else:
+        map_array[i] = -1
+    for key in metadata_list:
+      src_path = self.base_path + '.' + key
+      new_path = dest_path + '.' + key
+      d_r_files[src_path].close()
+      d_w_files[new_path].close()
+    webgraph.Transform.map(self.load(), map_array)
+    path = dest_path  # self.path("map-" + key)
+    if overwrite or pathutils.notisglob(path + "*"):
+      webgraph.BVGraph.store(self, path) # or self.load() ?
+    return BVGraph(base_path=dest_path, sep=self.sep)
 
   def popularity(self, missing_value: int):
     """Function that retrieve the popularity inside the popularity.txt file of the graph
@@ -346,7 +405,7 @@ class BVGraph:
 
         Returns:
           the json containing the genres of the artists of the graph"""
-    with open(self.path("genre", "json"), "r") as f:
+    with open(self.path("genre", "txt"), "r") as f:
       return [json.loads(r.rstrip("\n")) for r in f]
 
   def popularity_filter(self, threshold):
@@ -410,26 +469,6 @@ class BVGraph:
     filtered_nodes = list(
       filter(lambda i: (c_values[i] > threshold), range(len(c_values))))
     return filtered_nodes
-
-  def map_nodes(self, filtered_nodes):
-    """Create the map_array, which is a list to be passed to transform_map to filter the graph.
-       If map[i] == -1, the node is removed. Else, assign to the nodes to keep an incremental value starting from zero.
-
-        Args:
-          n_nodes (int): the total number of nodes in the original graph
-          filtered_nodes (int list): a list containing the indices of the nodes of the graph to keep
-        Returns:
-          map (jpype.JInt[]): an array containing the a value for each node, whether it is removed or not"""
-    n_nodes = self.numNodes()
-    map_array = jpype.JInt[n_nodes]
-    c = 0
-    for i in range(n_nodes):
-      if i not in filtered_nodes:
-        map_array[i] = -1
-      else:
-        map_array[i] = c
-        c += 1
-    return map_array
 
   def update_txt_metadata(self, src_path, key, type_filter, threshold, lines_to_keep):
     """Function for the creation of the metadata file for the filtered graph:
