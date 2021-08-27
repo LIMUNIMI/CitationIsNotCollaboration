@@ -390,9 +390,8 @@ class BVGraph:
           m (int): the values of the metric to be returned
        """
     it = [False] * self.numNodes()
-    for i in range(int(self.numNodes())):
-      if i in indices:
-        it[i] = True
+    for i in indices:
+      it[i] = True
     for m, b in zip(metric, it):
       if b:
         yield m
