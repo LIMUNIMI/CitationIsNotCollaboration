@@ -354,23 +354,12 @@ class BVGraph:
     src_path = self.base_path + "."
     metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
     infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
-    print("infnames: ", infnames)
-    #print("Writing {} files:{}".format(len(infnames),
-    #                                   "".join(map("\n  {}".format, infnames))))
-
-    #with featgraph.misc.multicontext(map(open_write, infnames)) as files:
-    #  for i, f in itertools.product(range(n_rows), files):
-    #    f.write("{:<20} {:>2}\n".format(f.name, i + 1))
-
-    # keep only rows with multiples of 2 or 3
     missing_value = -20
     rowfilter = map(lambda p: p > 95, self.popularity(missing_value))
 
-    outfnames = list(map(str(dest_path + ".{}.text").format, metadata_list))
+    outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
     open_read = functools.partial(open, mode="r", encoding="utf-8")
     open_write = functools.partial(open, mode="w", encoding="utf-8")
-    print("Writing output files:{}".format("".join(map("\n  {}".format,
-                                                       outfnames))))
     with featgraph.misc.multicontext(map(open_read, infnames)) as infiles:
       with featgraph.misc.multicontext(map(open_write, outfnames)) as outfiles:
         # for every filter value and row (in parallel)
@@ -399,8 +388,8 @@ class BVGraph:
       if f:
         map_array[i] = j
         j += 1
-        #self.write_metadata_files(6, 10, dest_path)
-        self.write_line_metadata(dest_path, i, flag_overwrite)
+        self.write_metadata_files(6, 10, dest_path)
+        #self.write_line_metadata(dest_path, i, flag_overwrite)
         flag_overwrite = False
       else:
         map_array[i] = -1
