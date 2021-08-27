@@ -348,7 +348,7 @@ class BVGraph:
         cont = fn.readlines()[line]
         fn1.write(cont)
 
-  def transform_map(self, dest_path: str, it: list[int], overwrite: bool = False) -> "BVGraph":
+  def transform_map(self, dest_path: str, indices: list[int], overwrite: bool = False) -> "BVGraph":
     """Transform a graph according to the mapping in map_array. If map[i] == -1, the node is removed.
 
         Args:
@@ -363,10 +363,10 @@ class BVGraph:
     j = 0
     flag_overwrite = True
     for i in range(n_nodes):
-      if i in it:
+      if i in indices:
         map_array[i] = j
         j += 1
-        if i != it[0]:
+        if i != indices[0]:
           flag_overwrite = False
         self.write_line_metadata(dest_path, i, flag_overwrite)
       else:
@@ -379,10 +379,23 @@ class BVGraph:
 
   # TODO
   # filter_metric(graph.harmonicc(), ...)
-  # def filter_metric(metric, it):
-  #  for m, b in zip(metric, it):
-  #    if b:
-  #      yield m
+  def filter_metric(self, metric, indices):
+    """Function that gets a list containing the graph values for a certain metric and a list of indices.
+       Returns the metrics of the specified indices.
+
+        Args:
+          metrics (list[int]): a list of int containing the matric values for all nodes of the graph
+          indices (list[int]): a list of int specifying the indices of the nodes we want to consider
+        Returns:
+          m (int): the values of the metric to be returned
+       """
+    it = [False] * self.numNodes()
+    for i in range(int(self.numNodes())):
+      if i in indices:
+        it[i] = True
+    for m, b in zip(metric, it):
+      if b:
+        yield m
 
   def popularity(self, missing_value: int):
     """Function that retrieve the popularity inside the popularity.txt file of the graph

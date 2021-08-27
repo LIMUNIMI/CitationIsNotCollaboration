@@ -44,6 +44,7 @@ for r in ("graph", "properties", "ids.txt"):
 
 missing_value = -20
 
+
 # Filter the nodes for different attributes and thresholds
 threshold_pop = 95
 ids_pop = graph.popularity_filter(threshold_pop)
@@ -59,6 +60,7 @@ type_centr = 'hc'
 ids_c = graph.centrality_filter(type_centr, threshold_centrality)
 print("Ids of the nodes filtered by centrality: ", ids_c)
 
+
 # Generate the filtered graph and store it
 type_filt = 'popularity'
 dest_path = "featgraph/graphs/spotify-2018"
@@ -69,19 +71,5 @@ subgraph_pop = graph.transform_map(subgraph_path, ids_pop)
 print("Subgraph generated")
 print(subgraph_pop.artist(index=0).genre)
 
-
-#jwebgraph.utils.store_subgraph(subgraph_pop, subgraph_path)
-
-# Create the metadata file for the new filtered graph
-#update_txt_metadata(dest_path, 'ids', type_filt, threshold_pop, ids_pop)
-#update_txt_metadata(dest_path, 'type', type_filt, threshold_pop, ids_pop)
-#update_txt_metadata(dest_path, 'name', type_filt, threshold_pop, ids_pop)
-#update_txt_metadata(dest_path, 'popularity', type_filt, threshold_pop, ids_pop)
-#update_txt_metadata(dest_path, 'genre', type_filt, threshold_pop, ids_pop)
-#update_txt_metadata(dest_path, 'followers', type_filt, threshold_pop, ids_pop)
-
-
-
-#subgraph = jwebgraph.utils.BVGraph(subgraph_path)
-#print(subgraph.artist(id=0).genre)
-
+metrics_filtered = graph.filter_metric(graph.harmonicc(),  ids_pop)
+print(list(metrics_filtered))
