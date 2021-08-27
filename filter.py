@@ -61,13 +61,13 @@ print("Ids of the nodes filtered by centrality: ", ids_c)
 
 # Generate the filtered graph and store it
 type_filt = 'popularity'
-dest_path = "graphs/spotify-2018"
+dest_path = "featgraph/graphs/spotify-2018"
 subgraph_path = dest_path + '.mapped-' + type_filt + '-' + str(threshold_pop)
-map_pop = list(filter(lambda p: p > 95, graph.popularity(missing_value)))
+#map_pop = list(filter(lambda p: p > 95, graph.popularity(missing_value)))
 #map_pop = [True if graph.popularity(missing_value)[i] > threshold_pop else False for i in range(len(graph.popularity(missing_value)))]
-subgraph_pop = graph.transform_map(subgraph_path, map_pop)
+subgraph_pop = graph.transform_map(subgraph_path, ids_pop)
 print("Subgraph generated")
-
+print(subgraph_pop.artist(index=0).genre)
 
 
 #jwebgraph.utils.store_subgraph(subgraph_pop, subgraph_path)
