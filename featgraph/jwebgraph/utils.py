@@ -1,9 +1,9 @@
 """Utility wrappers for Java functions.
 The JVM should be started before importing this module"""
 import json
-
+import functools
+import itertools
 import jpype
-
 from featgraph import pathutils, metadata
 import os
 import numpy as np
@@ -348,7 +348,40 @@ class BVGraph:
         cont = fn.readlines()[line]
         fn1.write(cont)
 
-  def transform_map(self, dest_path: str, indices: list[int], overwrite: bool = False) -> "BVGraph":
+  def write_metadata_files(self, n_files, n_rows, dest_path):
+    # Prepare input files
+    # Write nrows in each of nfiles files
+    src_path = self.base_path + "."
+    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
+    infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
+    print("infnames: ", infnames)
+    #print("Writing {} files:{}".format(len(infnames),
+    #                                   "".join(map("\n  {}".format, infnames))))
+
+    #with featgraph.misc.multicontext(map(open_write, infnames)) as files:
+    #  for i, f in itertools.product(range(n_rows), files):
+    #    f.write("{:<20} {:>2}\n".format(f.name, i + 1))
+
+    # keep only rows with multiples of 2 or 3
+    missing_value = -20
+    rowfilter = map(lambda p: p > 95, self.popularity(missing_value))
+
+    outfnames = list(map(str(dest_path + ".{}.text").format, metadata_list))
+    open_read = functools.partial(open, mode="r", encoding="utf-8")
+    open_write = functools.partial(open, mode="w", encoding="utf-8")
+    print("Writing output files:{}".format("".join(map("\n  {}".format,
+                                                       outfnames))))
+    with featgraph.misc.multicontext(map(open_read, infnames)) as infiles:
+      with featgraph.misc.multicontext(map(open_write, outfnames)) as outfiles:
+        # for every filter value and row (in parallel)
+        for b, inrows in zip(rowfilter, zip(*infiles)):
+          # if the filter value is True
+          if b:
+            # write the row from an input file to the corresponding output file
+            for row, outfile in zip(inrows, outfiles):
+              outfile.write(row)
+
+  def transform_map(self, dest_path: str, it: Iterable[bool], overwrite: bool = False) -> "BVGraph":
     """Transform a graph according to the mapping in map_array. If map[i] == -1, the node is removed.
 
         Args:
@@ -362,13 +395,13 @@ class BVGraph:
     map_array = jpype.JInt[n_nodes]
     j = 0
     flag_overwrite = True
-    for i in range(n_nodes):
-      if i in indices:
+    for i, f in enumerate(it):
+      if f:
         map_array[i] = j
         j += 1
-        if i != indices[0]:
-          flag_overwrite = False
+        #self.write_metadata_files(6, 10, dest_path)
         self.write_line_metadata(dest_path, i, flag_overwrite)
+        flag_overwrite = False
       else:
         map_array[i] = -1
     webgraph.Transform.map(self.load(), map_array)
@@ -377,9 +410,8 @@ class BVGraph:
       webgraph.BVGraph.store(self, path)
     return BVGraph(base_path=dest_path, sep=self.sep)
 
-  # TODO
-  # filter_metric(graph.harmonicc(), ...)
-  def filter_metric(self, metric, indices):
+
+  def filter_metric(self, metric, it):
     """Function that gets a list containing the graph values for a certain metric and a list of indices.
        Returns the metrics of the specified indices.
 
@@ -389,9 +421,6 @@ class BVGraph:
         Returns:
           m (int): the values of the metric to be returned
        """
-    it = [False] * self.numNodes()
-    for i in indices:
-      it[i] = True
     for m, b in zip(metric, it):
       if b:
         yield m
@@ -512,16 +541,6 @@ class BVGraph:
       arg = arg[:n]
     return [self.artist(index=i) for i in arg]
 
-
-def store_subgraph(graph, subgraph_path, overwrite: bool = True):
-    """Store the properties file of the subgraph
-
-        Args:
-          overwrite (bool): If :data:`False` (default), then skip if the
-            output file is found. Otherwise always run"""
-    path = subgraph_path #self.path("map-" + key)
-    if overwrite or pathutils.notisglob(path + "*"):
-      webgraph.BVGraph.store(graph, path)
 
 
 
