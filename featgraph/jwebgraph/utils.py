@@ -348,15 +348,19 @@ class BVGraph:
         cont = fn.readlines()[line]
         fn1.write(cont)
 
-  def write_metadata_files(self, n_files, n_rows, dest_path):
+  def write_metadata_files(self, rowfilter: Iterable[bool], dest_path: str):
+    """Function that writes the metadata files for the filtered graph.
+
+       Args:
+        rowfilter (Iterable[bool]): iterable that contains bool values indicating which rows are to keep and which are
+          to remove
+        dest_path (str): string that specifies the prefix of the paths for the new metadata files
+    """
     # Prepare input files
     # Write nrows in each of nfiles files
     src_path = self.base_path + "."
     metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
     infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
-    missing_value = -20
-    rowfilter = map(lambda p: p > 95, self.popularity(missing_value))
-
     outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
     open_read = functools.partial(open, mode="r", encoding="utf-8")
     open_write = functools.partial(open, mode="w", encoding="utf-8")
@@ -383,16 +387,13 @@ class BVGraph:
     n_nodes = int(self.numNodes())
     map_array = jpype.JInt[n_nodes]
     j = 0
-    flag_overwrite = True
     for i, f in enumerate(it):
       if f:
         map_array[i] = j
         j += 1
-        self.write_metadata_files(6, 10, dest_path)
-        #self.write_line_metadata(dest_path, i, flag_overwrite)
-        flag_overwrite = False
       else:
         map_array[i] = -1
+    self.write_metadata_files(it, dest_path)
     webgraph.Transform.map(self.load(), map_array)
     path = dest_path
     if overwrite or pathutils.notisglob(path + "*"):
