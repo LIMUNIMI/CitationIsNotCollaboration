@@ -303,27 +303,6 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
-  # do not need, delete after transform_map is ready!
-  def map_nodes(self, filtered_nodes: list[int]):
-    """Create the map_array, which is a list to be passed to transform_map to filter the graph.
-       If map[i] == -1, the node is removed. Else, assign to the nodes to keep an incremental value starting from zero.
-
-        Args:
-          n_nodes (int): the total number of nodes in the original graph
-          filtered_nodes (list[int]): a list containing the indices of the nodes of the graph to keep
-        Returns:
-          map (jpype.JInt[]): an array containing the a value for each node, whether it is removed or not"""
-    n_nodes = self.numNodes()
-    map_array = jpype.JInt[n_nodes]
-    c = 0
-    for i in range(n_nodes):
-      if i not in filtered_nodes:
-        map_array[i] = -1
-      else:
-        map_array[i] = c
-        c += 1
-    return map_array
-
   def write_line_metadata(self, dest_path: str, line: int, overwrite: bool):
     """Function that opens the metadata files of the original graph, read the specified line related to the node we are
         evaluating and writes that line in the metadata files of the new graph we are generating.
