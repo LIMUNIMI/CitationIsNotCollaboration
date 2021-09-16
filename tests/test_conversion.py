@@ -83,6 +83,7 @@ class TestConversion(
         self.path("pagerank-85", "ranks"),
         self.path("nf", "txt"),
         self.path("hc", "ranks"),
+        self.path("closenessc", "ranks"),
         os.path.dirname(self.path()),
         self.adjacency_path,
         self.metadata_path,
@@ -179,6 +180,13 @@ class TestConversion(
       # harmonicc
       check_fail("compute_harmonicc")
       check_fail("harmonicc")
+      # closeness
+      check_fail("compute_closenessc")
+      check_fail("closenessc")
+      # popularity
+      check_fail("popularity")
+      # genre
+      check_fail("genre")
       # best
       with self.subTest(check="best", what="indegrees"):
         self.assertEqual(

@@ -1,12 +1,16 @@
 """Utility wrappers for Java functions.
 The JVM should be started before importing this module"""
+import json
+import functools
+import jpype
 from featgraph import pathutils, metadata
 import os
 import numpy as np
 import sys
 import featgraph.misc
 from featgraph.misc import VectorOrCallable
-from typing import Union, List, Sequence
+from typing import Union, List, Sequence, Iterable, Optional
+
 # imports from java
 try:
   from it.unimi.dsi import law, webgraph
@@ -284,6 +288,89 @@ class BVGraph:
     Returns:
       array of doubles: Array of Harmonic Centralities"""
     return load_as_doubles(self.path("hc", "ranks"), "Float")
+
+  def compute_closenessc(self, **kwargs):
+    """Compute the Closeness Centrality with HyperBall
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-c",
+                   path=self.path("closenessc", "ranks"),
+                   **kwargs)
+
+  def closenessc(self):
+    """Load the Closeness Centrality vector from file
+
+    Returns:
+      array of doubles: Array of Closeness Centralities"""
+    return load_as_doubles(self.path("closenessc", "ranks"), "Float")
+
+  def transform_map(self, dest_path: str, it: Iterable[bool]) -> "BVGraph":
+    """Transform a graph according to the mapping in map_array.
+    If map[i] == -1, the node is removed.
+
+        Args:
+          dest_path (str): path where to save the filtered graph
+          it (list[int]): list of integer values that indicates the indices of
+            the nodes of the filtered graph
+          overwrite (bool): bool to indicate if the function overwrites the
+            existing files or not
+        Returns:
+          a BVGraph which is the filtered graph
+    """
+    n_nodes = int(self.numNodes())
+    map_array = jpype.JInt[n_nodes]
+    j = 0
+
+    # open metadata files
+    src_path = self.base_path + "."
+    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
+    infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
+    outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
+    open_read = functools.partial(open, mode="r", encoding="utf-8")
+    open_write = functools.partial(open, mode="w", encoding="utf-8")
+
+    with featgraph.misc.multicontext(map(open_read, infnames)) as infiles:
+      with featgraph.misc.multicontext(map(open_write, outfnames)) as outfiles:
+
+        for i, (b, inrows) in enumerate(zip(it, zip(*infiles))):
+          if b:
+            map_array[i] = j
+            for row, outfile in zip(inrows, outfiles):
+              outfile.write(row)
+            j += 1
+          else:
+            map_array[i] = -1
+    # write
+    # self.write_metadata_files(it, dest_path)
+    filtered_graph = webgraph.Transform.map(self.load(), map_array)
+    # if overwrite or pathutils.notisglob(dest_path + "*"):
+    webgraph.BVGraph.store(filtered_graph, dest_path)
+    return BVGraph(base_path=dest_path, sep=self.sep)
+
+  def popularity(self, missing_value: Optional = None):
+    """Function that retrieve the popularity inside the popularity.txt file of
+       the graph
+
+        Args:
+          missing_value (int): value to assign to an artist in case her
+            popularity is unknown
+        Returns:
+          the string (str) containing the popularities of the artists of the
+          graph"""
+    with open(self.path("popularity", "txt"), "r", encoding="utf-8") as f:
+      return [
+          float(s) if s else missing_value for s in (r.rstrip("\n") for r in f)
+      ]
+
+  def genre(self):
+    """Function that retrieve the genre inside the genre json file of the graph
+
+        Returns:
+          the json containing the genres of the artists of the graph"""
+
+    with open(self.path("genre", "txt"), "r", encoding="utf-8") as f:
+      return [json.loads(r.rstrip("\n")) for r in f]
 
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset

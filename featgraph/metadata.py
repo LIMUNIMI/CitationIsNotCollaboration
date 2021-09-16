@@ -134,11 +134,11 @@ class Artist:
 
   @property
   @functools.lru_cache(maxsize=1)
-  def genre(self) -> Optional[Sequence[str]]:
+  def genre(self) -> Sequence[str]:
     """Artist music genres. Defaults to :data:`None`
       if value is missing"""
     s = self._property_from_file("genre")
-    return json.loads(s.replace("'", "\"")) if s else None
+    return json.loads(s)
 
   @property
   @functools.lru_cache(maxsize=1)
