@@ -73,6 +73,7 @@ class TestFilter(
       conversion.main(self.adjacency_path, self.metadata_path, self.base_path)
 
       # check with files
+      np.random.seed(42)
       it = np.greater(np.random.rand(self.nnodes), 0.5)
       n_out = it.sum()
       self.assertEqual(
