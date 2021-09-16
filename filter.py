@@ -7,7 +7,7 @@ import os
 import jpype
 import json
 import featgraph.metadata
-
+import itertools
 
 # start jvm
 jvm_path = None
@@ -42,9 +42,6 @@ for r in ("graph", "properties", "ids.txt"):
   if not os.path.isfile(graph.path(r)):
     raise FileNotFoundError(graph.path(r))
 
-missing_value = -20
-
-
 # Filter the nodes for different attributes and thresholds
 threshold_pop = 95
 ids_pop = graph.popularity_filter(threshold_pop)
@@ -55,20 +52,23 @@ ids_genre = graph.genre_filter(threshold_genre, key='or')
 # here, for threshold is important for now to have the double '' inside the str
 print("Ids of the nodes filtered by genre: ", ids_genre)
 
-threshold_centrality = 310000.000
-type_centr = 'hc'
-ids_c = graph.centrality_filter(type_centr, threshold_centrality)
-print("Ids of the nodes filtered by centrality: ", ids_c)
-
+#threshold_centrality = 310000.000
+#type_centr = 'hc'
+#ids_c = graph.centrality_filter(type_centr, threshold_centrality)
+#print("Ids of the nodes filtered by centrality: ", ids_c)
 
 # Generate the filtered graph and store it
 type_filt = 'popularity'
 dest_path = "featgraph/graphs/spotify-2018"
 subgraph_path = dest_path + '.mapped-' + type_filt + '-' + str(threshold_pop)
+missing_value = -20
 map_pop = list(map(lambda p: p > 95, graph.popularity(missing_value)))
 subgraph_pop = graph.transform_map(subgraph_path, map_pop)
 print("Subgraph generated")
-print(subgraph_pop.artist(index=0).genre)
+#print(subgraph_pop.artist(index=0).genre)
 
-metrics_filtered = graph.filter_metric(graph.harmonicc(),  map_pop)
+# make sure to compute the centrality before filtering
+graph.compute_transpose()
+graph.compute_harmonicc()
+metrics_filtered = itertools.compress(graph.harmonicc(), map_pop)
 print(list(metrics_filtered))

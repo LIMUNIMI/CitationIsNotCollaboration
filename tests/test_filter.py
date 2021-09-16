@@ -1,69 +1,85 @@
 """Test for filter"""
-import random
+import importlib
+import os
 import unittest
-import  featgraph.jwebgraph.utils
-from pyfakefs import fake_filesystem_unittest
+from tests import testutils
+import numpy as np
+import featgraph.jwebgraph
+from featgraph import conversion, pathutils
 
 
-class TestFilter(unittest.TestCase):
-  """Tests for the filter functions in utils"""
+def test_filter_graph(base_path, dest_path, it):
+  # load graph
+  graph = importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
+      base_path)
 
-  def test_transform_map(self, basename):
-    graph = featgraph.jwebgraph.utils.BVGraph(basename)
-    type_filt = "popularity"
-    random.seed(42)
-    r = random.randint(0, int(graph.numNodes()))
-    thresh_filt = graph.artist(index=r).popularity
-    dest_path = basename + ".test-unittest-subgraph." + type_filt + "-" + str(thresh_filt)
-    map_array = list(map(lambda p: p > thresh_filt, graph.popularity(-20)))
-    subgraph = graph.transform_map(dest_path, map_array)
-    n = int(graph.numNodes())
-    m = int(subgraph.numNodes())
-    self.assertEqual(sum(map_array), m)
+  # it = filter
+  subgraph = graph.transform_map(dest_path, it)
+  return subgraph.numNodes()
 
 
-  def test_write_metadata(self, basename):
-    # load a graph
-    graph = featgraph.jwebgraph.utils.BVGraph(basename)
-    # create an iterable [bool] to store the results of the filtering of some property
-    missing_value = -20
-    random.seed(42)
-    r = random.randint(0, int(graph.numNodes()))
-    thresh_p = graph.artist(index=r).popularity
-    map_array = list(map(lambda p: p > thresh_p, graph.popularity(missing_value)))
-    dest_path = basename + ".test-unittest-subgraph.popularity"
-    subgraph = graph.transform_map(dest_path, map_array)
-    graph.write_metadata_files(self, map_array, dest_path)
-    j = 0
-    for m, b in zip(graph.popularity(), map_array):
-      if b:
-        self.assertEqual(m, subgraph.artist(index=j).popularity)
-        j += 1
+class TestFilter(
+    testutils.TestDataMixin,
+    unittest.TestCase,
+):
+  """Test conversion functions"""
+  adjacency_path = "faKedaTa_filter/collaboration_network_edge_list.pickle"
+  metadata_path = "faKedaTa_filter/artist_data.pickle"
+  base_path = "gRaphZ_filter/testexample-1560"
 
-    random.seed(42)
-    r = random.randint(0, int(graph.numNodes()))
-    thresh_g = graph.artist(index=r).genre
-    map_array = list(map(lambda g: g in thresh_g, graph.genre()))
-    dest_path = basename + ".test-unittest-subgraph.genre"
-    subgraph = graph.transform_map(dest_path, map_array)
-    graph.write_metadata_files(self, map_array, dest_path)
-    j = 0
-    for m, b in zip(graph.genre(), map_array):
-      if b:
-        self.assertEqual(m, subgraph.artist(index=j).genre)
-        j += 1
+  def test_whole_filter(self):
+    """Test whole filter"""
+    tmpdir = ".tmp_f1lt3r_t3st"
+    self.adjacency_path = os.path.join(tmpdir, self.adjacency_path)
+    self.metadata_path = os.path.join(tmpdir, self.metadata_path)
+    self.base_path = os.path.join(tmpdir, self.base_path)
+    self.setup_pickles_fn()
+    dest_path = self.base_path + "filtered"
+    dest_path_fn = pathutils.derived_paths(dest_path)
 
-    random.seed(42)
-    r = random.randint(0, int(graph.numNodes()))
-    type_centrality = "hc"
-    thresh_c = graph.centrality(type_centrality)[r]
-    map_array = list(map(lambda c: c in thresh_c, graph.centrality(type_centrality)))
-    dest_path = basename + ".test-unittest-subgraph." + type_centrality
-    subgraph = graph.transform_map(dest_path, map_array)
-    graph.write_metadata_files(self, map_array, dest_path)
-    c_sub = subgraph.centrality(type_centrality)
-    j = 0
-    for m, b in zip(graph.centrality(type_centrality), map_array):
-      if b:
-        self.assertEqual(m, c_sub[j])
-        j += 1
+    with self.check_files_exist(
+            # initial graph
+            self.path("followers", "txt"),
+            self.path("graph"),
+            self.path("ids", "txt"),
+            self.path("offsets"),
+            self.path("properties"),
+            self.path("genre", "txt"),
+            self.path("name", "txt"),
+            self.path("popularity", "txt"),
+            self.path("type", "txt"),
+            self.path("graph-txt"),
+
+            # trasnformed graph
+            dest_path_fn("followers", "txt"),
+            dest_path_fn("graph"),
+            dest_path_fn("ids", "txt"),
+            dest_path_fn("offsets"),
+            dest_path_fn("properties"),
+            dest_path_fn("genre", "txt"),
+            dest_path_fn("name", "txt"),
+            dest_path_fn("popularity", "txt"),
+            dest_path_fn("type", "txt"),
+
+            # directories and pickles
+            os.path.dirname(self.path()),
+            self.adjacency_path,
+            self.metadata_path,
+            os.path.dirname(self.adjacency_path),
+            os.path.dirname(os.path.dirname(self.path())),
+    ):
+
+
+      conversion.main(self.adjacency_path, self.metadata_path, self.base_path)
+
+      # check with files
+      it = np.greater(np.random.rand(self.nnodes), 0.5)
+      n_out = it.sum()
+      self.assertEqual(
+          n_out,
+          featgraph.jwebgraph.jvm_process_run(
+              test_filter_graph,
+              args=(self.base_path, dest_path, it),
+              return_type="i",
+              jvm_kwargs=dict(jvm_path=testutils.jvm_path),
+          ))

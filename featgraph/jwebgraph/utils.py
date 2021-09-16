@@ -2,7 +2,6 @@
 The JVM should be started before importing this module"""
 import json
 import functools
-import itertools
 import jpype
 from featgraph import pathutils, metadata
 import os
@@ -10,7 +9,8 @@ import numpy as np
 import sys
 import featgraph.misc
 from featgraph.misc import VectorOrCallable
-from typing import Union, List, Sequence, Iterable
+from typing import Union, List, Sequence, Iterable, Optional
+
 # imports from java
 try:
   from it.unimi.dsi import law, webgraph
@@ -294,7 +294,9 @@ class BVGraph:
 
     Args:
       kwargs: Keyword arguments for :meth:`hyperball`"""
-    self.hyperball(command="-c", path=self.path("closenessc", "ranks"), **kwargs)
+    self.hyperball(command="-c",
+                   path=self.path("closenessc", "ranks"),
+                   **kwargs)
 
   def closenessc(self):
     """Load the Closeness Centrality vector from file
@@ -303,107 +305,63 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
-  def write_line_metadata(self, dest_path: str, line: int, overwrite: bool):
-    """Function that opens the metadata files of the original graph, read the specified line related to the node we are
-        evaluating and writes that line in the metadata files of the new graph we are generating.
-
-        Args:
-          dest_path (str): the base path associated with the new graph
-          line (int): index of the line to be read
-          overwrite (bool): Bool that indicates if the file we are going to write to must be overwritten or not
-    """
-    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
-    if overwrite == True:
-      # write_flag indicates if it is the first time we are writing in the metadata files for this graph.
-      # If it is, we overwrite the existing file to write a new one.
-      # If it is not, we append a new line to the existing file, created in the preceeding loop in trasnform_map.
-      write_flag = 'w'
-    else:
-      write_flag = 'a'
-    for key in metadata_list:
-      src_path = self.base_path + '.' + key
-      new_path = dest_path + '.' + key
-      with open(src_path + '.txt', 'r') as fn, open(new_path + '.txt', write_flag) as fn1:
-        cont = fn.readlines()[line]
-        fn1.write(cont)
-
-  def write_metadata_files(self, rowfilter: Iterable[bool], dest_path: str):
-    """Function that writes the metadata files for the filtered graph.
-
-       Args:
-        rowfilter (Iterable[bool]): iterable that contains bool values indicating which rows are to keep and which are
-          to remove
-        dest_path (str): string that specifies the prefix of the paths for the new metadata files
-    """
-    # Prepare input files
-    # Write nrows in each of nfiles files
-    src_path = self.base_path + "."
-    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
-    infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
-    outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
-    open_read = functools.partial(open, mode="r", encoding="utf-8")
-    open_write = functools.partial(open, mode="w", encoding="utf-8")
-    with featgraph.misc.multicontext(map(open_read, infnames)) as infiles:
-      with featgraph.misc.multicontext(map(open_write, outfnames)) as outfiles:
-        # for every filter value and row (in parallel)
-        for b, inrows in zip(rowfilter, zip(*infiles)):
-          # if the filter value is True
-          if b:
-            # write the row from an input file to the corresponding output file
-            for row, outfile in zip(inrows, outfiles):
-              outfile.write(row)
-
-  def transform_map(self, dest_path: str, it: Iterable[bool], overwrite: bool = False) -> "BVGraph":
-    """Transform a graph according to the mapping in map_array. If map[i] == -1, the node is removed.
+  def transform_map(self, dest_path: str, it: Iterable[bool]) -> "BVGraph":
+    """Transform a graph according to the mapping in map_array.
+    If map[i] == -1, the node is removed.
 
         Args:
           dest_path (str): path where to save the filtered graph
-          it (list[int]): list of integer values that indicates the indices of the nodes of the filtered graph
-          overwrite (bool): bool to indicate if the function overwrites the existing files or not
+          it (list[int]): list of integer values that indicates the indices of
+            the nodes of the filtered graph
+          overwrite (bool): bool to indicate if the function overwrites the
+            existing files or not
         Returns:
           a BVGraph which is the filtered graph
     """
     n_nodes = int(self.numNodes())
     map_array = jpype.JInt[n_nodes]
     j = 0
-    for i, f in enumerate(it):
-      if f:
-        map_array[i] = j
-        j += 1
-      else:
-        map_array[i] = -1
-    self.write_metadata_files(it, dest_path)
-    webgraph.Transform.map(self.load(), map_array)
-    path = dest_path
-    if overwrite or pathutils.notisglob(path + "*"):
-      webgraph.BVGraph.store(self, path)
+
+    # open metadata files
+    src_path = self.base_path + "."
+    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
+    infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
+    outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
+    open_read = functools.partial(open, mode="r", encoding="utf-8")
+    open_write = functools.partial(open, mode="w", encoding="utf-8")
+
+    with featgraph.misc.multicontext(map(open_read, infnames)) as infiles:
+      with featgraph.misc.multicontext(map(open_write, outfnames)) as outfiles:
+
+        for i, (b, inrows) in enumerate(zip(it, zip(*infiles))):
+          if b:
+            map_array[i] = j
+            for row, outfile in zip(inrows, outfiles):
+              outfile.write(row)
+            j += 1
+          else:
+            map_array[i] = -1
+    # write
+    # self.write_metadata_files(it, dest_path)
+    filtered_graph = webgraph.Transform.map(self.load(), map_array)
+    # if overwrite or pathutils.notisglob(dest_path + "*"):
+    webgraph.BVGraph.store(filtered_graph, dest_path)
     return BVGraph(base_path=dest_path, sep=self.sep)
 
-
-  def filter_metric(self, metric, it):
-    """Function that gets a list containing the graph values for a certain metric and a list of indices.
-       Returns the metrics of the specified indices.
-
-        Args:
-          metrics (list[int]): a list of int containing the matric values for all nodes of the graph
-          indices (list[int]): a list of int specifying the indices of the nodes we want to consider
-        Returns:
-          m (int): the values of the metric to be returned
-       """
-    for m, b in zip(metric, it):
-      if b:
-        yield m
-
-  def popularity(self, missing_value: int):
-    """Function that retrieve the popularity inside the popularity.txt file of the graph
+  def popularity(self, missing_value: Optional = None):
+    """Function that retrieve the popularity inside the popularity.txt file of
+       the graph
 
         Args:
-          missing_value (int): value to assign to an artist in case her popularity is unknown
+          missing_value (int): value to assign to an artist in case her
+            popularity is unknown
         Returns:
-          the string (str) containing the popularities of the artists of the graph"""
-    missing_value = str(missing_value)
-    with open(self.path("popularity", "txt"), "r") as f:
-      return [float(r.rstrip("\n") or missing_value) for r in f]
+          the string (str) containing the popularities of the artists of the
+          graph"""
+    with open(self.path("popularity", "txt"), "r", encoding="utf-8") as f:
+      return [
+          float(s) if s else missing_value for s in (r.rstrip("\n") for r in f)
+      ]
 
   def genre(self):
     """Function that retrieve the genre inside the genre json file of the graph
@@ -411,70 +369,8 @@ class BVGraph:
         Returns:
           the json containing the genres of the artists of the graph"""
 
-    with open(self.path("genre", "txt"), "r") as f:
+    with open(self.path("genre", "txt"), "r", encoding="utf-8") as f:
       return [json.loads(r.rstrip("\n")) for r in f]
-
-  def popularity_filter(self, threshold: int):
-    """Filter the graph nodes based on thei popularity, according to the specified threshold
-
-        Args:
-          threshold (int): the threshold to filter the artists based on their popularity values
-        Returns:
-          filtered_nodes (int list): the list containing the indices of the filtered nodes"""
-    pop_values = self.popularity(missing_value=-20)
-    filtered_nodes = list(
-      filter(lambda i: (pop_values[i] > threshold), range(len(pop_values))))
-    return filtered_nodes
-
-  def genre_filter(self, threshold: str, key: str):
-    """Filter the graph nodes based on their genre, according to the specified threshold
-
-        Args:
-          threshold (str): a list of genres to filter the artists
-          key (str): a str that indicates if we want to select the nodes considering AND or OR to evaluate the genre
-              values of an artist
-        Returns:
-          filtered_nodes (list[int]): the list containing the indices of the filtered nodes"""
-    genre_values = self.genre()
-    if key == 'and':
-      filtered_nodes = list(
-        filter(lambda i: (all(x in genre_values[i] for x in threshold)),
-               range(len(genre_values))))
-    elif key == 'or':
-      filtered_nodes = list(
-        filter(lambda i: (any(x in genre_values[i] for x in threshold)),
-               range(len(genre_values))))
-    return filtered_nodes
-
-  def centrality(self, type_c: str):
-    """Filter the graph nodes based on their genre, according to the specified threshold
-
-      Args:
-        type_c (str): a str indicating which kind of centrality to consider
-      Returns:
-        c_values (list[int]): a list containing the (specified) centrality values for each artist"""
-    if type_c == "pagerank":
-      c_values = self.pagerank()
-    elif type_c == "hc":
-      c_values = self.harmonicc()
-    elif type_c == "closenessc":
-      c_values = self.closenessc()
-    else:
-      print("Unknown centrality")
-    return c_values
-
-  def centrality_filter(self, type_c: str, threshold: int):
-    """Filter the graph nodes based on their centrality, according to the specified threshold
-
-        Args:
-          type_c (str): a str indicating the type of centrality to consider
-          threshold (int): the threshold to filter the artists based on their centrality values
-        Returns:
-          filtered_nodes (int list): the list containing the indices of the filtered nodes"""
-    c_values = self.centrality(type_c)
-    filtered_nodes = list(
-      filter(lambda i: (c_values[i] > threshold), range(len(c_values))))
-    return filtered_nodes
 
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset
@@ -509,7 +405,3 @@ class BVGraph:
     else:
       arg = arg[:n]
     return [self.artist(index=i) for i in arg]
-
-
-
-

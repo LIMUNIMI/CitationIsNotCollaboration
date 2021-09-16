@@ -62,15 +62,9 @@ metadata_labels: Tuple[str, ...] = (
     "followers",
 )
 
+metadata_fmt = {"genre": json.dumps}
 
-metadata_fmt = {
-  "genre": json.dumps
-}
-
-
-metadata_missing = {
-  "genre": []
-}
+metadata_missing = {"genre": []}
 
 
 def make_metadata_txt(
