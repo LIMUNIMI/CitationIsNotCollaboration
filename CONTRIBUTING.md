@@ -167,5 +167,5 @@ Format rules are in the [`.style.yapf`](.style.yapf) file.
 As for [code style](#code-style), we are using Google's style.
 To reformat the codebase, run this command from the repository root directory
 ```
-yapf -ir feagraph tests
+yapf -ir featgraph tests
 ```
