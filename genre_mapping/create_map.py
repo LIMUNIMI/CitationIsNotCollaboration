@@ -147,8 +147,12 @@ def main(*argv):
     output_dict[g] = supergenre_from_tokens(g, tokenized_source_json,
                                             direct_source_json, preprocess_json)
     while args.interactive and len(output_dict[g]) == 0:
-      args.interactive = not interactive_update(g, tokenized_source_json,
-                                                direct_source_json)
+      try:
+        args.interactive = not interactive_update(g, tokenized_source_json,
+                                                  direct_source_json)
+      except Exception:  # pylint: disable=W0703
+        args.interactive = False
+        break
       output_dict[g] = supergenre_from_tokens(g, tokenized_source_json,
                                               direct_source_json,
                                               preprocess_json)
