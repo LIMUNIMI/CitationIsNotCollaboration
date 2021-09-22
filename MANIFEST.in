@@ -1,1 +1,2 @@
 include featgraph/jwebgraph/dependencies.json
+include featgraph/genre_map.json
