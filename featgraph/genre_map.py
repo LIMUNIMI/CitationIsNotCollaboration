@@ -2,14 +2,17 @@
 import more_itertools
 import functools
 import json
+import os
 from typing import Dict, List, Optional, Iterable
+
+
+_json_fname = ".".join((os.path.splitext(__file__)[0], "json"))
 
 
 @functools.lru_cache(maxsize=1)
 def get_default_map() -> Dict[str, List[str]]:
   """Get the default genre map dictionary"""
-  fname = __file__[::-1].replace(".py"[::-1], ".json"[::-1], 1)[::-1]
-  with open(fname, "r", encoding="utf-8") as f:
+  with open(_json_fname, "r", encoding="utf-8") as f:
     d = json.load(f)
   return d
 

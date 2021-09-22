@@ -36,7 +36,11 @@ class TestMetadata(testutils.TestDataMixin, unittest.TestCase):
             self.assertTrue(isinstance(n, metadata.Artist))
         with self.subTest(property="genre", aid=aid):
           self.assertTrue(isinstance(a.genre, list))
-          for g in a.genre:  # pylint: disable=E1133 (false positive)
+          for g in a.genre:
+            self.assertTrue(isinstance(g, str))
+        with self.subTest(property="supergenre", aid=aid):
+          self.assertTrue(isinstance(a.supergenre, list))
+          for g in a.supergenre:
             self.assertTrue(isinstance(g, str))
         with self.subTest(property="degree", aid=aid):
           self.assertEqual(a.degree, len(a.neighbors))

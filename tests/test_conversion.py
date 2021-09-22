@@ -187,6 +187,7 @@ class TestConversion(
       check_fail("popularity")
       # genre
       check_fail("genre")
+      check_fail("supergenre")
       # best
       with self.subTest(check="best", what="indegrees"):
         self.assertEqual(
