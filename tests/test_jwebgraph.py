@@ -105,7 +105,7 @@ def test_load_as_doubles(fname: str,
   a = (np.random.rand(n) * scale).astype(int)
   with open(fname, "w", encoding="utf-8") as f:
     for x in a:
-      f.write("{:.0f}\n".format(x))
+      f.write(f"{x:.0f}\n")
   b = importlib.import_module("featgraph.jwebgraph.utils").load_as_doubles(
       fname)
   return sum(x != int(y) for x, y in zip(a, b))

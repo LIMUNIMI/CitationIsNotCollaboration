@@ -22,7 +22,7 @@ def make_asciigraph_txt(
   if overwrite or pathutils.notisfile(path):
     with open(path, "w", encoding=encoding) as txt:
       logger.info("Writing ASCIIGraph file: %s", path)
-      txt.write("{}\n".format(graph.number_of_nodes()))
+      txt.write(f"{graph.number_of_nodes()}\n")
       for i in range(graph.number_of_nodes()):
         neighbors = sorted(graph[i])
         txt.write(" ".join(map(str, neighbors)) + "\n")
@@ -48,7 +48,7 @@ def make_attribute_txt(graph: nx.Graph,
     with open(path, "w", encoding=encoding) as txt:
       logger.info("Writing Node '%s' file: %s", attr, path)
       for i in range(graph.number_of_nodes()):
-        txt.write("{}\n".format(graph.nodes[i].get(attr, missing)))
+        txt.write(f"{graph.nodes[i].get(attr, missing)}\n")
 
 
 def nx2bv(

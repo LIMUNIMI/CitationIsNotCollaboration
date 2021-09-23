@@ -70,8 +70,8 @@ def interactive_update(subgenre: str, token_dict: Dict[str, Union[str,
 
   Returns:
     bool: Whether a skip has been requested or not"""
-  s = input("Create association for genre '{}'\n"
-            "[T -> token, D -> direct, others skip] ".format(subgenre)).lower()
+  s = input(f"Create association for genre '{subgenre}'\n"
+            "[T -> token, D -> direct, others skip] ").lower()
   if s == "t":
     t = input("Token (empty to skip):      ").strip()
     if t == "":

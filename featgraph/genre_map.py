@@ -5,7 +5,6 @@ import json
 import os
 from typing import Dict, List, Optional, Iterable
 
-
 _json_fname = ".".join((os.path.splitext(__file__)[0], "json"))
 
 

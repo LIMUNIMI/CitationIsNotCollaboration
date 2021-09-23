@@ -106,8 +106,8 @@ class TestDataMixin:
 
     Args:
       seed (int): RNG seed"""
-    with fake_filesystem_unittest.Patcher() as patcher:  # pylint: disable=W0212
-      patcher.fs.add_real_file(genre_map._json_fname, read_only=True)
+    with fake_filesystem_unittest.Patcher() as patcher:
+      patcher.fs.add_real_file(genre_map._json_fname, read_only=True)  # pylint: disable=W0212
       self.setup_pickles_fn(seed)
       yield
 

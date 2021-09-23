@@ -60,7 +60,7 @@ def scatter(
   if len(tit_li) > 0:
     tit_li = [" ".join(tit_li)]
   if kt is not None:
-    tit_li.append(r"(Kendall $\tau$ = {:.5f})".format(kt))
+    tit_li.append(fr"(Kendall $\tau$ = {kt:.5f})")
   if len(tit_li) > 0:
     ax.set_title("\n".join(tit_li))
   return ax

@@ -120,8 +120,8 @@ class BVGraph:
 
   def __str__(self) -> str:
     """Pretty-print graph name and path pattern"""
-    return "{} '{}' at '{}{}*'".format(
-        type(self).__name__, self.basename, self.base_path, self.sep)
+    return f"{type(self).__name__} '{self.basename}' " \
+           f"at '{self.base_path}{self.sep}*'"
 
   @property
   def loaded(self) -> bool:
@@ -196,7 +196,7 @@ class BVGraph:
     Returns:
       str: File path"""
     alpha = _pagerank_alpha_preprocess(alpha)
-    return self.path("pagerank-{:02.0f}".format(100 * alpha), *suffix)
+    return self.path(f"pagerank-{100 * alpha:02.0f}", *suffix)
 
   def compute_pagerank(self, alpha: float = 0.85, overwrite: bool = False):
     r"""Compute PageRank of a graph given its transpose
@@ -209,7 +209,7 @@ class BVGraph:
     if overwrite or pathutils.notisglob(self.pagerank_path("*", alpha=alpha)):
       law.rank.PageRankParallelGaussSeidel.main([
           "--alpha",
-          "{:.2f}".format(alpha),
+          f"{alpha:.2f}",
           self.path("transpose"),
           self.pagerank_path(alpha=alpha),
       ])
@@ -242,7 +242,7 @@ class BVGraph:
     if pathutils.notisfile(path):
       webgraph.algo.HyperBall.main([
           "--log2m",
-          "{:.0f}".format(nbits),
+          f"{nbits:.0f}",
           "--offline",
           "--external",
           command,

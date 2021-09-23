@@ -61,8 +61,8 @@ class Artist:
 
   def __str__(self) -> str:
     """Display artist ID and name (if name is in metadata)"""
-    name = "" if self.name is None else ", name='{}'".format(self.name)
-    return "Artist(aid='{}'{})".format(self.aid, name)
+    name = "" if self.name is None else f", name='{self.name}'"
+    return f"Artist(aid='{self.aid}'{name})"
 
   @property
   def _derived_paths(self) -> Callable[[str], str]:
@@ -100,8 +100,7 @@ class Artist:
         for i, n in enumerate(r.rstrip("\n") for r in f):
           if n == v:
             return i + offset
-      raise ValueError("No artist was found for {} '{}' in file '{}'".format(
-          k, v, fname))
+      raise ValueError(f"No artist was found for {k} '{v}' in file '{fname}'")
     raise ValueError("Please, specify at least one of: index, aid, name")
 
   def _property_from_file(self, kp: str) -> str:
@@ -119,9 +118,8 @@ class Artist:
     with open(fname, "r", encoding=self.encoding) as f:
       v = more_itertools.nth(f, self.index - offset)
       if v is None:
-        raise EOFError(
-            "Ran out of input while looking for row {} in file '{}'".format(
-                self.index, fname))
+        raise EOFError(f"Ran out of input while looking for"
+                       f"row {self.index} in file '{fname}'")
       return v.rstrip("\n")
 
   @property

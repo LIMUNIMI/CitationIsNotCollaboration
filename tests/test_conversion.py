@@ -31,9 +31,8 @@ def run_bvgraph_func(base_path: str,
 def check_graph_name(base_path: str):
   """Check graph name"""
   return str(
-      importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
-          base_path)) == "BVGraph '{}' at '{}.*'".format(
-              os.path.basename(base_path), base_path)
+      importlib.import_module("featgraph.jwebgraph.utils").BVGraph(base_path)
+  ) == f"BVGraph '{os.path.basename(base_path)}' at '{base_path}.*'"
 
 
 def check_best(base_path: str, func: str, reverse: bool = True) -> str:
@@ -224,7 +223,7 @@ class TestConversion(
         with self.subTest(check="ids file content"):
           self.assertEqual(
               f.read(),
-              "".join(map("{}\n".format, sorted(self.adjacency_dict.keys()))))
+              "".join(f"{s}\n" for s in sorted(self.adjacency_dict.keys())))
 
   def test_make_metadata(self):
     """Test making metadata files"""

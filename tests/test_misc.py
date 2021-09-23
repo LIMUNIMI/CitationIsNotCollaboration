@@ -45,8 +45,7 @@ class TestMisc(unittest.TestCase):
   def test_multicontext(self):
     """Test multicontext wrapper"""
     with fake_filesystem_unittest.Patcher():
-      filenames = list(
-          map("multicontext-test-file-{:02.0f}.txt".format, range(16)))
+      filenames = [f"multicontext-test-file-{i:02.0f}.txt" for i in range(16)]
       with featgraph.misc.multicontext(
           open(fn, mode="w", encoding="utf-8") for fn in filenames) as files:
         for f, fn in zip(files, filenames):
