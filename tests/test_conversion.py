@@ -61,18 +61,8 @@ class TestConversion(
     self.setup_pickles_fn()
 
     with self.check_files_exist(
-        self.path("followers", "txt"),
-        self.path("graph"),
-        self.path("ids", "txt"),
-        self.path("offsets"),
-        self.path("properties"),
-        self.path("genre", "txt"),
-        self.path("name", "txt"),
-        self.path("popularity", "txt"),
-        self.path("type", "txt"),
-        self.path("transpose", "graph"),
-        self.path("transpose", "offsets"),
-        self.path("transpose", "properties"),
+        *testutils.graph_paths(self.base_path),
+        *testutils.graph_paths(self.path("transpose"), metadata_paths=False),
         self.path("stats", "stats"),
         self.path("stats", "indegree"),
         self.path("stats", "indegrees"),
@@ -83,11 +73,7 @@ class TestConversion(
         self.path("nf", "txt"),
         self.path("hc", "ranks"),
         self.path("closenessc", "ranks"),
-        os.path.dirname(self.path()),
-        self.adjacency_path,
-        self.metadata_path,
-        os.path.dirname(self.adjacency_path),
-        os.path.dirname(os.path.dirname(self.path())),
+        *self.pickles_paths(),
     ):
       with self.check_files_exist(self.path("graph-txt")):
         # convert

@@ -5,7 +5,7 @@ import unittest
 from tests import testutils
 import numpy as np
 import featgraph.jwebgraph
-from featgraph import conversion, pathutils
+from featgraph import conversion
 
 
 def test_filter_graph(base_path, dest_path, it):
@@ -35,39 +35,17 @@ class TestFilter(
     self.base_path = os.path.join(tmpdir, self.base_path)
     self.setup_pickles_fn()
     dest_path = self.base_path + "filtered"
-    dest_path_fn = pathutils.derived_paths(dest_path)
 
     with self.check_files_exist(
         # initial graph
-        self.path("followers", "txt"),
-        self.path("graph"),
-        self.path("ids", "txt"),
-        self.path("offsets"),
-        self.path("properties"),
-        self.path("genre", "txt"),
-        self.path("name", "txt"),
-        self.path("popularity", "txt"),
-        self.path("type", "txt"),
+        *testutils.graph_paths(self.base_path),
         self.path("graph-txt"),
 
-        # trasnformed graph
-        dest_path_fn("followers", "txt"),
-        dest_path_fn("graph"),
-        dest_path_fn("ids", "txt"),
-        dest_path_fn("offsets"),
-        dest_path_fn("properties"),
-        dest_path_fn("genre", "txt"),
-        dest_path_fn("name", "txt"),
-        dest_path_fn("popularity", "txt"),
-        dest_path_fn("type", "txt"),
+        # transformed graph
+        *testutils.graph_paths(dest_path),
 
         # directories and pickles
-        os.path.dirname(self.path()),
-        self.adjacency_path,
-        self.metadata_path,
-        os.path.dirname(self.adjacency_path),
-        os.path.dirname(os.path.dirname(self.path())),
-    ):
+        *self.pickles_paths()):
       conversion.main(
           self.adjacency_path,
           self.metadata_path,

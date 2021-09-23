@@ -3,9 +3,10 @@ import numpy as np
 from pyfakefs import fake_filesystem_unittest
 from chromatictools import pickle
 from featgraph import conversion, pathutils, metadata, genre_map
+import itertools
 import contextlib
 import os
-from typing import Optional, Iterable
+from typing import Optional, Iterable, List
 
 jvm_path = os.environ.get("FEATGRAPH_JAVA_PATH", None)
 
@@ -100,6 +101,16 @@ class TestDataMixin:
     pickle.save_pickled(self.metadata, self.metadata_path)
     os.makedirs(os.path.dirname(self.base_path), exist_ok=True)
 
+  def pickles_paths(self) -> List[str]:
+    """Get the pickle files and directories paths"""
+    return [
+        os.path.dirname(self.path()),
+        self.adjacency_path,
+        self.metadata_path,
+        os.path.dirname(self.adjacency_path),
+        os.path.dirname(os.path.dirname(self.path())),
+    ]
+
   @contextlib.contextmanager
   def fake_test_data(self, seed: int = 42):
     """Context manager for using test data on a fake filesystem
@@ -152,3 +163,35 @@ def check_neighbors(
       }).neighbors)
   b = sorted(neighbors)
   return a == b
+
+
+def graph_paths(base_path: str,
+                sep: str = ".",
+                metadata_paths: bool = True) -> List[str]:
+  """Returns the list of graph files
+
+  Args:
+    base_path (str): Base path of the graph files
+    sep (str): Separator for derived paths
+    metadata_paths (bool): If :data:`True` (default), also return
+      the paths of the metadata files
+
+  Returns:
+    list of str: Graph files paths"""
+  path_fn = pathutils.derived_paths(base_path, sep)
+  suffixes = [
+      ("graph",),
+      ("offsets",),
+      ("properties",),
+  ]
+  if metadata_paths:
+    suffixes = [
+        *suffixes,
+        ("followers", "txt"),
+        ("ids", "txt"),
+        ("genre", "txt"),
+        ("name", "txt"),
+        ("popularity", "txt"),
+        ("type", "txt"),
+    ]
+  return list(itertools.starmap(path_fn, suffixes))
