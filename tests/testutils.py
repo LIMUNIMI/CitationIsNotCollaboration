@@ -2,7 +2,7 @@
 import numpy as np
 from pyfakefs import fake_filesystem_unittest
 from chromatictools import pickle
-from featgraph import conversion, pathutils, metadata
+from featgraph import conversion, pathutils, metadata, genre_map
 import contextlib
 import os
 from typing import Optional, Iterable
@@ -106,7 +106,8 @@ class TestDataMixin:
 
     Args:
       seed (int): RNG seed"""
-    with fake_filesystem_unittest.Patcher():
+    with fake_filesystem_unittest.Patcher() as patcher:  # pylint: disable=W0212
+      patcher.fs.add_real_file(genre_map._json_fname, read_only=True)
       self.setup_pickles_fn(seed)
       yield
 

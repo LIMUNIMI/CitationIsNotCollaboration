@@ -4,15 +4,13 @@ import os
 import sys
 import json
 import pickle
-import argparse
 import importlib
 import itertools
 import functools
 import sortedcontainers
 from chromatictools import cli
-from featgraph import pathutils, logger, jwebgraph
+from featgraph import pathutils, logger, jwebgraph, scriptutils
 from typing import Optional, Callable, Iterable, Tuple, Union, List
-import logging
 
 
 def make_ids_txt(dst: str,
@@ -186,7 +184,7 @@ def compress_to_bvgraph(
 @cli.main(__name__, *sys.argv[1:])
 def main(*argv):
   """Run conversion script"""
-  parser = argparse.ArgumentParser(
+  parser = scriptutils.FeatgraphArgParse(
       description="Convert original pickled dataset into text and BVGraph files"
   )
   parser.add_argument("adjacency_path",
@@ -196,35 +194,7 @@ def main(*argv):
   parser.add_argument(
       "dest_path",
       help="The destination base path for the BVGraph and text files")
-  parser.add_argument("--jvm-path",
-                      metavar="PATH",
-                      help="The Java virtual machine full path")
-  parser.add_argument(
-      "-l",
-      "--log-level",
-      dest="log_level",
-      metavar="LEVEL",
-      default="INFO",
-      type=lambda s: str(s).upper(),
-      help="The logging level. Default is 'INFO'",
-  )
-  parser.add_argument(
-      "--tqdm",
-      action="store_true",
-      help="Use tqdm progress bar (you should install tqdm for this)",
-  )
-  args = parser.parse_args(argv)
-  try:
-    log_level = int(args.log_level)
-  except ValueError:
-    log_level = args.log_level
-  logging_kwargs = dict(
-      level=log_level,
-      format="%(asctime)s %(name)-12s %(levelname)-8s: %(message)s",
-      datefmt="%Y-%m-%d %H:%M:%S",
-  )
-  logging.basicConfig(**logging_kwargs)
-  tqdm = importlib.import_module("tqdm").tqdm if args.tqdm else None
+  args = parser.custom_parse(argv)
 
   # Make destination directory
   spotipath = pathutils.derived_paths(args.dest_path)
@@ -232,25 +202,26 @@ def main(*argv):
   if spotidir:
     os.makedirs(spotidir, exist_ok=True)
   # Make ids file
-  nnodes = make_ids_txt(spotipath("ids", "txt"), args.adjacency_path, tqdm)
+  nnodes = make_ids_txt(spotipath("ids", "txt"), args.adjacency_path, args.tqdm)
   # Make metadata files
   make_metadata_txt(
       spotipath,
       args.metadata_path,
       spotipath("ids", "txt"),
-      tqdm if tqdm is None else functools.partial(tqdm, total=nnodes),
+      args.tqdm if args.tqdm is None else functools.partial(args.tqdm,
+                                                            total=nnodes),
   )
   # Make adjacency lists file
   make_asciigraph_txt(
       spotipath("graph-txt"),
       args.adjacency_path,
       spotipath("ids", "txt"),
-      tqdm,
+      args.tqdm,
   )
   # Compress to BVGraph
   jwebgraph.jvm_process_run(
       compress_to_bvgraph,
       kwargs=dict(dst=spotipath(),),
-      logging_kwargs=logging_kwargs,
+      logging_kwargs=args.logging_kwargs,
       jvm_kwargs=dict(jvm_path=args.jvm_path,),
   )

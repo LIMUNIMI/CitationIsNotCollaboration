@@ -3,13 +3,13 @@ The JVM should be started before importing this module"""
 import json
 import functools
 import jpype
-from featgraph import pathutils, metadata
+from featgraph import pathutils, metadata, genre_map
 import os
 import numpy as np
 import sys
 import featgraph.misc
 from featgraph.misc import VectorOrCallable
-from typing import Union, List, Sequence, Iterable, Optional
+from typing import Union, List, Sequence, Iterable, Optional, Dict
 
 # imports from java
 try:
@@ -371,6 +371,22 @@ class BVGraph:
 
     with open(self.path("genre", "txt"), "r", encoding="utf-8") as f:
       return [json.loads(r.rstrip("\n")) for r in f]
+
+  def supergenre(
+      self,
+      genre_dict: Optional[Dict[str, List[str]]] = None) -> Iterable[List[str]]:
+    """The supergenres of each artist
+
+    Args:
+      genre_dict (dict): The genre map dictionary.
+        If :data:`None` (default), the the default map is used.
+
+    Returns:
+      iterable: The iterable of the lists of supergenre names
+    """
+    return map(
+        functools.partial(genre_map.supergenres_from_iterable,
+                          genre_map=genre_dict), self.genre())
 
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset

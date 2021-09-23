@@ -1,5 +1,5 @@
 """Convenience classes for accessing artist metadata from text files"""
-from featgraph import pathutils
+from featgraph import pathutils, genre_map
 import featgraph.misc
 import more_itertools
 import functools
@@ -139,6 +139,11 @@ class Artist:
       if value is missing"""
     s = self._property_from_file("genre")
     return json.loads(s)
+
+  @property
+  def supergenre(self) -> Sequence[str]:
+    """Artist music supergenres"""
+    return genre_map.supergenres_from_iterable(self.genre)
 
   @property
   @functools.lru_cache(maxsize=1)
