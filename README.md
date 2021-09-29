@@ -34,7 +34,7 @@ conda activate ./venv
 You can add extra development dependencies using the requirements files.
 
 ```
-conda install --file <FILE>
+conda install --file <FILE> -c conda-forge
 ```
 
  - `test-requirements.txt`: Tests dependencies
@@ -45,7 +45,7 @@ conda install --file <FILE>
 To install all dependencies, run
 
 ```
-conda install --file test-requirements.txt --file docs-requirements.txt --file style-requirements.txt --file notebooks-requirements.txt
+conda install -c conda-forge --file test-requirements.txt --file docs-requirements.txt --file style-requirements.txt --file notebooks-requirements.txt
 ```
 
 ### Add FeatGraph

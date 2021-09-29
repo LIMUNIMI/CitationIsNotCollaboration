@@ -7,5 +7,5 @@
    :caption: Contents
 
    featgraph
-   changelog
+   CONTRIBUTING.md
 ```

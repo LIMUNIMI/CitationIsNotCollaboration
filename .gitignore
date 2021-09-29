@@ -29,8 +29,8 @@ dist
 
 # Sphinx
 docs/build
-docs/source/*.rst
-!docs/source/index.rst
+docs/source
+!docs/source/index.md
 !docs/source/changelog.rst
 
 # IDE
