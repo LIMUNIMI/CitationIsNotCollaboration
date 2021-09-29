@@ -84,8 +84,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install java
       run: mkdir /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
-    - name: Install conda-build
-      run: conda install conda-build
     - name: Create environment
       run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file style-requirements.txt
     - name: Log python version
@@ -120,8 +118,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install java and make
       run: mkdir /usr/share/man/man1 && apt-get update && apt-get install -y default-jre build-essential
-    - name: Install conda-build
-      run: conda install conda-build
     - name: Create environment
       run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file docs-requirements.txt
     - name: Log python version
