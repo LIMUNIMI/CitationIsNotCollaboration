@@ -1,13 +1,11 @@
-.. featgraph master file
+```{include} ../../README.md
+```
 
-.. mdinclude:: ../../README.md
-
-Package
-=======
-
+```{eval-rst}
 .. toctree::
    :maxdepth: 1
    :caption: Contents
 
    featgraph
    changelog
+```
