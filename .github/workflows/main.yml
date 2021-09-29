@@ -37,46 +37,46 @@ jobs:
     - name: Test
       run: conda run --prefix ./venv python -m unittest -v tests
 
-#  coverage:
-#    runs-on: ubuntu-latest
-#    container: continuumio/miniconda3
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Install java
-#      run: mkdir /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
-#    - name: Install conda-build
-#      run: conda install conda-build
-#    - name: Add featgraph
-#      run: conda develop .
-#    - name: Run coverage
-#      run: python -m coverage run
-#    - name: Collect coverage from multithreading
-#      run: python -m coverage combine
-#    - name: Make coverage JSON
-#      run: python -m coverage json
-#    - name: Upload coverage JSON
-#      uses: actions/upload-artifact@v1
-#      with:
-#        name: coverage_report
-#        path: coverage.json
-#    - name: Install chromatictools
-#      run: python -m pip install chromatictools
-#    - name: Download badge
-#      run: wget $(python -m chromatictools.badges coverage) -O badge.svg
-#    - name: Upload svg
-#      uses: actions/upload-artifact@v1
-#      with:
-#        name: coverage_badge
-#        path: badge.svg
-#    - name: Deploy badge
-#      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-#      uses: exuanbo/actions-deploy-gist@v1
-#      with:
-#        token: ${{ secrets.GIST_TOKEN }}
-#        gist_id: 18a4dd9093b1c271ce6f9d117cc5ba40
-#        gist_file_name: featgraph-coverage-badge.svg
-#        file_path: badge.svg
-#
+  coverage:
+    runs-on: ubuntu-latest
+    container: continuumio/miniconda3
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install java
+      run: mkdir /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
+    - name: Install conda-build
+      run: conda install conda-build
+    - name: Create environment
+      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file test-requirements.txt
+    - name: Log python version
+      run: conda run --prefix ./venv python --version
+    - name: Run coverage
+      run: conda run --prefix ./venv python -m coverage run
+    - name: Collect coverage from multithreading
+      run: conda run --prefix ./venv python -m coverage combine
+    - name: Make coverage JSON
+      run: conda run --prefix ./venv python -m coverage json
+    - name: Upload coverage JSON
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage_report
+        path: coverage.json
+    - name: Download badge
+      run: wget $(conda run --prefix ./venv python -m chromatictools.badges coverage) -O badge.svg
+    - name: Upload svg
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage_badge
+        path: badge.svg
+    - name: Deploy badge
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      uses: exuanbo/actions-deploy-gist@v1
+      with:
+        token: ${{ secrets.GIST_TOKEN }}
+        gist_id: 18a4dd9093b1c271ce6f9d117cc5ba40
+        gist_file_name: featgraph-coverage-badge.svg
+        file_path: badge.svg
+
 #  lint:
 #    runs-on: ubuntu-latest
 #    container: python:3.8
