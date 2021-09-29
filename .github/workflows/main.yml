@@ -77,40 +77,42 @@ jobs:
         gist_file_name: featgraph-coverage-badge.svg
         file_path: badge.svg
 
-#  lint:
-#    runs-on: ubuntu-latest
-#    container: python:3.8
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Install
-#      run: python -m pip install . --use-feature=in-tree-build
-#    - name: Install lint dependencies
-#      run: python -m pip install -Ur style-requirements.txt
-#    - name: Run pylint
-#      run: pylint featgraph tests -r y --exit-zero --jobs 1 --persistent=n --rcfile=pylintrc > pylint.txt
-#    - name: Upload lint report
-#      uses: actions/upload-artifact@v1
-#      with:
-#        name: lint_report
-#        path: pylint.txt
-#    - name: Install chromatictools
-#      run: python -m pip install chromatictools
-#    - name: Download badge
-#      run: wget $(python -m chromatictools.badges pylint) -O badge.svg
-#    - name: Upload svg
-#      uses: actions/upload-artifact@v1
-#      with:
-#        name: pylint_badge
-#        path: badge.svg
-#    - name: Deploy badge
-#      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-#      uses: exuanbo/actions-deploy-gist@v1
-#      with:
-#        token: ${{ secrets.GIST_TOKEN }}
-#        gist_id: 18a4dd9093b1c271ce6f9d117cc5ba40
-#        gist_file_name: featgraph-pylint-badge.svg
-#        file_path: badge.svg
-#
+  lint:
+    runs-on: ubuntu-latest
+    container: continuumio/miniconda3
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install java
+      run: mkdir /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
+    - name: Install conda-build
+      run: conda install conda-build
+    - name: Create environment
+      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file style-requirements.txt
+    - name: Log python version
+      run: conda run --prefix ./venv python --version
+    - name: Run pylint
+      run: conda run --prefix ./venv pylint featgraph tests -r y --exit-zero --jobs 1 --persistent=n --rcfile=pylintrc > pylint.txt
+    - name: Upload lint report
+      uses: actions/upload-artifact@v1
+      with:
+        name: lint_report
+        path: pylint.txt
+    - name: Download badge
+      run: wget $(conda run --prefix ./venv python -m chromatictools.badges pylint) -O badge.svg
+    - name: Upload svg
+      uses: actions/upload-artifact@v1
+      with:
+        name: pylint_badge
+        path: badge.svg
+    - name: Deploy badge
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      uses: exuanbo/actions-deploy-gist@v1
+      with:
+        token: ${{ secrets.GIST_TOKEN }}
+        gist_id: 18a4dd9093b1c271ce6f9d117cc5ba40
+        gist_file_name: featgraph-pylint-badge.svg
+        file_path: badge.svg
+
 #  sphinx:
 #    runs-on: ubuntu-latest
 #    container: python:3.8
