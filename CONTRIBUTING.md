@@ -1,4 +1,4 @@
-# Contributing to FeatGraph
+# Contributing
 The following is a set of guidelines for contributing to FeatGraph on GitHub.
 These are mostly guidelines, not rules. So, use your best judgment.
 
@@ -94,7 +94,7 @@ git add --patch <path/to/notebook.ipynb>
 Your code should pass all unit tests before it is merged onto `develop`.
 Install the Python packages required to run unit tests with
 ```
-pip install -Ur test-requirements.txt
+conda install --file test-requirements.txt -c conda-forge
 ```
 ### Unit Tests
 To perform unit tests, run this command from the repository root directory
@@ -121,7 +121,7 @@ coverage json
 Documentation is generated from docstrings with `sphinx`.
 Install the Python packages required to make documentation with
 ```
-pip install -Ur docs-requirements.txt
+conda install --file docs-requirements.txt -c conda-forge
 ```
 
 Build the HTML documentation running this command in the
@@ -143,7 +143,7 @@ and published on [GitHub Pages](https://chromaticisobar.github.io/featgraph)
 ## Styleguides
 Install the Python packages required to automate style check and formatting with
 ```
-pip install -Ur style-requirements.txt
+conda install --file style-requirements.txt -c conda-forge
 ```
 
 ### Code style

@@ -10,14 +10,18 @@ help:
 
 .PHONY: help clean rst Makefile
 
-%: Makefile rst
+%: Makefile rst $(SOURCEDIR)/CONTRIBUTING.md
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean: clean_rst
+	rm -f $(SOURCEDIR)/CONTRIBUTING.md
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 rst:
 	sphinx-apidoc -e -T -M -o "$(SOURCEDIR)" "$(PROJECTDIR)"
+
+$(SOURCEDIR)/CONTRIBUTING.md:
+	cp ../CONTRIBUTING.md $@
 
 clean_rst:
 	mkdir -p .tmp
