@@ -32,6 +32,7 @@ setuptools.setup(
     "networkx",
     "scipy",
     "numpy",
+    "pymc3",
   ],
   extras_require={
     "plots": [

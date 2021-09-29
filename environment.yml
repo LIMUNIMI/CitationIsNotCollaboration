@@ -12,3 +12,4 @@ dependencies:
   - networkx
   - scipy
   - numpy
+  - pymc3

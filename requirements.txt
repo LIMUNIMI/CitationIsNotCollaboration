@@ -6,3 +6,4 @@ more-itertools
 networkx
 scipy
 numpy
+pymc3
