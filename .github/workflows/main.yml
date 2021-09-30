@@ -34,7 +34,7 @@ jobs:
     - name: Add featgraph
       run: conda develop . --prefix ./venv
     - name: Test
-      run: conda run --prefix ./venv python -m unittest -v tests
+      run: conda run --prefix ./venv python -m unittest -v
 
   coverage:
     runs-on: ubuntu-latest
