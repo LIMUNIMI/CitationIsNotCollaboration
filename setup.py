@@ -33,6 +33,7 @@ setuptools.setup(
     "scipy",
     "numpy",
     "pymc3",
+    "arviz<=0.11.0",
   ],
   extras_require={
     "plots": [
