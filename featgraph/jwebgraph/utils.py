@@ -2,10 +2,12 @@
 The JVM should be started before importing this module"""
 import json
 import functools
+import itertools
 import jpype
 from featgraph import pathutils, metadata, genre_map
 import os
 import numpy as np
+import pandas as pd
 import sys
 import featgraph.misc
 from featgraph.misc import VectorOrCallable
@@ -395,6 +397,34 @@ class BVGraph:
     return map(
         functools.partial(genre_map.supergenres_from_iterable,
                           genre_map=genre_dict), self.genre())
+
+  def supergenre_dataframe(self,
+                           genre_dict: Optional[Dict[str, List[str]]] = None,
+                           **kwargs: Dict[str, Iterable]) -> pd.DataFrame:
+    """Make a dataframe of the values in the itarables and pair
+    it with information about the artist's supergenre. Every artist will have
+    one row in the dataframe for each of their supergenres
+
+    Args:
+      genre_dict (dict): The genre map dictionary.
+        If :data:`None` (default), the the default map is used.
+      kwargs (iterables): Named iterables for the dataframe columns
+
+    Returns:
+      iterable: The iterable of the lists of supergenre names
+    """
+    keys = tuple(kwargs.keys())
+    values = {k: [] for k in ("aid", "genre", *keys)}
+    vals = (itertools.repeat(
+        ()),) if len(keys) == 0 else (zip(*[kwargs[k] for k in keys]),)
+    for ai, sgi, ti in zip(self.ids(), self.supergenre(genre_dict=genre_dict),
+                           *vals):
+      for s in sgi:
+        values["aid"].append(ai)
+        values["genre"].append(s)
+        for k, v in zip(keys, ti):
+          values[k].append(v)
+    return pd.DataFrame(data=values)
 
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset
