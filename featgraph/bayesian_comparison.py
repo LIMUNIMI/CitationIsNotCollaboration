@@ -32,26 +32,28 @@ class StudentTComparison:
     self.dof_mean = dof_mean
     self.deepcopy = deepcopy
 
-  def fit(self, x_1, x_2, name_1: str = "group1", name_2: str = "group2"):
+  def fit(self, **kwargs):
     """Fit the comparison model to two (unpaired) population samples
 
     Args:
-      x_1 (array): The first population's samples
-      x_2 (array): The second population's samples
-      name_1 (str): The first population's name (default is :data:`"group1"`)
-      name_2 (str): The second population's name (default is :data:`"group2"`)
+      kwargs: Named arrays of population data
 
     Returns:
       self"""
     self.model_ = pm.Model() if self.model is None else (
         copy.deepcopy(self.model) if self.deepcopy else self.model)
 
-    x = np.empty(len(x_1) + len(x_2))
-    x[:len(x_1)] = x_1
-    x[len(x_1):] = x_2
+    x = np.empty(sum(map(len, kwargs.values())))
+    i = 0
+    j = 0
+    for xi in kwargs.values():
+      i = j
+      j += len(xi)
+      x[i:j] = xi
 
     # Paramaters for distributions of means
     m_x, s_x = stats.norm.fit(x)
+    del x
     s_m_x = self.mean_std_scale * s_x
 
     # Paramaters for distributions of standard deviations
@@ -60,21 +62,40 @@ class StudentTComparison:
 
     with self.model_:
       # Parameters of T distributions
-      m_1 = pm.Normal(fr"{name_1} $\mu$", mu=m_x, sd=s_m_x)
-      m_2 = pm.Normal(fr"{name_2} $\mu$", mu=m_x, sd=s_m_x)
-      s_1 = pm.Uniform(fr"{name_1} $\sigma$", lower=s_x_lo, upper=s_x_hi)
-      s_2 = pm.Uniform(fr"{name_2} $\sigma$", lower=s_x_lo, upper=s_x_hi)
-      dof = pm.Exponential(r"$\nu - 1$", lam=1 / (self.dof_mean - 1)) + 1
+      means = {k: pm.Normal(f"{k} mean", mu=m_x, sd=s_m_x) for k in kwargs}
+      stds = {
+          k: pm.Uniform(f"{k} std", lower=s_x_lo, upper=s_x_hi) for k in kwargs
+      }
+      dof = pm.Exponential("dof - 1", lam=1 / (self.dof_mean - 1)) + 1
 
       # Data distributions
-      t_1 = pm.StudentT(name_1, nu=dof, mu=m_1, lam=s_1**-2, observed=x_1)  # pylint: disable=W0612
-      t_2 = pm.StudentT(name_2, nu=dof, mu=m_2, lam=s_2**-2, observed=x_2)  # pylint: disable=W0612
+      student_ts = {  # pylint: disable=W0612
+          k: pm.StudentT(k, nu=dof, mu=means[k], lam=stds[k]**-2, observed=v)
+          for k, v in kwargs.items()
+      }
 
       # Estimate group differences
-      diff_of_means = pm.Deterministic(r"$\Delta\mu$", m_1 - m_2)
-      diff_of_stds = pm.Deterministic(r"$\Delta\sigma$", s_1 - s_2)  # pylint: disable=W0612
-      effect_size = pm.Deterministic(  # pylint: disable=W0612
-          "effect size", diff_of_means / np.sqrt((s_1**2 + s_2**2) / 2))
+      diff_of_means = {
+          k: {
+              h: pm.Deterministic(f"mean {k} - {h}", means[k] - means[h])
+              for h in kwargs
+              if h != k
+          } for k in kwargs
+      }
+      diff_of_stds = {  # pylint: disable=W0612
+          k: {
+              h: pm.Deterministic(f"std {k} - {h}", stds[k] - stds[h])
+              for h in kwargs
+              if h != k
+          } for k in kwargs
+      }
+      effect_sizes = {  # pylint: disable=W0612
+          k: {
+              h: pm.Deterministic(
+                  f"effect size {k} - {h}", diff_of_means[k][h] / np.sqrt(
+                      (stds[k]**2 + stds[h]**2) / 2)) for h in kwargs if h != k
+          } for k in kwargs
+      }
 
     return self
 
