@@ -34,6 +34,7 @@ setuptools.setup(
     "numpy",
     "pymc3",
     "arviz<=0.11.0",
+    "mkl-service",
   ],
   extras_require={
     "plots": [
