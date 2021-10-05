@@ -26,6 +26,8 @@ dist
 !*requirements.txt
 *.gz
 *.zip
+*.png
+*.svg
 
 # Sphinx
 docs/build
