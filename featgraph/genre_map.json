@@ -10,11 +10,11 @@
     "latin"
   ],
   "chicago soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "classic funk rock": [
     "rock",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "disco": [
     "electronic"
@@ -23,35 +23,35 @@
     "electronic"
   ],
   "funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "funk rock": [
     "rock",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "memphis soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "motown": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "new jack swing": [
     "hip-hop"
   ],
   "post-disco": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "quiet storm": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "southern soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "urban contemporary": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "kwaito house": [
     "african",
@@ -206,7 +206,7 @@
   ],
   "liquid funk": [
     "electronic",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "acid jazz": [
     "jazz"
@@ -242,7 +242,7 @@
     "hip-hop"
   ],
   "soul flow": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "hollywood": [
     "other"
@@ -318,7 +318,7 @@
   ],
   "jazz funk": [
     "jazz",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "jazz fusion": [
     "jazz"
@@ -515,10 +515,10 @@
     "electronic"
   ],
   "deep freestyle": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "freestyle": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "indietronica": [
     "electronic"
@@ -604,7 +604,7 @@
   "deep indie r&b": [
     "pop",
     "rock",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "acousmatic": [
     "electronic"
@@ -627,7 +627,7 @@
   "indie r&b": [
     "pop",
     "rock",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "volksmusik": [
     "folk",
@@ -824,7 +824,7 @@
     "electronic"
   ],
   "go-go": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "fidget house": [
     "electronic"
@@ -879,7 +879,7 @@
     "country"
   ],
   "norwegian gospel": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "swiss hip hop": [
     "hip-hop"
@@ -1108,7 +1108,7 @@
   ],
   "soul blues": [
     "blues",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "folk-pop": [
     "folk",
@@ -1214,7 +1214,7 @@
   ],
   "soul christmas": [
     "other",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "alt-indie rock": [
     "pop",
@@ -1270,7 +1270,7 @@
   ],
   "country gospel": [
     "country",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "nashville sound": [
     "country"
@@ -1282,7 +1282,7 @@
   ],
   "vapor soul": [
     "electronic",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "deep euro house": [
     "electronic"
@@ -1302,7 +1302,7 @@
   ],
   "gospel reggae": [
     "caribbean",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "chillwave": [
     "electronic"
@@ -1321,7 +1321,7 @@
   ],
   "southern soul blues": [
     "blues",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "psychedelic trance": [
     "electronic"
@@ -1426,7 +1426,7 @@
     "other"
   ],
   "southern gospel": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "folkmusik": [
     "folk"
@@ -1531,7 +1531,7 @@
   ],
   "soul jazz": [
     "jazz",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "minimal wave": [
     "electronic"
@@ -1649,7 +1649,7 @@
     "latin"
   ],
   "r&b": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "catalan folk": [
     "folk"
@@ -1673,7 +1673,7 @@
   ],
   "funk metal": [
     "rock",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "hard rock": [
     "rock"
@@ -1711,7 +1711,7 @@
   ],
   "brazilian gospel": [
     "latin",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "louvor": [
     "folk",
@@ -1789,7 +1789,7 @@
     "rock"
   ],
   "deep funk carioca": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "latin metal": [
     "latin",
@@ -1827,7 +1827,7 @@
     "hip-hop"
   ],
   "funk carioca": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "electro latino": [
     "electronic"
@@ -1856,7 +1856,7 @@
     "rock"
   ],
   "smooth urban r&b": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "hardcore breaks": [
     "electronic",
@@ -1888,7 +1888,7 @@
   ],
   "deep pop r&b": [
     "pop",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "dutch hip hop": [
     "hip-hop"
@@ -1921,7 +1921,7 @@
   ],
   "deep soul house": [
     "electronic",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "deep ambient": [
     "electronic"
@@ -2001,7 +2001,7 @@
     "pop"
   ],
   "deep funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "ambient dub techno": [
     "electronic"
@@ -2080,7 +2080,7 @@
     "other"
   ],
   "northern soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "pop house": [
     "electronic",
@@ -2200,7 +2200,7 @@
     "electronic"
   ],
   "future funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "vaporwave": [
     "electronic"
@@ -2432,7 +2432,7 @@
     "latin"
   ],
   "baile funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "jazz brass": [
     "jazz"
@@ -2539,7 +2539,7 @@
     "avant-garde"
   ],
   "g funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "canadian metal": [
     "rock"
@@ -2590,7 +2590,7 @@
     "electronic"
   ],
   "neo soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "commons": [
     "other"
@@ -2676,14 +2676,14 @@
     "folk"
   ],
   "alternative r&b": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "persian pop": [
     "pop"
   ],
   "deep funk house": [
     "electronic",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "filter house": [
     "electronic"
@@ -2825,7 +2825,7 @@
   ],
   "neo soul-jazz": [
     "jazz",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "rap chileno": [
     "hip-hop"
@@ -2948,7 +2948,7 @@
   ],
   "japanese r&b": [
     "asian",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "nepali": [
     "asian"
@@ -2964,7 +2964,7 @@
   ],
   "african gospel": [
     "african",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "bubblegum dance": [
     "electronic"
@@ -3044,7 +3044,7 @@
     "rock"
   ],
   "doo-wop": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "merseybeat": [
     "rock"
@@ -3124,7 +3124,7 @@
     "rock"
   ],
   "deep motown": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "vintage jazz": [
     "jazz"
@@ -3364,7 +3364,7 @@
     "rock"
   ],
   "traditional soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "ye ye": [
     "pop"
@@ -3387,7 +3387,7 @@
   ],
   "post-disco soul": [
     "electronic",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "ragtime": [
     "jazz"
@@ -3814,7 +3814,7 @@
     "other"
   ],
   "gospel": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "focus": [
     "easy listening"
@@ -3902,7 +3902,7 @@
     "pop"
   ],
   "deep northern soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "goregrind": [
     "rock"
@@ -4003,7 +4003,7 @@
   ],
   "cumbia funk": [
     "latin",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "oshare kei": [
     "asian",
@@ -4083,7 +4083,7 @@
     "other"
   ],
   "deep g funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "atmospheric post rock": [
     "rock"
@@ -4167,7 +4167,7 @@
     "rock"
   ],
   "traditional funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "deep neofolk": [
     "folk"
@@ -4176,7 +4176,7 @@
     "pop"
   ],
   "rhythm and boogie": [
-    "soul/r&b",
+    "soul-rnb",
     "rock"
   ],
   "neurostep": [
@@ -4230,7 +4230,7 @@
     "rock"
   ],
   "deep southern soul": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "chinese experimental": [
     "asian",
@@ -4326,7 +4326,7 @@
     "rock"
   ],
   "p funk": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "french punk": [
     "rock"
@@ -4542,7 +4542,7 @@
   ],
   "gospel blues": [
     "blues",
-    "soul/r&b"
+    "soul-rnb"
   ],
   "dark black metal": [
     "rock"
@@ -4946,7 +4946,7 @@
     "rock"
   ],
   "vintage gospel": [
-    "soul/r&b"
+    "soul-rnb"
   ],
   "jangle rock": [
     "rock"

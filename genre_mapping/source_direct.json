@@ -1,8 +1,8 @@
 {
   "new jack swing": "hip-hop",
-  "post-disco": "soul/r&b",
-  "quiet storm": "soul/r&b",
-  "urban contemporary": "soul/r&b",
+  "post-disco": "soul-rnb",
+  "quiet storm": "soul-rnb",
+  "urban contemporary": "soul-rnb",
   "fluxwork": "electronic",
   "romantic": "classical",
   "violin": "classical",
@@ -114,7 +114,7 @@
   "classify": "easy listening",
   "rebetiko": "pop",
   "carnatic": "asian",
-  "go-go": "soul/r&b",
+  "go-go": "soul-rnb",
   "poetry": "other",
   "laboratorio": "avant-garde",
   "timba": "caribbean",
@@ -315,7 +315,7 @@
   "nasheed": "other",
   "kindermusik": "other",
   "deathgrind": "rock",
-  "doo-wop": "soul/r&b",
+  "doo-wop": "soul-rnb",
   "merseybeat": "rock",
   "bassline": "electronic",
   "chalga": "folk",
@@ -433,7 +433,7 @@
   "psych gaze": "rock",
   "nintendocore": "rock",
   "rhythm and boogie": [
-    "soul/r&b",
+    "soul-rnb",
     "rock"
   ],
   "neurostep": "electronic",
