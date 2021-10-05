@@ -3,7 +3,7 @@ from scipy import stats
 import numpy as np
 import pymc3 as pm
 import copy
-from typing import Optional
+from typing import Optional, Tuple
 
 
 class StudentTComparison:
@@ -24,7 +24,7 @@ class StudentTComparison:
                deepcopy: bool = True,
                mean_std_scale: float = 2.0,
                std_std_scale: float = 1000.0,
-               dof_mean: float = 30):
+               dof_mean: float = 30.0):
     self.model = model
     self.model_ = None
     self.mean_std_scale = mean_std_scale
@@ -107,3 +107,35 @@ class StudentTComparison:
       kwargs: Keyword arguments for :func:`pymc3.sample`"""
     with self.model_:
       return pm.sample(*args, **kwargs)
+
+  def plot_posterior(self,
+                     data,
+                     names: Tuple[str, str],
+                     es_rope: Tuple[float, float] = (-0.1, 0.1)):
+    """Plot the posterior distribution of the pair
+    comparison from the inference data
+
+    Args:
+      data: Inference data
+      names (couple of str): The names of the two populations to compare
+      es_rope (copule of float): The boundaries of the ROPE
+        on the effect size. Default is :data:`(-0.1, 0.1)`"""
+    with self.model_:
+      pm.plot_posterior(
+          data,
+          rope={f"effect size {names[0]} - {names[1]}": [{
+              "rope": es_rope
+          }]},
+          ref_val={
+              f"{k} {names[0]} - {names[1]}": [{
+                  "ref_val": 0
+              }] for k in ("mean", "std")
+          },
+          var_names=[
+              *[f"{g} {k}" for k in ("mean", "std") for g in names], *[
+                  f"{k} {names[0]} - {names[1]}"
+                  for k in ("mean", "std", "effect size")
+              ]
+          ],
+          grid=(2, 4),
+      )
