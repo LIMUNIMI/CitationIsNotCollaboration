@@ -23,6 +23,7 @@ dist
 
 # Misc
 *.txt
+*.csv
 !*requirements.txt
 *.gz
 *.zip

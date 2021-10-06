@@ -7,6 +7,7 @@ import importlib
 import sys
 import os
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 import arviz
@@ -86,6 +87,10 @@ def main(*argv):
   parser.add_argument("--netcdf-compress",
                       action="store_true",
                       help="Compress netcdf file")
+  parser.add_argument("--rope-csv-path",
+                      metavar="PATH",
+                      default=None,
+                      help="The path for saving the ROPE summary to a CSV file")
   args = parser.custom_parse(argv)
   if args.metric not in metrics_dict:
     logger.error(
@@ -132,30 +137,40 @@ def main(*argv):
     logging.getLogger(m).setLevel("WARN")
   # Perform comparison
   genres = sorted(df["genre"].unique(), key=violin_order.to_list().index)
-  # tcomp_data = {}
+  rope_summary_keys = ("x", "y", "x - y < ROPE", "x - y in ROPE",
+                       "x - y > ROPE")
+  rope_summary = dict(
+      zip(rope_summary_keys, ([] for _ in itertools.repeat(None))))
   if args.netcdf_path is not None:
     os.makedirs(args.netcdf_path, exist_ok=True)
   for gx, gy in tqdm_fn(itertools.combinations(genres, 2),
                         total=len(genres) * (len(genres) - 1) // 2):
-    # if gx not in tcomp_data:
-    #   tcomp_data[gx] = {}
-    filepath_kh = None if args.netcdf_path is None else os.path.join(
+    filepath_xy = None if args.netcdf_path is None else os.path.join(
         args.netcdf_path, f"{gx}-{gy}.netcdf")
-    if filepath_kh is None or pathutils.notisfile(filepath_kh):
+    if filepath_xy is None or pathutils.notisfile(filepath_xy):
       tcomp = bayesian_comparison.StudentTComparison().fit(
           **{g: df[df["genre"] == g][k] for g in (gx, gy)})
-      # tcomp_data[gx][gy] =
       tcomp_data = tcomp.sample(chains=args.sample_chains,
-                                        cores=args.sample_cores,
-                                        draws=args.sample_draws,
-                                        return_inferencedata=True,
-                                        progressbar=args.tqdm is not None)
-      if filepath_kh is not None:
-        logger.info("Saving netcdf file: %s (compress=%s)", filepath_kh,
+                                cores=args.sample_cores,
+                                draws=args.sample_draws,
+                                return_inferencedata=True,
+                                progressbar=args.tqdm is not None)
+      if filepath_xy is not None:
+        logger.info("Saving netcdf file: %s (compress=%s)", filepath_xy,
                     args.netcdf_compress)
-        # tcomp_data[gx][gy]
-        tcomp_data.to_netcdf(filepath_kh, compress=args.netcdf_compress)
+        tcomp_data.to_netcdf(filepath_xy, compress=args.netcdf_compress)
     else:
-      logger.info("Loading netcdf file: %s", filepath_kh)
-      tcomp_data = arviz.from_netcdf(filepath_kh)
-    # TODO: Do something with tcomp_data
+      logger.info("Loading netcdf file: %s", filepath_xy)
+      tcomp_data = arviz.from_netcdf(filepath_xy)
+
+    for gxx, gyy in ((gx, gy), (gy, gx)):
+      rope_probs = bayesian_comparison.rope_probabilities(
+          tcomp_data, var=f"effect size {gxx} - {gyy}")
+      for rs_list, rs_v in zip(map(rope_summary.get, rope_summary_keys),
+                               (gxx, gyy, *rope_probs)):
+        rs_list.append(rs_v)
+  rope_summary = pd.DataFrame(data=rope_summary)
+  logger.info("ROPE summaries:\n%s", rope_summary)
+  if args.rope_csv_path is not None:
+    logger.info("Saving ROPE summaries to: %s", args.rope_csv_path)
+    rope_summary.to_csv(args.rope_csv_path)
