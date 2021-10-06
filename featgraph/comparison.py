@@ -88,6 +88,14 @@ def main(*argv):
   parser.add_argument("--netcdf-compress",
                       action="store_true",
                       help="Compress netcdf file")
+  parser.add_argument("--no-netcdf",
+                      dest="netcdf",
+                      action="store_false",
+                      help="Don't save netcdf files (plots only, eventually)")
+  parser.add_argument("--no-posterior-plots",
+                      dest="posterior_plots",
+                      action="store_false",
+                      help="Don't save inference posterior plots")
   parser.add_argument("--rope-csv-path",
                       metavar="PATH",
                       default=None,
@@ -166,7 +174,7 @@ def main(*argv):
                                 draws=args.sample_draws,
                                 return_inferencedata=True,
                                 progressbar=args.tqdm is not None)
-      if filepath_xy is not None:
+      if filepath_xy is not None and args.netcdf:
         logger.info("Saving netcdf file: %s (compress=%s)", filepath_xy,
                     args.netcdf_compress)
         tcomp_data.to_netcdf(filepath_xy, compress=args.netcdf_compress)
@@ -174,12 +182,24 @@ def main(*argv):
       logger.info("Loading netcdf file: %s", filepath_xy)
       tcomp_data = arviz.from_netcdf(filepath_xy)
 
+    # Make ROPE probabilities dataframe
     for gxx, gyy in ((gx, gy), (gy, gx)):
       rope_probs = bayesian_comparison.rope_probabilities(
           tcomp_data, var=f"effect size {gxx} - {gyy}")
       for rs_list, rs_v in zip(map(rope_summary.get, rope_summary_keys),
                                (gxx, gyy, *rope_probs)):
         rs_list.append(rs_v)
+
+    # Make posterior plots
+    if filepath_xy is not None and args.posterior_plots:
+      for gxx, gyy in ((gx, gy), (gy, gx)):
+        plotpath_xy = os.path.join(os.path.dirname(filepath_xy),
+                                   f"{gxx}-{gyy}.svg")
+        logger.info("Saving posterior plot: %s", plotpath_xy)
+        featgraph.plots.plot_posterior(tcomp_data, (gxx, gyy))
+        plt.savefig(plotpath_xy)
+        plt.clf()
+
   rope_summary = pd.DataFrame(data=rope_summary)
   logger.info("ROPE summaries:\n%s", rope_summary)
   if args.rope_csv_path is not None:
@@ -189,10 +209,11 @@ def main(*argv):
       args.rope_image_path = args.rope_csv_path + ".svg"
   if args.rope_image_path is not None:
     logger.info("Saving ROPE probabilities plot to: %s", args.rope_image_path)
-    plt.clf()
     featgraph.plots.rope_matrix_plot(rope_summary,
                                      legend_selectors=[3, 5, 1, 0, 2],
                                      legend=True)
-    plt.title("Difference in Artist Harmonic Centrality between Genres")
+    plt.title(f"Difference in Artist {args.metric.capitalize()} "
+              "Centrality between Genres")
     plt.gcf().set_size_inches(np.ones(2) * args.rope_image_scale)
     plt.savefig(args.rope_image_path)
+    plt.clf()
