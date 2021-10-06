@@ -117,10 +117,10 @@ def plot_posterior(data,
   comparison from the inference data
 
   Args:
-  data: Inference data
-  names (couple of str): The names of the two populations to compare
-  es_rope (copule of float): The boundaries of the ROPE
-  on the effect size. Default is :data:`(-0.1, 0.1)`"""
+    data: Inference data
+    names (couple of str): The names of the two populations to compare
+    es_rope (copule of float): The boundaries of the ROPE
+      on the effect size. Default is :data:`(-0.1, 0.1)`"""
   arviz.plot_posterior(
       data,
       rope={f"effect size {names[0]} - {names[1]}": [{
@@ -139,3 +139,29 @@ def plot_posterior(data,
       ],
       grid=(2, 4),
   )
+
+
+def rope_probabilities(
+    data,
+    key: str = "posterior",
+    var: str = "effect size",
+    rope: Tuple[float, float] = (-0.1, 0.1)
+) -> Tuple[float, float, float]:
+  """Return the probabilities that a variable in the data is below,
+  within or above a ROPE
+
+  Args:
+    data: Inference data
+    key (str): Key for data values. Default is :data:`"posterior"`
+    var (str): variable name. Default is :data:`"effect size"`
+    rope (copule of float): The boundaries of the ROPE.
+      Default is :data:`(-0.1, 0.1)`
+
+  Returns:
+    triplet of float: The probabilities that the variable is below,
+    within or above the ROPE"""
+  v = data[key][var]
+  p_lt = (v < rope[0]).mean().values[()]
+  p_in = ((rope[0] <= v) & (v <= rope[1])).mean().values[()]
+  p_gt = (v > rope[1]).mean().values[()]
+  return p_lt, p_in, p_gt
