@@ -1,5 +1,6 @@
 """Compare centrality values across genres"""
 from featgraph import scriptutils, jwebgraph, bayesian_comparison, pathutils, logger
+import featgraph.plots
 import logging
 from chromatictools import cli
 import itertools
@@ -91,6 +92,16 @@ def main(*argv):
                       metavar="PATH",
                       default=None,
                       help="The path for saving the ROPE summary to a CSV file")
+  parser.add_argument("--rope-image-path",
+                      metavar="PATH",
+                      default=None,
+                      help="The path for saving the ROPE probabilities plot")
+  parser.add_argument(
+      "--rope-image-scale",
+      metavar="SCALE",
+      type=float,
+      default=10.0,
+      help="The scale for the ROPE probabilities plot (in inches)")
   args = parser.custom_parse(argv)
   if args.metric not in metrics_dict:
     logger.error(
@@ -174,3 +185,14 @@ def main(*argv):
   if args.rope_csv_path is not None:
     logger.info("Saving ROPE summaries to: %s", args.rope_csv_path)
     rope_summary.to_csv(args.rope_csv_path)
+    if args.rope_image_path is None:
+      args.rope_image_path = args.rope_csv_path + ".svg"
+  if args.rope_image_path is not None:
+    logger.info("Saving ROPE probabilities plot to: %s", args.rope_image_path)
+    plt.clf()
+    featgraph.plots.rope_matrix_plot(rope_summary,
+                                     legend_selectors=[3, 5, 1, 0, 2],
+                                     legend=True)
+    plt.title("Difference in Artist Harmonic Centrality between Genres")
+    plt.gcf().set_size_inches(np.ones(2) * args.rope_image_scale)
+    plt.savefig(args.rope_image_path)
