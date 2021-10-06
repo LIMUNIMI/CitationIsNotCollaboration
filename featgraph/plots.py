@@ -1,9 +1,12 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt, patches
 import networkx as nx
+import pandas as pd
+import numpy as np
+import itertools
 import importlib
 from featgraph.misc import VectorOrCallable
-from typing import Optional, Callable, Dict, Tuple, Any
+from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
 def scatter(
@@ -162,3 +165,106 @@ def draw_sgc_graph(
         for k in ("masses", "celebrities", "community leaders")
     ])
   return ax
+
+
+def rope_matrix_plot(df: pd.DataFrame,
+                     names: Optional[Sequence[str]] = None,
+                     order=None,
+                     x_label: str = "x",
+                     y_label: str = "y",
+                     probs_labels: Tuple[str, str, str] = (
+                         "x - y < ROPE",
+                         "x - y in ROPE",
+                         "x - y > ROPE",
+                     ),
+                     th: Optional[float] = None,
+                     normalize: bool = True,
+                     legend: bool = False,
+                     legend_selectors: Optional[Sequence[int]] = None,
+                     ticks: bool = True):
+  """Plot the ROPE probabilities as a RGB matrix
+
+  Args:
+    df (pd.DataFrame): ROPE probabilities dataframe
+    names (sequence of str): Names of the different populations.
+      If :data:`None`, the names are inferred from the dataframe
+    order (callable): Key function for sorting populations.
+      If :data:`None`, the populations are sorted by descresing
+      difference of average probabilities above and below the ROPE
+    x_label (str): Column name for first population names.
+      Default is :data:`"x"`
+    y_label (str): Column name for second population names.
+      Default is :data:`"y"`
+    probs_labels (triplet of str): Column names for the probabilities below,
+      within and above the ROPE
+    th (float): If specified, threshold hypoteses at the given value
+    normalize (bool): If :data:`True` (default), normalize the RGB values.
+      This results in brighter colors and better intelligibility
+    legend (bool): If :data:`True`, plot a legend on the axis
+    legend_selectors (sequence of int): Specifies which legend entries to keep
+    ticks (bool): If :data:`True` (default), draw ticks and tick
+      labels on both the x and y axis"""
+  if names is None:
+    names = pd.concat((df[x_label], df[y_label])).unique().tolist()
+  if order is not None:
+    if order == "auto":
+      # Order by rank
+      score = df.groupby(by=[x_label]).mean()
+      score = score[probs_labels[2]] - score[probs_labels[0]]
+      order = score.sort_values().iloc[::-1].index.to_list().index
+    names = sorted(names, key=order)
+
+  # Build matrix
+  n = len(names)
+  m = np.empty((n, n, 3))
+  for i, j in itertools.product(range(n), repeat=2):
+    if i == j:
+      m[i, j, :] = (0, 1, 0)
+      continue
+    x = names[i]
+    y = names[j]
+
+    r = df
+    r = r[r[x_label] == x]
+    r = r[r[y_label] == y]
+    for k, l in enumerate(probs_labels):
+      m[i, j, k] = r[l].mean()
+  if th is None:
+    if normalize:
+      m /= np.tile(np.expand_dims(np.max(m, axis=2), 2), (1, 1, 3))
+  else:
+    np.greater_equal(m, th, out=m)
+
+  rv = plt.imshow(m)
+  if ticks:
+    plt.xticks(np.arange(n), names, rotation=90)
+    plt.yticks(np.arange(n), names)
+
+  if legend:
+    # Build custom legend
+    legend_patches = []
+    legend_labels = []
+    cols = filter(any, itertools.product(range(2), repeat=3))
+    if th is None and not normalize:
+      cols = (np.array(c) / sum(c) for c in cols)
+    cols = list(cols)
+    for c in cols:
+      legend_patches.append(patches.Patch(facecolor=c))
+      cs = "/".join(itertools.compress((r"$<$", r"$\in$", r"$>$"), c))
+      legend_labels.append(f"row - column {cs} ROPE")
+
+    if legend_selectors is None:
+      # Choose which entries to show
+      legend_selectors = range(len(cols))
+      if th is not None:
+        legend_selectors = filter(
+            lambda ci: any(
+                np.array_equal(cols[ci], m[i, j, :])
+                for i, j in itertools.product(range(n), repeat=2)),
+            legend_selectors)
+      legend_selectors = list(legend_selectors)
+
+    legend_patches = list(map(legend_patches.__getitem__, legend_selectors))
+    legend_labels = list(map(legend_labels.__getitem__, legend_selectors))
+    plt.legend(legend_patches, legend_labels)
+  return rv
