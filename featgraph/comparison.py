@@ -210,8 +210,9 @@ def main(*argv):
   if args.rope_image_path is not None:
     logger.info("Saving ROPE probabilities plot to: %s", args.rope_image_path)
     featgraph.plots.rope_matrix_plot(rope_summary,
-                                     legend_selectors=[3, 5, 1, 0, 2],
-                                     legend=True)
+                                     legend_selectors=[3, 5, 1, 2, 0],
+                                     legend=True,
+                                     order="auto")
     plt.title(f"Difference in Artist {args.metric.capitalize()} "
               "Centrality between Genres")
     plt.gcf().set_size_inches(np.ones(2) * args.rope_image_scale)
