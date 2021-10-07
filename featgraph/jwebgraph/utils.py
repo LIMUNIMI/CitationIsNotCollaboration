@@ -2,10 +2,12 @@
 The JVM should be started before importing this module"""
 import json
 import functools
+import itertools
 import jpype
 from featgraph import pathutils, metadata, genre_map
 import os
 import numpy as np
+import pandas as pd
 import sys
 import featgraph.misc
 from featgraph.misc import VectorOrCallable
@@ -348,45 +350,81 @@ class BVGraph:
     webgraph.BVGraph.store(filtered_graph, dest_path)
     return BVGraph(base_path=dest_path, sep=self.sep)
 
-  def popularity(self, missing_value: Optional = None):
-    """Function that retrieve the popularity inside the popularity.txt file of
-       the graph
+  def ids(self) -> Iterable[str]:
+    """Get the artists ids from the metadata file
 
-        Args:
-          missing_value (int): value to assign to an artist in case her
-            popularity is unknown
-        Returns:
-          the string (str) containing the popularities of the artists of the
-          graph"""
+    Returns:
+      The iterable of ids of each artist as strings"""
+    with open(self.path("ids", "txt"), "r", encoding="utf-8") as f:
+      for s in f:
+        yield s.rstrip()
+
+  def popularity(self, missing_value: Optional = None) -> Iterable[float]:
+    """Get the popularity values from the metadata file
+
+      Args:
+        missing_value (int): value to assign to an artist in case their
+          popularity is unknown
+
+      Returns:
+        The iterable of popularity values of each artist
+        as floats between 0 and 100 (or :data:`missing_value`)"""
     with open(self.path("popularity", "txt"), "r", encoding="utf-8") as f:
-      return [
-          float(s) if s else missing_value for s in (r.rstrip("\n") for r in f)
-      ]
+      for r in f:
+        s = r.rstrip()
+        yield float(s) if s else missing_value
 
-  def genre(self):
-    """Function that retrieve the genre inside the genre json file of the graph
+  def genre(self) -> Iterable[List[str]]:
+    """Get the genres from the metadata file
 
-        Returns:
-          the json containing the genres of the artists of the graph"""
-
+      Returns:
+        The iterable of the lists of genres of each artist"""
     with open(self.path("genre", "txt"), "r", encoding="utf-8") as f:
-      return [json.loads(r.rstrip("\n")) for r in f]
+      for r in f:
+        yield json.loads(r.rstrip("\n"))
 
   def supergenre(
       self,
       genre_dict: Optional[Dict[str, List[str]]] = None) -> Iterable[List[str]]:
-    """The supergenres of each artist
+    """Get the supergenres of each artist
 
     Args:
       genre_dict (dict): The genre map dictionary.
         If :data:`None` (default), the the default map is used.
 
     Returns:
-      iterable: The iterable of the lists of supergenre names
-    """
+      The iterable of the lists of supergenres of each artist"""
     return map(
         functools.partial(genre_map.supergenres_from_iterable,
                           genre_map=genre_dict), self.genre())
+
+  def supergenre_dataframe(self,
+                           genre_dict: Optional[Dict[str, List[str]]] = None,
+                           **kwargs: Dict[str, Iterable]) -> pd.DataFrame:
+    """Make a dataframe of the values in the itarables and pair
+    it with information about the artist's supergenre. Every artist will have
+    one row in the dataframe for each of their supergenres
+
+    Args:
+      genre_dict (dict): The genre map dictionary.
+        If :data:`None` (default), the the default map is used.
+      kwargs (iterables): Named iterables for the dataframe columns
+
+    Returns:
+      iterable: The iterable of the lists of supergenre names
+    """
+    keys = tuple(kwargs.keys())
+    values = {k: [] for k in ("aid", "genre", *keys)}
+    vals = (itertools.repeat(
+        ()),) if len(keys) == 0 else (zip(*[kwargs[k] for k in keys]),)
+    for ai, sgi, ti in zip(self.ids(), self.supergenre(genre_dict=genre_dict),
+                           *vals):
+      for s in sgi:
+        values["aid"].append(ai)
+        values["genre"].append(s)
+        for k, v in zip(keys, ti):
+          values[k].append(v)
+    return pd.DataFrame(data=values)
 
   def artist(self, **kwargs) -> metadata.Artist:
     """Get an artist from the dataset

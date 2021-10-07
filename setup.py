@@ -32,6 +32,9 @@ setuptools.setup(
     "networkx",
     "scipy",
     "numpy",
+    "pymc3",
+    "arviz>=0.11.4",
+    "mkl-service",
   ],
   extras_require={
     "plots": [
