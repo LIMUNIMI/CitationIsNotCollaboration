@@ -7,6 +7,7 @@ import itertools
 import importlib
 import arviz
 from featgraph.misc import VectorOrCallable
+from featgraph import bayesian_comparison
 from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
@@ -189,9 +190,9 @@ def rope_matrix_plot(df: pd.DataFrame,
     df (pd.DataFrame): ROPE probabilities dataframe
     names (sequence of str): Names of the different populations.
       If :data:`None`, the names are inferred from the dataframe
-    order (callable): Key function for sorting populations.
-      If :data:`None`, the populations are sorted by descresing
-      difference of average probabilities above and below the ROPE
+    order (callable): Key function for sorting populations. Alternatively,
+      if :data:`"auto"`, the populations are sorted by decreasing difference
+      of average probabilities above and below the ROPE
     x_label (str): Column name for first population names.
       Default is :data:`"x"`
     y_label (str): Column name for second population names.
@@ -205,15 +206,14 @@ def rope_matrix_plot(df: pd.DataFrame,
     legend_selectors (sequence of int): Specifies which legend entries to keep
     ticks (bool): If :data:`True` (default), draw ticks and tick
       labels on both the x and y axis"""
-  if names is None:
-    names = pd.concat((df[x_label], df[y_label])).unique().tolist()
-  if order is not None:
-    if order == "auto":
-      # Order by rank
-      score = df.groupby(by=[x_label]).mean()
-      score = score[probs_labels[2]] - score[probs_labels[0]]
-      order = score.sort_values().iloc[::-1].index.to_list().index
-    names = sorted(names, key=order)
+  names = bayesian_comparison._rope_probabilities_names(  # pylint: disable=W0212
+      df=df,
+      names=names,
+      order=order,
+      x_label=x_label,
+      y_label=y_label,
+      probs_labels=probs_labels,
+  )
 
   # Build matrix
   n = len(names)

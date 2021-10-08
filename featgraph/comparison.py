@@ -104,6 +104,10 @@ def main(*argv):
                       metavar="PATH",
                       default=None,
                       help="The path for saving the ROPE probabilities plot")
+  parser.add_argument("--rope-report-path",
+                      metavar="PATH",
+                      default=None,
+                      help="The path for saving the ROPE probabilities report")
   parser.add_argument(
       "--rope-image-scale",
       metavar="SCALE",
@@ -218,3 +222,13 @@ def main(*argv):
     plt.gcf().set_size_inches(np.ones(2) * args.rope_image_scale)
     plt.savefig(args.rope_image_path)
     plt.clf()
+  if args.rope_report_path is not None:
+    types_by_ext = {".tex": "latex"}
+    report_type = types_by_ext.get(
+        os.path.splitext(args.rope_report_path)[-1], "plain-text")
+    logger.info("Saving ROPE probabilities %s report to: %s", report_type,
+                args.rope_report_path)
+    bayesian_comparison.make_report(rope_summary,
+                                    f"{args.metric} centrality",
+                                    type=report_type).save(
+                                        args.rope_report_path, ext=None)
