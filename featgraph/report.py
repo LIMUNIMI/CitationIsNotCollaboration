@@ -76,6 +76,21 @@ class ReportMaker(metaclass=_ReportMakerMeta):
     yield it
     self.append(it.get())
 
+  def save(self, basepath: str, ext: str = "txt", encoding="utf-8") -> str:
+    """Save the report to file
+
+    Args:
+      basepath (str): The base path of the file to save the report to
+      ext (str): File extension
+      encoding (str): File encoding
+
+    Returns:
+      str: The complete file path (with extension)"""
+    filepath = f"{basepath}.{ext}" if ext else basepath
+    with open(filepath, mode="w", encoding=encoding) as f:
+      f.write(self.get())
+    return filepath
+
 
 class _ReportMakerPlain(ReportMaker):
   """Plain-text report maker (default)"""
@@ -128,6 +143,9 @@ class _ReportMakerLatex(ReportMaker):
 
   def display(self):
     return importlib.import_module("IPython.display").Latex(self.get())
+
+  def save(self, basepath: str, ext: str = "tex", encoding="utf-8") -> str:
+    return super().save(basepath, ext=ext, encoding=encoding)
 
 
 class _ItemizeReportMakerLatex(_ReportMakerLatex, _ItemizeReportMaker):
