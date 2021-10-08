@@ -20,9 +20,9 @@ class FeatgraphArgParse(argparse.ArgumentParser):
         "--log-level",
         dest="log_level",
         metavar="LEVEL",
-        default="INFO",
+        default="WARN",
         type=lambda s: str(s).upper(),
-        help="The logging level. Default is 'INFO'",
+        help="The logging level. Default is 'WARN'",
     )
     self.add_argument(
         "--tqdm",
