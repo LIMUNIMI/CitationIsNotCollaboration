@@ -60,6 +60,11 @@ def main(*argv):
                       default=0.85,
                       metavar="A",
                       help="The alpha parameter for pagerank")
+  parser.add_argument("--rescale",
+                      metavar="K",
+                      type=float,
+                      default=None,
+                      help="Rescale the metric multiplying by the given factor")
   parser.add_argument("--logarithm",
                       "-L",
                       action="store_true",
@@ -136,11 +141,15 @@ def main(*argv):
   df = graph.supergenre_dataframe(**{args.metric: get_fn(graph, args)})
   if not args.keep_other:
     df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
+  k = args.metric
+  if args.rescale is not None:
+    k_ = f"{k}*{args.rescale}"
+    df[k_] = df[k] * args.rescale
+    k = k_
   if args.logarithm:
-    k = f"log_{args.metric}"
-    df[k] = np.log10(df[args.metric])
-  else:
-    k = args.metric
+    k_ = f"log_{args.metric}"
+    df[k_] = np.log10(df[k])
+    k = k_
   logger.info("Dataframe:\n%s", df)
   violin_order = df.groupby(
       by=["genre"])[k].median().sort_values().iloc[::-1].index
