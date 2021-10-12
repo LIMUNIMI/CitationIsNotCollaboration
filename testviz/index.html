@@ -1,0 +1,130 @@
+<html>
+  <header>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Spotify 2018 Centralities</title>
+    <script>
+      json_index = {};
+      key = "";
+      
+      // Load JSON settings
+      fetch("./index.json")
+        .then(response => response.json())
+        .then(function (json) {
+          centrality_list = document.getElementById("centrality-list");
+          json_index = json;
+          for (var k in json) {
+            var anc = document.createElement("a");
+            anc.href = "#";
+            anc.classList.add("w3-bar-item");
+            anc.classList.add("w3-button");
+            anc.innerText = json[k].title;
+            (function(){
+              const this_k = k;
+              anc.onclick = function() {
+                updateCentrality(this_k);
+                return false;
+              };
+            })();
+            centrality_list.appendChild(anc);
+          }
+        }
+      );
+      
+      // Change centrality (from drop-down)
+      function updateCentrality(k) {
+        key = k;
+        title = document.getElementById("centrality-title");
+        subtitle = document.getElementById("centrality-subtitle");
+        
+        title.innerText = json_index[k].title;
+        subtitle.innerText = json_index[k].subtitle + "\n";
+        
+        rope_img = document.getElementById("rope-img");
+        rope_img.src = json_index[k].folder + "/rope_probs.svg";
+        rope_img.style.visibility = "visible";
+        
+        violin_img = document.getElementById("violin-img");
+        violin_img.src = json_index[k].folder + "/violin_plots.svg";
+        violin_img.style.visibility = "visible";
+        
+        pymc3_img = document.getElementById("pymc3-img");
+        pymc3_img.src = "#";
+        pymc3_img.style.visibility = "hidden";
+        
+        document.getElementById("test-title").innerText = "";
+      }
+      
+      // Handle clicks on matrix
+      function clickHandler(event) {
+        rope_img = document.getElementById("rope-img");
+        if (event.target !== rope_img)
+          return;
+        x = (event.pageX - rope_img.offsetLeft) / rope_img.width;
+        y = (event.pageY - rope_img.offsetTop) / rope_img.height;
+        
+        pad = json_index[key].pad;
+        x = (x - pad.left) / (1 - pad.right - pad.left);
+        y = (y - pad.top) / (1 - pad.bottom - pad.top);
+        
+        if (x < 0 || x > 1 || y < 0 || y > 1)
+          return;
+        
+        genre_list = json_index[key].genres;
+        x = Math.floor(x * genre_list.length);
+        y = Math.floor(y * genre_list.length);
+        
+        if (x == y)
+          return;
+        
+        x = genre_list[x];
+        y = genre_list[y];
+        
+        console.log("x", x, "y", y);
+        console.log(event);
+        document.getElementById(
+          "test-title"
+        ).innerText = "\ntest " + y + " against " + x;
+        pymc3_img = document.getElementById("pymc3-img");
+        violin_img = document.getElementById("violin-img");
+        pymc3_img.src = json_index[key].folder + "/" + 
+                        json_index[key].subfolder + "/" + 
+                        y + "-" + x + ".svg";
+        pymc3_img.style.visibility = "visible";
+        pymc3_img.style.width = violin_img.width;
+      }
+      document.addEventListener("click", clickHandler);
+      
+    </script>
+  </header>
+  <body>
+    <!-- Navbar -->
+    <div class="w3-top">
+      <div class="w3-bar w3-black w3-card">
+        <div class="w3-dropdown-hover w3-hide-small">
+          <button class="w3-padding-large w3-button" title="Centralities">CENTRALITIES <i class="fa fa-caret-down"></i></button>     
+          <div class="w3-dropdown-content w3-bar-block w3-card-4" id="centrality-list">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Title -->
+    <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px">
+      <h2 class="w3-wide" id="centrality-title"></h2>
+      <p class="w3-opacity"><i id="centrality-subtitle"></i></p>
+    </div>
+    <!-- Images -->
+    <div class="mySlides w3-display-container w3-center">
+      <img src="#" id="violin-img" style="visibility:hidden"></img>
+      <div></div>
+      <img src="#" id="rope-img" style="visibility:hidden"></img>
+      <div></div>
+      <p class="w3-opacity"><i id="test-title"></i></p>
+      <img src="#" id="pymc3-img" style="visibility:hidden;max-width=100%"></img>
+    </div>
+  </body>
+</html>
+
