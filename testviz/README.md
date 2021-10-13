@@ -12,8 +12,8 @@ The `index.json` file stores the configuration metadata for the visualizer. Ever
 
 If you've been given a zip file with test plots, unzip it here and it should work.
 
-## HTML Server
-To host a simple HTML server on your machine to serve this website, you can run
+## HTTP Server
+To host a simple HTTP server on your machine to serve this website, you can run
 ```
 python -m http.server
 ```
