@@ -6,8 +6,11 @@ import numpy as np
 import itertools
 import importlib
 import arviz
+import sys
+import os
+from chromatictools import cli
 from featgraph.misc import VectorOrCallable
-from featgraph import bayesian_comparison
+from featgraph import bayesian_comparison, scriptutils, jwebgraph, logger
 from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
@@ -300,3 +303,123 @@ def plot_posterior(data,
       ],
       grid=(2, 4),
   )
+
+
+def _translate_log_ticks(
+    offset: float,
+    ax: Optional = None,
+    add_zero: bool = True,
+):
+  r"""Move xticks by a specified amount on a log scale axis. Please, add
+  :data:`{"text.usetex": True, "text.latex.preamble": r"\usepackage{amsmath}"}`
+  to your matplotlib rcparams before calling this function
+
+  Args:
+    offset (float): Offset amount between position and ticks (difference
+      between the tick position and the tick label value)
+    ax: The axis. If not specified, the current axis is affected
+    add_zero (bool): Add tick on the zero"""
+  if ax is None:
+    ax = plt.gca()
+  xl = ax.get_xlim()
+  xt = 10**np.arange(np.log10(xl[-1] + 1))
+  if add_zero:
+    xt = np.array([0, *xt])
+  plt.gca().set_xticks(xt + offset)
+  plt.gca().set_xticklabels(
+      fr"$10^{'{'}{np.log10(i):.0f}{'}'}$" if i > 0 else r"$0^{\vphantom{1}}$"
+      for i in xt)
+  plt.xlim(xl)
+
+
+@cli.main(__name__, *sys.argv[1:])
+def main(*argv):
+  """Make the plots for the slides"""
+  parser = scriptutils.FeatgraphArgParse(
+      description="Make plots for the presentation slides")
+  parser.add_argument("graph_path", help="The base path for the BVGraph files")
+  parser.add_argument(
+      "dest_path", help="The destination path (directory) for the plot files")
+  parser.add_argument("-a",
+                      "--artist",
+                      dest="ref_artists",
+                      metavar="AID",
+                      type=str,
+                      action="append",
+                      help="Specify a reference artist by ID")
+  parser.add_argument("--max-height",
+                      metavar="H",
+                      default=10.0,
+                      type=float,
+                      help="The maximum height of figures (in inches)")
+  parser.add_argument("--max-width",
+                      metavar="W",
+                      default=10.0,
+                      type=float,
+                      help="The maximum width of figures (in inches)")
+  parser.add_argument("--mpl-style",
+                      metavar="FILEPATH",
+                      default=os.path.join(os.path.dirname(__file__),
+                                           "slides.mplstyle"),
+                      help="The path of the matplotlib style file")
+  args = parser.custom_parse(argv)
+
+  def none_or_expand(s: Optional[str]) -> Optional[str]:
+    return None if s is None else os.path.expanduser(s)
+
+  args.jvm_path = none_or_expand(args.jvm_path)
+  args.dest_path = none_or_expand(args.dest_path)
+  args.graph_path = none_or_expand(args.graph_path)
+
+  # Load BVGraph
+  jwebgraph.start_jvm(jvm_path=args.jvm_path)
+  importlib.import_module("featgraph.jwebgraph.utils")
+  graph = jwebgraph.utils.BVGraph(args.graph_path)
+  logger.info("%s", graph)
+
+  # Prepare references for scatter plots
+  ref_artists = [graph.artist(aid=a) for a in args.ref_artists]
+
+  def scatter_refs(x, y, legend_kw: Optional[dict] = None, **kwargs):
+    if len(ref_artists) == 0:
+      return
+    xs = x() if callable(x) else x
+    xs = [xs[a.index] for a in ref_artists]
+    ys = y() if callable(y) else y
+    ys = [ys[a.index] for a in ref_artists]
+    for xi, yi, ai in zip(xs, ys, ref_artists):
+      plt.scatter(xi, yi, label=ai.name, **kwargs)
+    plt.legend(**({} if legend_kw is None else legend_kw))
+
+  # Configure matplotlib
+  logger.info("Setting style: %s", args.mpl_style)
+  plt.style.use(args.mpl_style)
+
+  # Plot degrees
+  logger.info("Plotting degrees")
+
+  out_degs = graph.outdegrees()
+  for i in range(len(out_degs)):
+    out_degs[i] += 1
+  scatter(
+      out_degs,
+      graph.indegrees,
+      marker=".",
+      c="k",
+      alpha=2**(-6),
+      xscale="log",
+      yscale="log",
+      label=graph.basename,
+      xlabel="out-degree",
+      ylabel="in-degree",
+  )
+  scatter_refs(out_degs, graph.indegrees, legend_kw=dict(loc="upper left"))
+  del out_degs
+  plt.gca().set_aspect("equal")
+  plt.minorticks_off()
+  _translate_log_ticks(1)
+
+  figpath = os.path.join(args.dest_path, "degrees.png")
+  logger.info("Saving plot: %s", figpath)
+  plt.savefig(fname=figpath)
+  plt.clf()
