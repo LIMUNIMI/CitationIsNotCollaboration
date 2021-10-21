@@ -40,9 +40,9 @@ Data collected by Tobin South _et al._ for their work
 > Popularity and centrality in Spotify networks: critical transitions
 in eigenvector centrality, Journal of Complex Networks (2021)
 
-<table width="100%" style="align:center;" ><tr>
-  <td width="50%" style="text-align:left;">Nodes: artists</td>
-  <td width="50%" style="text-align:right;">Edges: collaborations</td>
+<table style="width:100%;" ><tr>
+  <td style="text-align:left;width:50%">Nodes: artists</td>
+  <td style="text-align:right;width:50%">Edges: collaborations</td>
 </tr></table><!-- .element: class="fragment " data-fragment-index="1" -->
 
 <p> there is an edge from node A to node B if artist B is credited for any song in artist A's discography </p><!-- .element: class="fragment " data-fragment-index="2" -->
@@ -58,8 +58,8 @@ in eigenvector centrality, Journal of Complex Networks (2021)
 
 between December 2017 and January 2018
 
-<table width="100%" style="align:center;" ><tr>
-  <td width="50%" style="text-align:left;">Nodes: 1 250 114</td>
-  <td width="50%" style="text-align:right;">Edges: 7 435 330</td>
+<table style="width:100%;" ><tr>
+  <td style="width:50%;text-align:left;">Nodes: 1 250 114</td>
+  <td style="width:50%;text-align:right;">Edges: 7 435 330</td>
 </tr></table>
 
