@@ -73,3 +73,15 @@ between December 2017 and January 2018
   <td style="width:50%;text-align:right;">Edges: 7 435 330</td>
 </tr></table>
 
+---
+
+<!-- .slide: data-auto-animate -->
+
+## The Network and the Data
+
+<table><tr>
+<td><img alt="Degree Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/degrees.png"
+style="height:50vh" /></td>
+<td><img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/distances.png"
+style="height:50vh" /></td>
+</tr></table>
