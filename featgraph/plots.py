@@ -1,5 +1,6 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt, patches
+import matplotlib as mpl
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -332,6 +333,59 @@ def _translate_log_ticks(
   plt.xlim(xl)
 
 
+def _hdi(p,
+         x: Optional = None,
+         ci: float = 0.94,
+         n: Optional[int] = None,
+         cdf: bool = False):
+  """Compute the HDI around the mode
+
+  Args:
+    p (array): Array of the probabilities of x
+    x (array): Array of variable values (if unspecified,
+      the integer range of the same length of :data:`p` is used)
+    ci (float): The minimum density of the HDI
+    n (int): If specified, upsample the probability function
+      to this number of values
+    cdf (True): If :data:`True` interpret :data:`p` as a cumulative probability function"""
+  if ci < 0 or ci > 1:
+    raise ValueError("Invalid value for density. It should be "
+                     f"a float between 0 and 1. Got {ci}")
+  if cdf:
+    p = np.diff([0, *p])
+  if x is None:
+    x = np.arange(len(p))
+  if n is None:
+    n = len(x)
+  else:
+    x_ = x
+    p_ = p
+    x = np.linspace(x_[0], x_[-1], n, endpoint=True)
+    p = np.interp(x, x_, p_, left=0, right=0)
+
+  def dx(_i, _x=x):
+    _l = _i if _i == 0 else _i - 1
+    _r = _i if _i == len(_x) - 1 else _i + 1
+    return (_x[_r] - _x[_l]) / (_r - _l)
+
+  l = np.argmax(p)
+  r = l + 1
+  while True:
+    d_curr = sum(p[i] * dx(i) for i in range(l, r))
+    logger.info("[%d, %d] -> (%f, %f) = %f", l, r - 1, x[l], x[r - 1], d_curr)
+    if d_curr >= ci or (l == 0 and r == n):
+      break
+    if l == 0:
+      r += 1
+    elif r == n:
+      l -= 1
+    elif p[l - 1] >= p[r + 1]:
+      l -= 1
+    else:
+      r += 1
+  return x[l], x[r - 1]
+
+
 @cli.main(__name__, *sys.argv[1:])
 def main(*argv):
   """Make the plots for the slides"""
@@ -391,6 +445,14 @@ def main(*argv):
       plt.scatter(xi, yi, label=ai.name, **kwargs)
     plt.legend(**({} if legend_kw is None else legend_kw))
 
+  # Prepare figure saving
+  def savefig(filename: str, clf: bool = True):
+    figpath = os.path.join(args.dest_path, filename)
+    logger.info("Saving plot: %s", figpath)
+    plt.savefig(fname=figpath)
+    if clf:
+      plt.clf()
+
   # Configure matplotlib
   logger.info("Setting style: %s", args.mpl_style)
   plt.style.use(args.mpl_style)
@@ -418,8 +480,53 @@ def main(*argv):
   plt.gca().set_aspect("equal")
   plt.minorticks_off()
   _translate_log_ticks(1)
+  savefig("degrees.png")
 
-  figpath = os.path.join(args.dest_path, "degrees.png")
-  logger.info("Saving plot: %s", figpath)
-  plt.savefig(fname=figpath)
-  plt.clf()
+  # Plot distance probability functions
+  logger.info("Compute neighbourhood")
+  graph.compute_transpose()
+  graph.compute_neighborhood()
+
+  logger.info("Plotting distance probability mass function")
+  d = graph.distances()
+  d /= sum(d)
+  plt.plot(d)
+  d_mean = np.dot(np.arange(len(d)), d)
+  p_mean = np.interp(d_mean, np.arange(len(d)), d)
+
+  d_hdi_ci = 0.94
+  d_hdi = _hdi(d, n=1024, ci=d_hdi_ci)
+  plt.plot(d_hdi, np.zeros(2), c=mpl.rcParams["lines.color"], linewidth=3)
+
+  fsize = mpl.rcParams["font.size"] + 2
+  plt.text(d_hdi[0],
+           p_mean * 0.02,
+           f"{d_hdi[0]:.2f}",
+           verticalalignment="bottom",
+           horizontalalignment="right",
+           fontsize=fsize)
+  plt.text(d_hdi[1],
+           p_mean * 0.02,
+           f"{d_hdi[1]:.2f}",
+           verticalalignment="bottom",
+           horizontalalignment="left",
+           fontsize=fsize)
+  percent_s = r"$\%$" if mpl.rcParams["text.usetex"] else "%"
+  plt.text(np.mean(d_hdi),
+           p_mean * 0.125,
+           f"{d_hdi_ci * 100:.0f}{percent_s} HDI",
+           verticalalignment="center",
+           horizontalalignment="center",
+           fontsize=fsize)
+
+  plt.text(d_mean,
+           p_mean * 0.90,
+           f"mean = {d_mean:.2f}",
+           verticalalignment="center",
+           horizontalalignment="center",
+           fontsize=fsize)
+
+  plt.xlabel("distance")
+  plt.ylabel("probability")
+  plt.title(f"{graph.basename}\nHyperBall ($log_2m$ = 8)")
+  savefig("distances.png")
