@@ -373,7 +373,6 @@ def _hdi(p,
   r = l + 1
   while True:
     d_curr = sum(p[i] * dx(i) for i in range(l, r))
-    logger.info("[%d, %d] -> (%f, %f) = %f", l, r - 1, x[l], x[r - 1], d_curr)
     if d_curr >= ci or (l == 0 and r == n):
       break
     if l == 0:
