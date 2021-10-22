@@ -15,8 +15,8 @@ You can make the same plots that are in the slides by running
 python -m featgraph.plots \
   <graph path> \
   <dest path> \
-  -a 2wOqMjp9TyABvtHdOSOTUS \
-  -a 3fWtSlVVBl6uvTZdNrefU2 \
+  -a 4NJhFmfw43RLBLjQvxDuRS \
+  -a 4RcqZYDDLikC5uAIUD8Ptx \
   -a 6eUKZXaKkcviH0Ku9w2n3V \
   -a 1sBkRIssrMs1AbVkOJbc7a \
   -a 7pXu47GoqSYRajmBCjxdD6
