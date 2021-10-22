@@ -347,7 +347,8 @@ def _hdi(p,
     ci (float): The minimum density of the HDI
     n (int): If specified, upsample the probability function
       to this number of values
-    cdf (True): If :data:`True` interpret :data:`p` as a cumulative probability function"""
+    cdf (True): If :data:`True` interpret :data:`p`
+      as a cumulative probability function"""
   if ci < 0 or ci > 1:
     raise ValueError("Invalid value for density. It should be "
                      f"a float between 0 and 1. Got {ci}")
@@ -363,10 +364,10 @@ def _hdi(p,
     x = np.linspace(x_[0], x_[-1], n, endpoint=True)
     p = np.interp(x, x_, p_, left=0, right=0)
 
-  def dx(_i, _x=x):
-    _l = _i if _i == 0 else _i - 1
-    _r = _i if _i == len(_x) - 1 else _i + 1
-    return (_x[_r] - _x[_l]) / (_r - _l)
+  def dx(idx, arr=x):
+    l = idx if idx == 0 else idx - 1
+    r = idx if idx == len(arr) - 1 else idx + 1
+    return (arr[r] - arr[l]) / (r - l)
 
   l = np.argmax(p)
   r = l + 1
