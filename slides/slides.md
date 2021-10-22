@@ -101,5 +101,9 @@ style="height:50vh" /></td>
 
 ## Music Genre and Artist Centrality
 
+<!-- This links to the local website for plot navigation -->
+
+<a href="http://0.0.0.0:8000/" >
 <img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/indegrees.svg"
 style="height:55vh" />
+</a>
