@@ -107,3 +107,68 @@ style="height:50vh" /></td>
 <img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/indegrees.svg"
 style="height:55vh" />
 </a>
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Transitions in Centrality
+
+classical artists are the most central in the full graph<!-- .element: class="fragment " data-fragment-index="1" -->
+
+<ol style="column-count: 2; column-gap: 5vw; width: 55vw">
+<!--li>Traditional</li-->
+<!--li>Various Artists</li-->
+<li>Johann Sebastian Bach</li><!-- .element: class="fragment " data-fragment-index="2" -->
+<li>Wolfgang Amadeus Mozart</li><!-- .element: class="fragment " data-fragment-index="3" -->
+<!--li>Anonymous</li-->
+<li>Ludwig van Beethoven</li><!-- .element: class="fragment " data-fragment-index="4" -->
+<li>Franz Schubert</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>George Frideric Handel</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>Johannes Brahms</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>Pyotr Ilyich Tchaikovsky</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>Claude Debussy</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>Felix Mendelssohn</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>Giuseppe Verdi</li><!-- .element: class="fragment " data-fragment-index="5" -->
+</ol>
+
+<div style="height: 5vh"></div>
+<small>
+results shown for harmonic centrality, but they are
+similar for other centrality measures
+</small><!-- .element: class="fragment " data-fragment-index="5" -->
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Transitions in Centrality
+
+what happens if we prune low-popularity nodes?
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Transitions in Centrality
+
+hip-hop artists emerge
+
+<ol style="column-count: 2; column-gap: 5vw; width: 55vw">
+<li>Snoop Dogg</li>
+<li>Lil Wayne</li>
+<li>Nicki Minaj</li>
+<li>Ty Dolla $ign</li>
+<li>Rick Ross</li>
+<li>French Montana</li>
+<li>Pharrell Williams</li>
+<li>Akon</li>
+<li>Chris Brown</li>
+<li>2 Chainz</li>
+</ol>
+
+<div style="height: 5vh"></div>
+<small>
+top 10 artists for harmonic centrality in the graph
+of artists with a popularity of more than 60%
+</small>
