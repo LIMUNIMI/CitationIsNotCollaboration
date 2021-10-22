@@ -85,3 +85,21 @@ style="height:50vh" /></td>
 <td><img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/distances.png"
 style="height:50vh" /></td>
 </tr></table>
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Music Genre and Artist Centrality
+
+<p> Does music genre affect the centrality of artists? </p><!-- .element: class="fragment " data-fragment-index="1" -->
+<p> Which genres have the most central artists? </p><!-- .element: class="fragment " data-fragment-index="2" -->
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Music Genre and Artist Centrality
+
+<img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/indegrees.svg"
+style="height:55vh" />
