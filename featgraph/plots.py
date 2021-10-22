@@ -530,3 +530,23 @@ def main(*argv):
   plt.ylabel("probability")
   plt.title(f"{graph.basename}\nHyperBall ($log_2m$ = 8)")
   savefig("distances.png")
+
+  # Compute indegrees dataframe
+  logger.info("Load indegrees dataset")
+  df = graph.supergenre_dataframe(indegree=graph.indegrees())
+  df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
+  k = r"$\log_{10}$indegree" if mpl.rcParams["text.usetex"] else "log-indegree"
+  df[k] = np.log10(df["indegree"])
+  violin_order = df.groupby(
+      by=["genre"])[k].median().sort_values().iloc[::-1].index
+
+  logger.info("Plot indegrees dataset")
+  plt.xticks(rotation=33)
+  importlib.import_module("seaborn").violinplot(data=df,
+                                                x="genre",
+                                                y=k,
+                                                order=violin_order,
+                                                cut=0)
+  plt.gcf().set_size_inches(mpl.rcParams["figure.figsize"][1] *
+                            np.array([16 / 9, 1]))
+  savefig("indegrees.svg")
