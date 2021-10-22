@@ -169,6 +169,6 @@ hip-hop artists emerge
 
 <div style="height: 5vh"></div>
 <small>
-top 10 artists for harmonic centrality in the graph
-of artists with a popularity of more than 60%
+top 10 artists for harmonic centrality in the graph of artists<br/>
+with a popularity of more than 60%
 </small>
