@@ -307,7 +307,7 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
-  def transform_map(self, dest_path: str, it: Iterable[bool]) -> "BVGraph":
+  def transform_map(self, dest_path: str, it: Iterable[bool], graph_type: str) -> "BVGraph":
     """Transform a graph according to the mapping in map_array.
     If map[i] == -1, the node is removed.
 
@@ -317,6 +317,7 @@ class BVGraph:
             the nodes of the filtered graph
           overwrite (bool): bool to indicate if the function overwrites the
             existing files or not
+          graph_type (str): string identifying the type of the graph: a Spotify or SGC model graph
         Returns:
           a BVGraph which is the filtered graph
     """
@@ -326,7 +327,10 @@ class BVGraph:
 
     # open metadata files
     src_path = self.base_path + "."
-    metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
+    if graph_type == "sgc":
+      metadata_list = ["type", "popularity"]
+    else:
+      metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
     infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
     outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
     open_read = functools.partial(open, mode="r", encoding="utf-8")
@@ -382,6 +386,16 @@ class BVGraph:
     with open(self.path("genre", "txt"), "r", encoding="utf-8") as f:
       for r in f:
         yield json.loads(r.rstrip("\n"))
+
+  def type_sgc(self) -> Iterable[List[str]]:
+    """Get the sgc type from the metadata file
+
+      Returns:
+        The iterable of the lists of types of each individual"""
+    with open(self.path("type", "txt"), "r", encoding="utf-8") as f:
+      for r in f:
+        s = r.strip()
+        yield str(s) if s else None
 
   def supergenre(
       self,
