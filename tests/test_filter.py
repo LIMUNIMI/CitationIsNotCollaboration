@@ -14,7 +14,7 @@ def test_filter_graph(base_path, dest_path, it):
       base_path)
 
   # it = filter
-  subgraph = graph.transform_map(dest_path, it, "spotify")
+  subgraph = graph.transform_map(dest_path, it)
   return subgraph.numNodes()
 
 
