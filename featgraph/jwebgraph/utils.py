@@ -307,38 +307,46 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
-  def transform_map(self, dest_path: str, it: Iterable[bool], graph_type: str) -> "BVGraph":
-    """Transform a graph according to the mapping in map_array.
-    If map[i] == -1, the node is removed.
+  def transform_map(
+      self,
+      dest_path: str,
+      it: Iterable[bool],
+      metadata_list: Iterable[str] = ("ids", "type", "name", "popularity",
+                                      "genre", "followers")
+  ) -> "BVGraph":
+    """Filter out the nodes at the indices for which the iterable
+    value is :data:`False`
 
-        Args:
-          dest_path (str): path where to save the filtered graph
-          it (list[int]): list of integer values that indicates the indices of
-            the nodes of the filtered graph
-          overwrite (bool): bool to indicate if the function overwrites the
-            existing files or not
-          graph_type (str): string identifying the type of the graph: a Spotify or SGC model graph
-        Returns:
-          a BVGraph which is the filtered graph
-    """
+    Args:
+      dest_path (str): path where to save the filtered graph
+      it (iterable of bool): iterable of boolean values. If :data:`it[i]` is
+        :data:`True`, then node :data:`i` is kept, otherwise the node is
+        filtered out
+      metadata_list (str): list of suffixes of metadata files to map
+
+    Returns:
+      a BVGraph which is the filtered graph"""
     n_nodes = int(self.numNodes())
     map_array = jpype.JInt[n_nodes]
     j = 0
 
     # open metadata files
     src_path = self.base_path + "."
-    if graph_type == "sgc":
-      metadata_list = ["type", "popularity"]
-    else:
-      metadata_list = ["ids", "type", "name", "popularity", "genre", "followers"]
     infnames = list(map(str(src_path + "{}.txt").format, metadata_list))
-    outfnames = list(map(str(dest_path + ".{}.txt").format, metadata_list))
+
+    # skip files that don't exist
+    b = list(map(os.path.exists, infnames))
+    infnames = list(itertools.compress(infnames, b))
+
+    outfnames = list(
+        itertools.compress(
+            map(str(dest_path + ".{}.txt").format, metadata_list), b))
+
     open_read = functools.partial(open, mode="r", encoding="utf-8")
     open_write = functools.partial(open, mode="w", encoding="utf-8")
 
     with featgraph.misc.multicontext(map(open_read, infnames)) as infiles:
       with featgraph.misc.multicontext(map(open_write, outfnames)) as outfiles:
-
         for i, (b, inrows) in enumerate(zip(it, zip(*infiles))):
           if b:
             map_array[i] = j
@@ -348,9 +356,7 @@ class BVGraph:
           else:
             map_array[i] = -1
     # write
-    # self.write_metadata_files(it, dest_path)
     filtered_graph = webgraph.Transform.map(self.load(), map_array)
-    # if overwrite or pathutils.notisglob(dest_path + "*"):
     webgraph.BVGraph.store(filtered_graph, dest_path)
     return BVGraph(base_path=dest_path, sep=self.sep)
 
