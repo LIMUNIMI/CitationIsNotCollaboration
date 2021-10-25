@@ -1,3 +1,2 @@
 include featgraph/jwebgraph/dependencies.json
 include featgraph/genre_map.json
-include featgraph/slides.mplstyle

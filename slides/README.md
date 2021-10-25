@@ -12,7 +12,7 @@ You will find the presentation at the URL returned in the HTTP response
 ## Make plots
 You can make the same plots that are in the slides by running
 ```
-python -m featgraph.plots \
+python slides.py \
   <graph path> \
   <dest path> \
   -a 4NJhFmfw43RLBLjQvxDuRS \
