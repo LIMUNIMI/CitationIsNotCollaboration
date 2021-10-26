@@ -153,16 +153,20 @@ class BVGraph:
     if overwrite or pathutils.notisfile(path):
       webgraph.BVGraph.main(["-O", self.base_path])
 
-  def compute_degrees(self, overwrite: bool = False):
+  def compute_degrees(self, overwrite: bool = False, log: bool = True):
     """Compute statistical data of a given graph and save
     indegrees and outdegrees in text format
 
     Args:
       overwrite (bool): If :data:`False` (default), then skip if the
-        output file is found. Otherwise always run"""
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
     path = self.path("stats")
-    if overwrite or pathutils.notisglob(path + "*"):
+    if overwrite or pathutils.notisglob(path + "*", log=log):
       webgraph.Stats.main(["--save-degrees", self.base_path, path])
+
+  compute_indegrees = compute_degrees
+  compute_outdegrees = compute_degrees
 
   def indegrees(self):
     """Load indegrees vector from file
@@ -178,14 +182,15 @@ class BVGraph:
       array of doubles: Array of outdegrees"""
     return load_as_doubles(self.path("stats", "outdegrees"))
 
-  def compute_transpose(self, overwrite: bool = False):
+  def compute_transpose(self, overwrite: bool = False, log: bool = True):
     """Compute the transpose of the graph
 
     Args:
       overwrite (bool): If :data:`False` (default), then skip if the
-        output file is found. Otherwise always run"""
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
     path = self.path("transpose")
-    if overwrite or pathutils.notisglob(path + "*"):
+    if overwrite or pathutils.notisglob(path + "*", log=log):
       webgraph.Transform.main(["transposeOffline", self.base_path, path])
 
   def pagerank_path(self, *suffix: str, alpha: float = 0.85):
@@ -200,15 +205,20 @@ class BVGraph:
     alpha = _pagerank_alpha_preprocess(alpha)
     return self.path(f"pagerank-{100 * alpha:02.0f}", *suffix)
 
-  def compute_pagerank(self, alpha: float = 0.85, overwrite: bool = False):
+  def compute_pagerank(self,
+                       alpha: float = 0.85,
+                       overwrite: bool = False,
+                       log: bool = True):
     r"""Compute PageRank of a graph given its transpose
 
     Args:
       alpha (float): PageRank :math:`\alpha` value
       overwrite (bool): If :data:`False` (default), then skip if the
-        output file is found. Otherwise always run"""
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
     alpha = _pagerank_alpha_preprocess(alpha)
-    if overwrite or pathutils.notisglob(self.pagerank_path("*", alpha=alpha)):
+    if overwrite or pathutils.notisglob(self.pagerank_path("*", alpha=alpha),
+                                        log=log):
       law.rank.PageRankParallelGaussSeidel.main([
           "--alpha",
           f"{alpha:.2f}",
@@ -230,18 +240,23 @@ class BVGraph:
                 command: str,
                 path: str,
                 nbits: int = 8,
-                transpose: bool = True):
+                transpose: bool = True,
+                log: bool = True,
+                overwrite: bool = False):
     r"""Run HyperBall on the graph
 
     Args:
       command (str): Command flag
       path (str): Output file path
       nbits (int): Number of bits (:math:`\log_2m`) for the
-      transpose (bool): Run HyperBall on the transposed graph (default)"""
+      transpose (bool): Run HyperBall on the transposed graph (default)
+      log (bool): If :data:`True`, then log if file was found
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run"""
     graph_paths = (self.path(), self.path("transpose"))
     if transpose:
       graph_paths = reversed(graph_paths)
-    if pathutils.notisfile(path):
+    if overwrite or pathutils.notisfile(path, log=log):
       webgraph.algo.HyperBall.main([
           "--log2m",
           f"{nbits:.0f}",
