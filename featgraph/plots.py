@@ -1,5 +1,6 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt, patches
+import matplotlib as mpl
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -300,3 +301,136 @@ def plot_posterior(data,
       ],
       grid=(2, 4),
   )
+
+
+def plot_centrality_transitions(
+    df: pd.DataFrame,
+    centrality_name: str,
+    cmap: Optional[Dict[str, Any]] = None,
+    centrality_name_key: str = "centrality",
+    graph_names: Optional[Sequence[str]] = None,
+    graph_name_key: str = "graph",
+    type_name_key: str = "type_value",
+    threshold_key: str = "threshold",
+    threshold_attr: str = "popularity",
+    norm=None,
+    logy: bool = False,
+    save: bool = False,
+    aspect: float = 16 / 9,
+    width: float = 6,
+    figext: str = "svg",
+    median: bool = True,
+    mean_key: str = "mean",
+    std_key: str = "std",
+    quartile1_key: str = "quartile-1",
+    median_key: str = "median",
+    quartile3_key: str = "quartile-3",
+    std_scale: float = 0.7,
+    fill_alpha: float = 0.25,
+    fig=None,
+    ax=None,
+):
+  """Plot centrality transitions for multiple graphs
+
+  Args:
+    df (DataFrame): Centralities summary
+    centrality_name (str): Name of the centrality to plot
+    cmap (dict): Map from type names to plot colors
+    centrality_name_key (str): Name of the column in the dataframe
+      with the centrality names
+    graph_names (sequence of str): Names of the graphs, the centralities of
+      which to plot. If unspecified, plot centralities for all graphs
+      in the dataframe
+    graph_name_key (str): Name of the column in the dataframe
+      with the graph names
+    type_name_key (str): Name of the column in the dataframe
+      with the type names
+    threshold_key (str): Name of the column in the dataframe
+      with the threshold values
+    threshold_attr (str): Name of the attribute used for thresholding
+    norm (str): If specified, divide the centrality column
+      by the column with this name. Use this for normalization
+    logy (bool): If :data:`True`, set the y-axis as logarithmic
+    aspect (float): Aspect ratio of the figure for a 1-graph plot
+    width (float): Width of the figure
+    median (bool): If :data:`True` (default), plot median and interquartile
+      ranges. Otherwise, plot the mean and the range within :data:`std_scale`
+      times the standard deviation
+    mean_key (str): Name of the column in the dataframe
+      with the mean values
+    std_key (str): Name of the column in the dataframe
+      with the standard deviation values
+    quartile1_key (str): Name of the column in the dataframe
+      with the quartile 1 values
+    median_key (str): Name of the column in the dataframe
+      with the median (quartile 2) values
+    quartile3_key (str): Name of the column in the dataframe
+      with the quartile 3 values
+    std_scale (float): Scale factor for the standard deviation range
+    fill_alpha (float): Fill opacity for the interquartile range or the
+      standard deviation range
+    fig: Figure onto which to plot
+    ax: Array of axes onto which to plot
+    save (bool): If :data:`True`, save the figure to a file. If a string,
+      save to the specific filepath
+    figext (str): Extension of the figure file"""
+  if fig is None:
+    fig = plt.gcf()
+  if graph_names is None:
+    graph_names = df[graph_name_key].unique()
+  if ax is None:
+    ax = fig.subplots(nrows=len(graph_names), sharex=True)
+  if cmap is None:
+    cmap = {}
+    for graph_name in graph_names:
+      for tv, c in zip(
+          df[df[graph_name_key] == graph_name][type_name_key].unique(),
+          itertools.cycle(mpl.rcParams["axes.prop_cycle"])):
+        cmap[tv] = c["color"]
+
+  for a, graph_name in zip(ax, graph_names):
+    df_ = df[(df[graph_name_key] == graph_name) &
+             (df[centrality_name_key] == centrality_name)]
+    for k in df_[type_name_key].unique():
+      dfk = df_[df_[type_name_key] == k]
+      thresholds = dfk[threshold_key].to_numpy()
+      idx = np.argsort(thresholds)
+      thresholds = thresholds[idx]
+
+      if median:
+        kq1 = dfk[quartile1_key].to_numpy()[idx]
+        kq2 = dfk[median_key].to_numpy()[idx]
+        kq3 = dfk[quartile3_key].to_numpy()[idx]
+      else:
+        kq2 = dfk[mean_key].to_numpy()[idx]
+        ks = dfk[std_key].to_numpy()[idx] * std_scale
+        kq1 = kq2 - ks
+        kq3 = kq2 + ks
+      if norm:
+        kn = dfk[norm].to_numpy()[idx]
+        kq1 /= kn
+        kq2 /= kn
+        kq3 /= kn
+      a.plot(thresholds, kq2, label=k, c=cmap.get(k, "k"))
+      a.fill_between(
+          thresholds,
+          kq1,
+          kq3,
+          facecolor=cmap.get(k, "k"),
+          alpha=fill_alpha,
+      )
+    if logy:
+      a.set_yscale("log")
+    a.legend()
+    a.set_title(graph_name)
+    a.set_ylabel(centrality_name)
+    a.set_xlabel(f"{threshold_attr} threshold")
+
+  fig.set_size_inches(width * np.array([aspect, len(graph_names)]))
+  if save:
+    fpath = f"compare-{centrality_name}" + \
+          (f"-norm_{norm}" if norm else "") + \
+          (f"-median" if logy else "") + \
+          (f"-semilogy" if logy else "") + \
+          f".{figext}" if isinstance(save, bool) else save
+    plt.savefig(fpath, bbox_inches="tight")
