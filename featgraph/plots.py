@@ -375,10 +375,11 @@ def plot_centrality_transitions(
     save (bool): If :data:`True`, save the figure to a file. If a string,
       save to the specific filepath
     figext (str): Extension of the figure file"""
-  if fig is None:
-    fig = plt.gcf()
   if graph_names is None:
     graph_names = df[graph_name_key].unique()
+  if fig is None:
+    fig = plt.gcf()
+    fig.set_size_inches(width * np.array([aspect, len(graph_names)]))
   if ax is None:
     ax = fig.subplots(nrows=len(graph_names), sharex=True)
   if cmap is None:
@@ -427,7 +428,6 @@ def plot_centrality_transitions(
     a.set_ylabel(centrality_name)
     a.set_xlabel(f"{threshold_attr} threshold")
 
-  fig.set_size_inches(width * np.array([aspect, len(graph_names)]))
   if save:
     fpath = f"compare-{centrality_name}" + \
           (f"-norm_{norm}" if norm else "") + \
@@ -494,6 +494,7 @@ def plot_centrality_boxes(
     save: bool = False,
     figext: str = "svg",
     ipython: Optional[bool] = None,
+    **kwargs,
 ):
   """Plot centrality boxplots
 
@@ -507,8 +508,9 @@ def plot_centrality_boxes(
     figext (str): Extension of the figure file
     ipython (bool): If :data:`True`, then return an IPython HTML
       object. If :data:`None`, return an IPython HTML object if
-      running in a notebook"""
-  box_plot = pygal.Box()
+      running in a notebook
+    kwargs: Keyword arguments for :class:`pygal.Box`"""
+  box_plot = pygal.Box(**kwargs)
   box_plot.title = \
     f"{centrality}\n{graph_name}\n{tc.attribute} > {tc.attr_fmt(th)}"
 

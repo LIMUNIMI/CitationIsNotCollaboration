@@ -418,10 +418,8 @@ class ThresholdComparison:
           len(self.centralities))) as pbar:
         for baseg, th in itertools.product(self.basegraphs, self.thresholds):
           subg = self.subgraph(baseg, th)
-          logger.info("Loading graph: %s", subg.basename)
           all_types = list(getattr(subg, baseg.type_key)())
           for attr_name, attr in self.centralities.items():
-            logger.info("  Loading %s (%s.%s)", attr_name, subg.basename, attr)
             all_values = np.array(list(getattr(subg, attr)()))
             for tv in baseg.type_values:
               # Add values to dataframe

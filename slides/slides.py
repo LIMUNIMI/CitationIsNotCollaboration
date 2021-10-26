@@ -7,7 +7,7 @@ import importlib
 import sys
 import os
 from chromatictools import cli
-from featgraph import plots, scriptutils, jwebgraph, logger
+from featgraph import plots, scriptutils, jwebgraph, sgc, pathutils, logger
 from typing import Optional
 
 
@@ -99,6 +99,14 @@ def main(*argv):
   parser.add_argument("graph_path", help="The base path for the BVGraph files")
   parser.add_argument(
       "dest_path", help="The destination path (directory) for the plot files")
+  parser.add_argument("--csv-path",
+                      default=None,
+                      help="The path of the centralities summary dataframe")
+  parser.add_argument("-F",
+                      "--force",
+                      dest="overwrite",
+                      action="store_true",
+                      help="Overwrite preexisting files")
   parser.add_argument("-a",
                       "--artist",
                       dest="ref_artists",
@@ -106,6 +114,10 @@ def main(*argv):
                       type=str,
                       action="append",
                       help="Specify a reference artist by ID")
+  parser.add_argument("--sgc-path",
+                      metavar="PATH",
+                      default=".sgc-graph/sgc",
+                      help="The path for the SGC random graph")
   parser.add_argument("--max-height",
                       metavar="H",
                       default=10.0,
@@ -151,10 +163,12 @@ def main(*argv):
     plt.legend(**({} if legend_kw is None else legend_kw))
 
   # Prepare figure saving
+  def figpath(filename: str) -> str:
+    return os.path.join(args.dest_path, filename)
+
   def savefig(filename: str, clf: bool = True):
-    figpath = os.path.join(args.dest_path, filename)
-    logger.info("Saving plot: %s", figpath)
-    plt.savefig(fname=figpath)
+    logger.info("Saving plot: %s", figpath(filename))
+    plt.savefig(fname=figpath(filename))
     if clf:
       plt.clf()
 
@@ -163,91 +177,161 @@ def main(*argv):
   plt.style.use(args.mpl_style)
 
   # Plot degrees
-  logger.info("Plotting degrees")
-  graph.compute_degrees()
+  degscatter_fname = "degrees.png"
+  if args.overwrite or pathutils.notisfile(figpath(degscatter_fname)):
+    logger.info("Plotting degrees")
+    graph.compute_degrees()
 
-  out_degs = graph.outdegrees()
-  for i in range(len(out_degs)):
-    out_degs[i] += 1
-  plots.scatter(
-      out_degs,
-      graph.indegrees,
-      marker=".",
-      c=mpl.rcParams["lines.markerfacecolor"],
-      xscale="log",
-      yscale="log",
-      label=graph.basename,
-      xlabel="out-degree",
-      ylabel="in-degree",
-  )
-  scatter_refs(out_degs, graph.indegrees, legend_kw=dict(loc="upper left"))
-  del out_degs
-  plt.gca().set_aspect("equal")
-  plt.minorticks_off()
-  _translate_log_ticks(1)
-  savefig("degrees.png")
+    out_degs = graph.outdegrees()
+    for i in range(len(out_degs)):
+      out_degs[i] += 1
+    plots.scatter(
+        out_degs,
+        graph.indegrees,
+        marker=".",
+        c=mpl.rcParams["lines.markerfacecolor"],
+        xscale="log",
+        yscale="log",
+        label=graph.basename,
+        xlabel="out-degree",
+        ylabel="in-degree",
+    )
+    scatter_refs(out_degs, graph.indegrees, legend_kw=dict(loc="upper left"))
+    del out_degs
+    plt.gca().set_aspect("equal")
+    plt.minorticks_off()
+    _translate_log_ticks(1)
+    savefig(degscatter_fname)
 
   # Plot distance probability functions
-  logger.info("Compute neighbourhood")
-  graph.compute_transpose()
-  graph.compute_neighborhood()
+  neigh_fname = "distances.svg"
+  if args.overwrite or pathutils.notisfile(figpath(neigh_fname)):
+    logger.info("Compute neighbourhood")
+    graph.compute_transpose()
+    graph.compute_neighborhood()
 
-  logger.info("Plotting distance probability mass function")
-  d = graph.distances()
-  d /= sum(d)
-  plt.plot(d)
-  d_mean = np.dot(np.arange(len(d)), d)
-  p_mean = np.interp(d_mean, np.arange(len(d)), d)
+    logger.info("Plotting distance probability mass function")
+    d = graph.distances()
+    d /= sum(d)
+    plt.plot(d)
+    d_mean = np.dot(np.arange(len(d)), d)
+    p_mean = np.interp(d_mean, np.arange(len(d)), d)
 
-  d_hdi_ci = 0.94
-  d_hdi = _hdi(d, n=1024, ci=d_hdi_ci)
-  plt.plot(d_hdi, np.zeros(2), c=mpl.rcParams["lines.color"], linewidth=3)
+    d_hdi_ci = 0.94
+    d_hdi = _hdi(d, n=1024, ci=d_hdi_ci)
+    plt.plot(d_hdi, np.zeros(2), c=mpl.rcParams["lines.color"], linewidth=3)
 
-  fsize = mpl.rcParams["font.size"] + 2
-  plt.text(d_hdi[0],
-           p_mean * 0.02,
-           f"{d_hdi[0]:.2f}",
-           verticalalignment="bottom",
-           horizontalalignment="right",
-           fontsize=fsize)
-  plt.text(d_hdi[1],
-           p_mean * 0.02,
-           f"{d_hdi[1]:.2f}",
-           verticalalignment="bottom",
-           horizontalalignment="left",
-           fontsize=fsize)
-  percent_s = r"$\%$" if mpl.rcParams["text.usetex"] else "%"
-  plt.text(np.mean(d_hdi),
-           p_mean * 0.125,
-           f"{d_hdi_ci * 100:.0f}{percent_s} HDI",
-           verticalalignment="center",
-           horizontalalignment="center",
-           fontsize=fsize)
+    fsize = mpl.rcParams["font.size"] + 2
+    plt.text(d_hdi[0],
+             p_mean * 0.02,
+             f"{d_hdi[0]:.2f}",
+             verticalalignment="bottom",
+             horizontalalignment="right",
+             fontsize=fsize)
+    plt.text(d_hdi[1],
+             p_mean * 0.02,
+             f"{d_hdi[1]:.2f}",
+             verticalalignment="bottom",
+             horizontalalignment="left",
+             fontsize=fsize)
+    percent_s = r"$\%$" if mpl.rcParams["text.usetex"] else "%"
+    plt.text(np.mean(d_hdi),
+             p_mean * 0.125,
+             f"{d_hdi_ci * 100:.0f}{percent_s} HDI",
+             verticalalignment="center",
+             horizontalalignment="center",
+             fontsize=fsize)
 
-  plt.text(d_mean,
-           p_mean * 0.90,
-           f"mean = {d_mean:.2f}",
-           verticalalignment="center",
-           horizontalalignment="center",
-           fontsize=fsize)
+    plt.text(d_mean,
+             p_mean * 0.90,
+             f"mean = {d_mean:.2f}",
+             verticalalignment="center",
+             horizontalalignment="center",
+             fontsize=fsize)
 
-  plt.xlabel("distance")
-  plt.ylabel("probability")
-  plt.title(f"{graph.basename}\nHyperBall ($log_2m$ = 8)")
-  savefig("distances.png")
+    plt.xlabel("distance")
+    plt.ylabel("probability")
+    plt.title(f"{graph.basename}\nHyperBall ($log_2m$ = 8)")
+    savefig(neigh_fname)
 
   # Compute indegrees dataframe
-  logger.info("Load indegrees dataset")
-  df = graph.supergenre_dataframe(indegree=graph.indegrees())
-  df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
-  k = r"$\log_{10}$indegree" if mpl.rcParams["text.usetex"] else "log-indegree"
-  df[k] = np.log10(df["indegree"])
-  violin_order = df.groupby(
-      by=["genre"])[k].median().sort_values().iloc[::-1].index
+  indegrees_fname = "indegrees.svg"
+  if args.overwrite or pathutils.notisfile(figpath(indegrees_fname)):
+    logger.info("Load indegrees dataset")
+    df = graph.supergenre_dataframe(indegree=graph.indegrees())
+    df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
+    k = r"$\log_{10}$indegree" if mpl.rcParams["text.usetex"] \
+                               else "log-indegree"
+    df[k] = np.log10(df["indegree"])
+    violin_order = df.groupby(
+        by=["genre"])[k].median().sort_values().iloc[::-1].index
 
-  logger.info("Plot indegrees dataset")
-  plt.xticks(rotation=33)
-  sns.violinplot(data=df, x="genre", y=k, order=violin_order, cut=0)
-  plt.gcf().set_size_inches(mpl.rcParams["figure.figsize"][1] *
-                            np.array([16 / 9, 1]))
-  savefig("indegrees.svg")
+    logger.info("Plot indegrees dataset")
+    plt.xticks(rotation=33)
+    sns.violinplot(data=df, x="genre", y=k, order=violin_order, cut=0)
+    plt.gcf().set_size_inches(mpl.rcParams["figure.figsize"][1] *
+                              np.array([16 / 9, 1]))
+    savefig(indegrees_fname)
+
+  # Compute transitions dataframe
+  ## Sample SGC Graph
+  seed = 42
+  sgc_model = sgc.SGCModel()
+  sgc_graph = jwebgraph.utils.BVGraph(args.sgc_path)
+  if pathutils.notisglob(sgc_graph.path("*"), msg="Found: %.40s... Skipping"):
+    logger.info("Sampling SGC graph")
+    sgc_nxgraph = sgc_model(seed=seed)
+    logger.info("Converting nxgraph to BVGraph")
+    sgc.to_bv(sgc_nxgraph, args.sgc_path)
+
+  ## Perform thresholing
+  transisions_fnames_fmt = "transition-{}.svg".format
+  tc = sgc.ThresholdComparison(
+      sgc.ThresholdComparison.sgc_graph(sgc_graph),
+      sgc.ThresholdComparison.spotify_graph(graph),
+  )
+  trasition_plot_kwargs = {
+      "Harmonic Centrality": dict(norm="narcs",),
+      "Closeness Centrality": dict(norm="narcs", logy=True),
+      "Indegree": dict(norm="narcs", logy=True),
+      "Pagerank": dict(
+          norm="nnodes_inv",
+          logy=True,
+      )
+  }
+  if args.overwrite or pathutils.notisfile(
+      list(map(figpath, map(transisions_fnames_fmt, tc.centralities.values()))),
+      func=lambda x: all(map(os.path.exists, x)),
+  ):
+    logger.info("Thresholding based on %s at thresholds: %s ", tc.attribute,
+                tc.thresholds)
+    tc.threshold_graphs(tqdm=args.tqdm, overwrite=args.overwrite)
+
+    ## Compute centralities
+    tc.compute_centralities(tqdm=args.tqdm, overwrite=args.overwrite)
+
+    ## Build dataframe
+    logger.info("Centralities summary dataframe. File: %s ", args.csv_path)
+    df = tc.dataframe(*(() if args.csv_path is None else (args.csv_path,)),
+                      tqdm=args.tqdm,
+                      overwrite=args.overwrite)
+
+    for k, v in tc.centralities.items():
+      logger.info("Plotting %s", k)
+      fig, ax = plt.subplots(1, 2, sharex=True)
+      fig.set_size_inches(mpl.rcParams["figure.figsize"][1] *
+                          np.array([20 / 9, 1]))
+      plots.plot_centrality_transitions(df,
+                                        k,
+                                        cmap={
+                                            "celebrities": "C0",
+                                            "community leaders": "C1",
+                                            "masses": "C2",
+                                            "hip-hop": "C0",
+                                            "classical": "C1",
+                                            "rock": "C2",
+                                        },
+                                        fig=fig,
+                                        ax=ax,
+                                        **trasition_plot_kwargs.get(k, {}))
+      savefig(transisions_fnames_fmt(v))
