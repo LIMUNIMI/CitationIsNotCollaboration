@@ -82,7 +82,7 @@ between December 2017 and January 2018
 <table><tr>
 <td><img alt="Degree Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/degrees.png"
 style="height:50vh" /></td>
-<td><img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/distances.png"
+<td><img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/distances.svg"
 style="height:50vh" /></td>
 </tr></table>
 
@@ -173,12 +173,12 @@ top 10 artists for harmonic centrality in the graph of artists<br/>
 with a popularity of more than 60%
 </small>
 
-
 ---
 
 <!-- .slide: data-auto-animate -->
 
 ## SGC model - Tobin _et al._
+
 inserisci immagine Tobin et al. Fig.4
 
 We implemented the SGC model proposed by Tobin _et al._, using the Webgraph framework (https://webgraph.di.unimi.it)
@@ -203,7 +203,6 @@ Does the same happen for other types of centrality?
 
 ---
 
-
 <!-- .slide: data-auto-animate -->
 
 ## Comparison between the Spotify graph and the SGC model
@@ -212,7 +211,7 @@ Tobin _et al._ analysed the behaviour of the _eigenvector centrality._
 
 Does the same happen for other types of centrality?
 
-What if we model the behaviour of this network through the SGC model? Does the same transition in centrality occur?  
+What if we model the behaviour of this network through the SGC model? Does the same transition in centrality occur?
 
 ---
 
@@ -224,63 +223,57 @@ Tobin _et al._ analysed the behaviour of the _eigenvector centrality._
 
 Does the same happen for other types of centrality?
 
-What if we model the behaviour of this network through the SGC model? Does the same transition occur for different centralities?  
+What if we model the behaviour of this network through the SGC model? Does the same transition occur for different centralities?
 
 If so, does it occur at the same threshold?
 
 ---
 
-<!-- .slide: data-auto-animate -->
+## Indegree
 
-## Indegree centrality - 
+![Indegree Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-indegrees.svg)
 
-
-<img alt="Distances Distribution" src="https://gist.github.com/GiuliaClerici/70ea8807c2608b5b06740eabb5282b7e/raw/compare-harmonicc-norm_nnodes_inv-median-semilogy.svg"
-style="height:55vh" />
+<small>normalized by the number of arcs</small>
 
 ---
 
 <!-- .slide: data-auto-animate -->
 
-## Harmonic centrality
+## Harmonic Centrality
 
+![Harmonic Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
 
-<img alt="Distances Distribution" src="https://gist.github.com/GiuliaClerici/70ea8807c2608b5b06740eabb5282b7e/raw/compare-harmonicc-norm_nnodes_inv-median-semilogy.svg"
-style="height:55vh" />
+<small>normalized by the number of arcs</small>
 
 ---
 
 <!-- .slide: data-auto-animate -->
 
-## harmonic centrality 
-
+## Harmonic Centrality
 
 <img alt="Distances Distribution" src="https://gist.github.com/GiuliaClerici/691ce315430dca82e2c7ac4bbb6f93cd/raw/boxplot-spotify-harmonicc.svg"
 style="height:55vh" />
 
 ---
 
-<!-- .slide: data-auto-animate -->
+## Pagerank
 
-## Pagerank centrality 
+![Pagerank](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
 
-
-<img alt="Distances Distribution" src="https://gist.github.com/GiuliaClerici/b2a521e589ba285fa0166d54c9985c0b/raw/compare-pagerank-norm_nnodes_inv-median-semilogy.svg"
-style="height:55vh" />
+<small>normalized by the number of arcs</small>
 
 ---
 
-<!-- .slide: data-auto-animate -->
+## Closeness Centrality
 
-## Closeness centrality
+![Closeness Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-closenessc.svg)
 
+<small>normalized by the number of arcs</small>
 
-<img alt="Distances Distribution" src="https://gist.github.com/GiuliaClerici/ab596e595d279ded033820d1086b3363/raw/compare-closenessc-norm_nnodes_inv-median-semilogy.svg"
-style="height:55vh" />
-
+Note:
 We remind you that this graph is directed and the pruning can lead to unconnected nodes.
 
-The behaviour for SGC is justified by the  principle proposed by Marchiori and Latora (2000), which states that in graphs with infinite distances the harmonic mean behaves better than the arithmetic mean.
+The behaviour for SGC is justified by the principle proposed by Marchiori and Latora (2000), which states that in graphs with infinite distances the harmonic mean behaves better than the arithmetic mean.
 
 ---
 
@@ -288,10 +281,10 @@ The behaviour for SGC is justified by the  principle proposed by Marchiori and L
 
 ## Results
 
-
 We note that the transition:
-- **Spotify graph**: from *classical* to *hip-hop* artists
-- **SGC model**: from *community leaders* to *celebrities*
+
+- **Spotify graph**: from _classical_ to _hip-hop_ artists
+- **SGC model**: from _community leaders_ to _celebrities_
 
 appears for every tested centrality.
 
@@ -309,7 +302,7 @@ appears for every tested centrality.
 
 ## Results
 
-- Confirming the results obtained by Tobin _et al._, this transition always occurs for every centrality when the threshold for popularity is set around 50. 
+- Confirming the results obtained by Tobin _et al._, this transition always occurs for every centrality when the threshold for popularity is set around 50.
 
 - Therefore, we can state that this result is not due to the choice of the eigenvalues in the eigenvector centrality tested by Tobin _et al._
 
@@ -317,15 +310,10 @@ appears for every tested centrality.
 
 ---
 
-<!-- .slide: data-auto-animate -->
-
 ### Conclusion
 
 - We analyzed the work by Tobin _et al._, which observes a transition in the eigenvetor centrality when filtering the nodes at 47
 
-
-
 ---
 
 ### References
-
