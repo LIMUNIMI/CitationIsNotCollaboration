@@ -138,6 +138,9 @@ results shown for harmonic centrality, but they are
 similar for other centrality measures
 </small><!-- .element: class="fragment " data-fragment-index="5" -->
 
+Note:
+Let the audience guess the first 3 most important classical artists
+
 ---
 
 <!-- .slide: data-auto-animate -->
@@ -177,11 +180,19 @@ with a popularity of more than 60%
 
 <!-- .slide: data-auto-animate -->
 
-## SGC model - Tobin _et al._
+## SGC Model
 
-inserisci immagine Tobin et al. Fig.4
+Tobin _et al._ proposed a _Social Group Centrality_ model to explain the transitions in centrality
 
-We implemented the SGC model proposed by Tobin _et al._, using the Webgraph framework (https://webgraph.di.unimi.it)
+---
+
+<!-- .slide: data-auto-animate -->
+
+## SGC Model
+
+![SGC Model](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/SGC.svg)
+
+Tobin _et al._ proposed a _Social Group Centrality_ model to explain the transitions in centrality
 
 ---
 
