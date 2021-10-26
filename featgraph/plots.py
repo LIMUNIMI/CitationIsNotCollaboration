@@ -7,7 +7,7 @@ import itertools
 import importlib
 import arviz
 from featgraph.misc import VectorOrCallable
-from featgraph import bayesian_comparison, scriptutils, jwebgraph, logger
+from featgraph import bayesian_comparison
 from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
