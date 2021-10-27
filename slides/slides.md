@@ -79,6 +79,8 @@ between December 2017 and January 2018
 
 ## The Network and the Data
 
+<small>data processed using WebGraph<br/>webgraph.di.unimi.it</small>
+
 <table><tr>
 <td><img alt="Degree Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/degrees.png"
 style="height:50vh" /></td>
@@ -182,7 +184,7 @@ with a popularity of more than 60%
 
 ## SGC Model
 
-Tobin _et al._ proposed a _Social Group Centrality_ model to explain the transitions in centrality
+Tobin South _et al._ proposed a _Social Group Centrality_ model to explain the transitions in centrality
 
 ---
 
@@ -192,51 +194,18 @@ Tobin _et al._ proposed a _Social Group Centrality_ model to explain the transit
 
 ![SGC Model](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/SGC.svg)
 
-Tobin _et al._ proposed a _Social Group Centrality_ model to explain the transitions in centrality
+Tobin South _et al._ proposed a _Social Group Centrality_ model to explain the transitions in centrality
 
 ---
 
 <!-- .slide: data-auto-animate -->
 
-## Comparison between the Spotify graph and the SGC model
+## Compare Spotify graph and SGC model
 
-Tobin _et al._ analysed the behaviour of the _eigenvector centrality._
+Tobin South _et al._ observed a critical transition in the _eigenvector centrality_
 
----
-
-<!-- .slide: data-auto-animate -->
-
-## Comparison between the Spotify graph and the SGC model
-
-Tobin _et al._ analysed the behaviour of the _eigenvector centrality._
-
-Does the same happen for other types of centrality?
-
----
-
-<!-- .slide: data-auto-animate -->
-
-## Comparison between the Spotify graph and the SGC model
-
-Tobin _et al._ analysed the behaviour of the _eigenvector centrality._
-
-Does the same happen for other types of centrality?
-
-What if we model the behaviour of this network through the SGC model? Does the same transition in centrality occur?
-
----
-
-<!-- .slide: data-auto-animate -->
-
-## Comparison between the Spotify graph and the SGC model
-
-Tobin _et al._ analysed the behaviour of the _eigenvector centrality._
-
-Does the same happen for other types of centrality?
-
-What if we model the behaviour of this network through the SGC model? Does the same transition occur for different centralities?
-
-If so, does it occur at the same threshold?
+- Does the same happen for other centralities? <!-- .element: class="fragment " data-fragment-index="1" -->
+- Does a graph sampled from the SGC model behave the same as the Spotify graph? <!-- .element: class="fragment " data-fragment-index="2" -->
 
 ---
 
@@ -293,41 +262,24 @@ The behaviour for SGC is justified by the principle proposed by Marchiori and La
 
 <!-- .slide: data-auto-animate -->
 
-## Results
+## Conclusion
 
-We note that the transition:
+We found that the transition in centrality
 
-- **Spotify graph**: from _classical_ to _hip-hop_ artists
-- **SGC model**: from _community leaders_ to _celebrities_
-
-appears for every tested centrality.
-
----
-
-<!-- .slide: data-auto-animate -->
-
-## Results
-
-- Confirming the results obtained by Tobin _et al._, this transition always occurs for every centrality when the threshold for popularity is set around 50.
+- occurs for indegree, harmonic centrality, and pagerank <!-- .element: class="fragment " data-fragment-index="1" -->
+- occurs at aroud the same popularity threshold as for the eigenvector centrality (40 ~ 50) <!-- .element: class="fragment " data-fragment-index="2" -->
+- is not as critical in other centralities as for the eigenvector centrality <!-- .element: class="fragment " data-fragment-index="3" -->
 
 ---
 
 <!-- .slide: data-auto-animate -->
 
-## Results
+## Conclusion
 
-- Confirming the results obtained by Tobin _et al._, this transition always occurs for every centrality when the threshold for popularity is set around 50.
+This suggests that the transition in centrality is due to some property of the graph
 
-- Therefore, we can state that this result is not due to the choice of the eigenvalues in the eigenvector centrality tested by Tobin _et al._
-
-- It is due to the structure of the graph, replicated by the SGC model.
+and that the SGC model captures and extremizes that property <!-- .element: class="fragment " data-fragment-index="1" -->
 
 ---
 
-### Conclusion
-
-- We analyzed the work by Tobin _et al._, which observes a transition in the eigenvetor centrality when filtering the nodes at 47
-
----
-
-### References
+## Thank you for your attention
