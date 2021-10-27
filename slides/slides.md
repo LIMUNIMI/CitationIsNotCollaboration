@@ -118,17 +118,17 @@ style="height:55vh" />
 
 classical artists are the most central in the full graph<!-- .element: class="fragment " data-fragment-index="1" -->
 
-<ol style="column-count: 2; column-gap: 5vw; width: 55vw">
+<ol style="column-count: 2; column-gap: 5vw; width: 65vw">
 <!--li>Traditional</li-->
 <!--li>Various Artists</li-->
-<li>Johann Sebastian Bach</li><!-- .element: class="fragment " data-fragment-index="2" -->
-<li>Wolfgang Amadeus Mozart</li><!-- .element: class="fragment " data-fragment-index="3" -->
+<li>Johann S. Bach</li><!-- .element: class="fragment " data-fragment-index="2" -->
+<li>Wolfgang A. Mozart</li><!-- .element: class="fragment " data-fragment-index="3" -->
 <!--li>Anonymous</li-->
 <li>Ludwig van Beethoven</li><!-- .element: class="fragment " data-fragment-index="4" -->
 <li>Franz Schubert</li><!-- .element: class="fragment " data-fragment-index="5" -->
-<li>George Frideric Handel</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>George F. Handel</li><!-- .element: class="fragment " data-fragment-index="5" -->
 <li>Johannes Brahms</li><!-- .element: class="fragment " data-fragment-index="5" -->
-<li>Pyotr Ilyich Tchaikovsky</li><!-- .element: class="fragment " data-fragment-index="5" -->
+<li>Pyotr I. Tchaikovsky</li><!-- .element: class="fragment " data-fragment-index="5" -->
 <li>Claude Debussy</li><!-- .element: class="fragment " data-fragment-index="5" -->
 <li>Felix Mendelssohn</li><!-- .element: class="fragment " data-fragment-index="5" -->
 <li>Giuseppe Verdi</li><!-- .element: class="fragment " data-fragment-index="5" -->
@@ -205,7 +205,8 @@ Tobin South _et al._ proposed a _Social Group Centrality_ model to explain the t
 Tobin South _et al._ observed a critical transition in the _eigenvector centrality_
 
 - Does the same happen for other centralities? <!-- .element: class="fragment " data-fragment-index="1" -->
-- Does a graph sampled from the SGC model behave the same as the Spotify graph? <!-- .element: class="fragment " data-fragment-index="2" -->
+- Does the same happen for the directed graph? <!-- .element: class="fragment " data-fragment-index="2" -->
+- Does a graph sampled from the SGC model behave the same as the Spotify graph? <!-- .element: class="fragment " data-fragment-index="3" -->
 
 ---
 
