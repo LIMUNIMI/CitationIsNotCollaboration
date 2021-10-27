@@ -244,7 +244,8 @@ If so, does it occur at the same threshold?
 
 ![Indegree Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-indegrees.svg)
 
-<small>normalized by the number of arcs</small>
+Note:
+normalized by the number of nodes
 
 ---
 
@@ -254,7 +255,8 @@ If so, does it occur at the same threshold?
 
 ![Harmonic Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
 
-<small>normalized by the number of arcs</small>
+Note:
+normalized by the number of nodes
 
 ---
 
@@ -271,7 +273,8 @@ style="height:55vh" />
 
 ![Pagerank](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
 
-<small>normalized by the number of arcs</small>
+Note:
+normalized by the number of nodes
 
 ---
 
@@ -279,11 +282,10 @@ style="height:55vh" />
 
 ![Closeness Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-closenessc.svg)
 
-<small>normalized by the number of arcs</small>
-
 Note:
-We remind you that this graph is directed and the pruning can lead to unconnected nodes.
+Normalized by the number of nodes
 
+We remind you that this graph is directed and the pruning can lead to unconnected nodes.
 The behaviour for SGC is justified by the principle proposed by Marchiori and Latora (2000), which states that in graphs with infinite distances the harmonic mean behaves better than the arithmetic mean.
 
 ---

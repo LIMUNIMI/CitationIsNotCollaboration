@@ -291,9 +291,9 @@ def main(*argv):
       sgc.ThresholdComparison.spotify_graph(graph),
   )
   trasition_plot_kwargs = {
-      "Harmonic Centrality": dict(norm="narcs",),
-      "Closeness Centrality": dict(norm="narcs", logy=True),
-      "Indegree": dict(norm="narcs", logy=True),
+      "Harmonic Centrality": dict(norm="nnodes",),
+      "Closeness Centrality": dict(norm="nnodes", logy=True),
+      "Indegree": dict(norm="nnodes", logy=True),
       "Pagerank": dict(
           norm="nnodes_inv",
           logy=True,
@@ -315,6 +315,7 @@ def main(*argv):
     df = tc.dataframe(*(() if args.csv_path is None else (args.csv_path,)),
                       tqdm=args.tqdm,
                       overwrite=args.overwrite)
+    df["nnodes_inv"] = 1 / df["nnodes"]
 
     for k, v in tc.centralities.items():
       logger.info("Plotting %s", k)

@@ -447,6 +447,4 @@ class ThresholdComparison:
         df.to_csv(csv_path)
     else:
       df = pd.read_csv(csv_path, index_col=0)
-    df["nnodes_inv"] = 1 / df["nnodes"]
-    df["narcs_inv"] = 1 / df["narcs"]
     return df
