@@ -249,8 +249,6 @@ normalized by the number of nodes
 
 ---
 
-<!-- .slide: data-auto-animate -->
-
 ## Harmonic Centrality
 
 ![Harmonic Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
@@ -262,16 +260,19 @@ normalized by the number of nodes
 
 <!-- .slide: data-auto-animate -->
 
-## Harmonic Centrality
+![Harmonic centrality th=45](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/harmonicc-boxplot-45.svg)
 
-<img alt="Distances Distribution" src="https://gist.github.com/GiuliaClerici/691ce315430dca82e2c7ac4bbb6f93cd/raw/boxplot-spotify-harmonicc.svg"
-style="height:55vh" />
+---
+
+<!-- .slide: data-auto-animate -->
+
+![Harmonic centrality th=50](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/harmonicc-boxplot-50.svg)
 
 ---
 
 ## Pagerank
 
-![Pagerank](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
+![Pagerank](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-pagerank.svg)
 
 Note:
 normalized by the number of nodes

@@ -2,6 +2,7 @@
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 import seaborn as sns
+import pygal.style
 import numpy as np
 import importlib
 import sys
@@ -336,3 +337,21 @@ def main(*argv):
                                         ax=ax,
                                         **trasition_plot_kwargs.get(k, {}))
       savefig(transisions_fnames_fmt(v))
+
+  # Plot harmonicc boxplots
+  hc_boxplot_fmt = "harmonicc-boxplot-{:.0f}.svg".format
+  for th in (45, 50):
+    fpath = figpath(hc_boxplot_fmt(th))
+    if args.overwrite or pathutils.notisfile(fpath):
+      logger.info("Plotting boxplot for Harmonic centrality. Threshold: %f. File: %s", th, fpath)
+      plots.plot_centrality_boxes(
+        tc,
+        centrality="Harmonic Centrality",
+        graph_name=graph.basename,
+        th=th,
+        style=pygal.style.NeonStyle(
+          background="transparent",
+          plot_background="transparent",
+        ),
+        save=fpath,
+      )
