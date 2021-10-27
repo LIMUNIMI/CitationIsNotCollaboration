@@ -325,6 +325,8 @@ def main(*argv):
                           np.array([20 / 9, 1]))
       plots.plot_centrality_transitions(df,
                                         k,
+                                        median=False,
+                                        fill_alpha=0.1,
                                         cmap={
                                             "celebrities": "C0",
                                             "community leaders": "C1",
