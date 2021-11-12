@@ -231,6 +231,8 @@ Tobin South _et al._ observed a critical transition in the _eigenvector centrali
 
 ## Indegree
 
+$c_i^{(indegree)} = \sum_{j=1}^{N} A_{ij}$
+
 ![Indegree Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-indegrees.svg)
 
 Note:
@@ -239,6 +241,8 @@ normalized by the number of nodes
 ---
 
 ## Harmonic Centrality
+
+$c_{i}^{(Harmonic)} = \sum_{i \neq j}^{N} \frac{1}{d(i, j)}$
 
 ![Harmonic Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-harmonicc.svg)
 
@@ -261,6 +265,8 @@ normalized by the number of nodes
 
 ## Pagerank
 
+$c_{i}^{(Pagerank)} = \frac{1 - d}{N} + d \sum_{j \in M(i)} \frac{c_{j}^{(Pagerank)}}{\sum_{k}A_{jk}}$
+
 ![Pagerank](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-pagerank.svg)
 
 Note:
@@ -269,6 +275,8 @@ normalized by the number of nodes
 ---
 
 ## Closeness Centrality
+
+$c_i^{(closeness)} = \frac{N}{ \sum_{j=1,j \neq i}^{N} d_{ij} }$
 
 ![Closeness Centrality](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/transition-closenessc.svg)
 
