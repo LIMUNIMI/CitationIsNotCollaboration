@@ -255,24 +255,42 @@ def main(*argv):
     plt.title(f"{graph.basename}\nHyperBall ($log_2m$ = 8)")
     savefig(neigh_fname)
 
-  # Compute indegrees dataframe
-  indegrees_fname = "indegrees.svg"
-  if args.overwrite or pathutils.notisfile(figpath(indegrees_fname)):
-    logger.info("Load indegrees dataset")
-    df = graph.supergenre_dataframe(indegree=graph.indegrees())
-    df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
-    k = r"$\log_{10}$indegree" if mpl.rcParams["text.usetex"] \
-                               else "log-indegree"
-    df[k] = np.log10(df["indegree"])
-    violin_order = df.groupby(
-        by=["genre"])[k].median().sort_values().iloc[::-1].index
+  # Centrality violin plots
+  _violin_specs = (
+    ("indegrees", r"$\log_{10}$indegree" if mpl.rcParams["text.usetex"] else "log-indegree", np.log10),
+    ("harmonicc", "harmonic centrality", None),
+    ("pagerank", r"$\log_{10}$pagerank" if mpl.rcParams["text.usetex"] else "log-pagerank", np.log10),
+    ("closenessc", r"closeness centrality $\times10^7$" if mpl.rcParams["text.usetex"] else "closeness-centrality * 1e7", lambda x: x * 1e7),
+  )
 
-    logger.info("Plot indegrees dataset")
-    plt.xticks(rotation=33)
-    sns.violinplot(data=df, x="genre", y=k, order=violin_order, cut=0)
-    plt.gcf().set_size_inches(mpl.rcParams["figure.figsize"][1] *
-                              np.array([16 / 9, 1]))
-    savefig(indegrees_fname)
+  for name, k, k_fn in _violin_specs:
+    fname = f"{name}.svg"
+    if args.overwrite or pathutils.notisfile(figpath(fname)):
+      logger.info("Load %s dataset", name)
+      getattr(graph, f"compute_{name}")()
+      df = graph.supergenre_dataframe(**{name: getattr(graph, name)()})
+      df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
+      logger.debug("Dataframe shape: %s", df.shape)
+      logger.debug(" min: %s", df[name].min())
+      logger.debug(" max: %s", df[name].max())
+      if k is None:
+        k = name
+      else:
+        if k_fn is None:
+          k_fn = lambda x: x
+        df[k] = k_fn(df[name])
+      logger.debug("Dataframe shape: %s", df.shape)
+      logger.debug(" min: %s", df[k].min())
+      logger.debug(" max: %s", df[k].max())
+      violin_order = df.groupby(
+          by=["genre"])[k].median().sort_values().iloc[::-1].index
+
+      logger.info("Plot %s dataset", name)
+      plt.xticks(rotation=33)
+      sns.violinplot(data=df, x="genre", y=k, order=violin_order, cut=0)
+      plt.gcf().set_size_inches(mpl.rcParams["figure.figsize"][1] *
+                                np.array([16 / 9, 1]))
+      savefig(fname)
 
   # Compute transitions dataframe
   ## Sample SGC Graph

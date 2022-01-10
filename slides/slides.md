@@ -103,12 +103,31 @@ style="height:50vh" /></td>
 
 ## Music Genre and Artist Centrality
 
-<!-- This links to the local website for plot navigation -->
+![Indegree distributions](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/indegrees.svg)
 
-<a href="http://0.0.0.0:8000/" >
-<img alt="Distances Distribution" src="https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/indegrees.svg"
-style="height:55vh" />
-</a>
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Music Genre and Artist Centrality
+
+![Indegree distributions](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/harmonicc.svg)
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Music Genre and Artist Centrality
+
+![Indegree distributions](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/pagerank.svg)
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+## Music Genre and Artist Centrality
+
+![Indegree distributions](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/closenessc.svg)
 
 ---
 
