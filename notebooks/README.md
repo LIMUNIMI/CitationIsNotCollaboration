@@ -2,21 +2,9 @@
 Example notebooks
 
 ## Configuration
-### Python
-To run these notebooks, please install the `featgraph` package and its dependencies.
-To install the package and its core dependencies, run
-```
-pip install -U <package_root> --use-feature=in-tree-build
-```
-Where `<package_root>` is the git repository root folder (the directory where `setup.py` is).
-
-To install notebooks extra dependencies, run
-```
-pip install -Ur <package_root>/notebooks-requirements.txt
-```
-This commands can be run from jupyter itself. In
-the `Configure` section of each
-notebook there is a cell set up for this
+### Python/Conda
+To run these notebooks, please install the `featgraph` package and its dependencies (including the [notebooks requirements](../notebooks-requirements.txt)).
+For detailed setup instructions, see the main [README.md](../README.md) file
 
 ### Java
 To use WebGraph you need a Java runtime of version 9 or higher.

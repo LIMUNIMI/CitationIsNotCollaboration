@@ -5,8 +5,6 @@ on:
     branches:
       - main
       - develop
-    tags:
-      - 'v*.*'
   pull_request:
     branches:
       - main
@@ -21,44 +19,48 @@ jobs:
           "3.7",
           "3.8",
         ]
-    container: python:${{ matrix.pyversion }}
+    container: continuumio/miniconda3
     steps:
     - uses: actions/checkout@v2
     - name: Install java
-      run: apt-get update && apt-get install -y openjdk-11-jre
-    - name: Install
-      run: python -m pip install . --use-feature=in-tree-build
-    - name: Install test dependencies
-      run: python -m pip install -Ur test-requirements.txt
+      run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
+    - name: Install conda-build
+      run: conda install conda-build
+    - name: Create environment
+      run: conda create --prefix ./venv python=${{ matrix.pyversion }} -c conda-forge -c chromaticisobar --file requirements.txt --file test-requirements.txt
+    - name: Log python version
+      run: conda run --prefix ./venv python --version
+    - name: Add featgraph
+      run: conda develop . --prefix ./venv
     - name: Test
-      run: python -m unittest -v
+      run: conda run --prefix ./venv python -m unittest -v
 
   coverage:
     runs-on: ubuntu-latest
-    container: python:3.8
+    container: continuumio/miniconda3
     steps:
     - uses: actions/checkout@v2
     - name: Install java
-      run: apt-get update && apt-get install -y openjdk-11-jre
-    - name: Install
-      run: python -m pip install . --use-feature=in-tree-build
-    - name: Install test dependencies
-      run: python -m pip install -Ur test-requirements.txt
+      run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
+    - name: Install conda-build
+      run: conda install conda-build
+    - name: Create environment
+      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file test-requirements.txt
+    - name: Log python version
+      run: conda run --prefix ./venv python --version
     - name: Run coverage
-      run: python -m coverage run
+      run: conda run --prefix ./venv python -m coverage run
     - name: Collect coverage from multithreading
-      run: python -m coverage combine
+      run: conda run --prefix ./venv python -m coverage combine
     - name: Make coverage JSON
-      run: python -m coverage json
+      run: conda run --prefix ./venv python -m coverage json
     - name: Upload coverage JSON
       uses: actions/upload-artifact@v1
       with:
         name: coverage_report
         path: coverage.json
-    - name: Install chromatictools
-      run: python -m pip install chromatictools
     - name: Download badge
-      run: wget $(python -m chromatictools.badges coverage) -O badge.svg
+      run: wget $(conda run --prefix ./venv python -m chromatictools.badges coverage) -O badge.svg
     - name: Upload svg
       uses: actions/upload-artifact@v1
       with:
@@ -75,27 +77,24 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    container: python:3.8
+    container: continuumio/miniconda3
     steps:
     - uses: actions/checkout@v2
-    - name: Install
-      run: python -m pip install . --use-feature=in-tree-build
-    - name: Install lint dependencies
-      run: python -m pip install -Ur lint-requirements.txt
-    - name: Download pylintrc
-      run: make pylintrc
-      working-directory: docs
+    - name: Install java
+      run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
+    - name: Create environment
+      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file style-requirements.txt
+    - name: Log python version
+      run: conda run --prefix ./venv python --version
     - name: Run pylint
-      run: pylint featgraph tests --rcfile docs/pylintrc -r y --exit-zero > pylint.txt
+      run: conda run --prefix ./venv pylint featgraph tests -r y --exit-zero --jobs 1 --persistent=n --rcfile=pylintrc > pylint.txt
     - name: Upload lint report
       uses: actions/upload-artifact@v1
       with:
         name: lint_report
         path: pylint.txt
-    - name: Install chromatictools
-      run: python -m pip install chromatictools
     - name: Download badge
-      run: wget $(python -m chromatictools.badges pylint) -O badge.svg
+      run: wget $(conda run --prefix ./venv python -m chromatictools.badges pylint) -O badge.svg
     - name: Upload svg
       uses: actions/upload-artifact@v1
       with:
@@ -110,83 +109,41 @@ jobs:
         gist_file_name: featgraph-pylint-badge.svg
         file_path: badge.svg
 
-#  sphinx:
-#    runs-on: ubuntu-latest
-#    container: sphinxdoc/sphinx
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          persist-credentials: false
-#      - name: Install
-#        run: python -m pip install . --use-feature=in-tree-build
-#      - name: Install docs dependencies
-#        run: python -m pip install -Ur docs-requirements.txt
-#      - name: Build HTML
-#        run: make html
-#        working-directory: docs
-#      - name: Upload HTML
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: pages
-#          path: docs/build/html
+  sphinx:
+    runs-on: ubuntu-latest
+    container: continuumio/miniconda3
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install java and make
+      run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre build-essential
+    - name: Create environment
+      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file docs-requirements.txt
+    - name: Log python version
+      run: conda run --prefix ./venv python --version
+    - name: Build HTML
+      run: conda run --prefix ../venv make html
+      working-directory: docs
+    - name: Upload HTML
+      uses: actions/upload-artifact@v1
+      with:
+        name: pages
+        path: docs/build/html
 
-#  release-create:
-#    if: ${{ startsWith( github.ref , 'refs/tags/' ) }}
-#    runs-on: ubuntu-latest
-#    needs: [test, coverage, lint, sphinx]
-#    outputs:
-#      upload_url: ${{ steps.create_release.outputs.upload_url }}
-#      version: ${{ steps.get_version.outputs.VERSION }}
-#    steps:
-#    - name: Create Release
-#      id: create_release
-#      uses: actions/create-release@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        tag_name: ${{ github.ref }}
-#        release_name: ${{ github.ref }}
-#        draft: false
-#        prerelease: ${{ contains( github.ref , 'dev' ) }}
-#    - name: Get the version
-#      id: get_version
-#      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-#  pages-deploy:
-#    runs-on: ubuntu-latest
-#    needs: [sphinx, release-create]
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          persist-credentials: false
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: pages
-#          path: pages
-#      - name: No Jekyll in pages
-#        run: touch pages/.nojekyll
-#      - name: Deploy pages
-#        uses: JamesIves/github-pages-deploy-action@releases/v3
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          BRANCH: gh-pages
-#          FOLDER: pages
-
-#  pypi-upload:
-#    runs-on: ubuntu-latest
-#    container: python:3.8
-#    needs: release-create
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Build
-#      run: python setup.py sdist
-#    - name: Install Twine
-#      run: python -m pip install twine
-#    - name: Upload
-#      run: python -m twine upload --verbose dist/*
-#      env:
-#        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-#        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-#        TWINE_REPOSITORY: ${{ secrets.TWINE_REPOSITORY }}
-#        TWINE_NON_INTERACTIVE: 1
+  pages-deploy:
+    runs-on: ubuntu-latest
+    needs: [sphinx, test]
+    steps:
+      - uses: actions/checkout@v2.3.1
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: pages
+          path: pages
+      - name: No Jekyll in pages
+        run: touch pages/.nojekyll
+      - name: Deploy pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: pages
+          single-commit: true

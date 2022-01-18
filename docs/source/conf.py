@@ -12,8 +12,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath("../.."))
 
+sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
@@ -22,6 +22,7 @@ copyright = "2021, Marco Tiraboschi and Giulia Clerici"
 author = "Marco Tiraboschi \\and Giulia Clerici"
 
 from featgraph import __version__ as version
+
 release = version
 
 # -- General configuration ---------------------------------------------------
@@ -35,10 +36,24 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.coverage",
     "sphinx_rtd_theme",
-    "m2r2",
+    "myst_parser",
 ]
 
-source_suffix = [".rst", ".md"]
+source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
+
+myst_enable_extensions = [
+    # "amsmath",
+    # "colon_fence",
+    # "deflist",
+    # "dollarmath",
+    # "html_admonition",
+    # "html_image",
+    # "linkify",
+    # "replacements",
+    # "smartquotes",
+    # "substitution",
+    # "tasklist",
+]
 
 napoleon_google_docstring = True
 
@@ -49,7 +64,6 @@ templates_path = ["_templates"]
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 # The theme to use for HTML and HTML Help pages.  See the documentation for

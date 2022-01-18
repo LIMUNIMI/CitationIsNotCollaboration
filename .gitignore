@@ -23,15 +23,44 @@ dist
 
 # Misc
 *.txt
+*.csv
 !*requirements.txt
 *.gz
 *.zip
+*.png
+*.svg
+*.pdf
+
+# LaTeX
+*.tex
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
 
 # Sphinx
 docs/build
-docs/pylintrc
-docs/source/*.rst
-!docs/source/index.rst
+docs/source
+!docs/source/index.md
 !docs/source/changelog.rst
 
 # IDE

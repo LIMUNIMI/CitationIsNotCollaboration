@@ -6,8 +6,10 @@ from typing import Callable, Union
 
 
 def notisfile(
-  f: str, func: Union[Callable, bool] = os.path.isfile,
-  msg: str = "Found '%s'. Skipping"
+    f: str,
+    func: Union[Callable, bool] = os.path.isfile,
+    msg: str = "Found '%s'. Skipping",
+    log: bool = True,
 ):
   """Check if file does not exist. If file is found, log a message
 
@@ -18,6 +20,7 @@ def notisfile(
       to get the truth value. Defaults to :func:`os.path.isfile`
     msg (str): Log message. It should have a string formattable
       field where the file name will be interpolated
+    log (bool): If :data:`True`, then log a message if the file is found
 
   Example:
     >>> from featgraph.pathutils import notisfile
@@ -29,7 +32,7 @@ def notisfile(
     b = func
   else:
     b = func(f)
-  if b:
+  if b and log:
     logger.info(msg, f)
   return not b
 
@@ -71,8 +74,10 @@ def derived_paths(f: str, sep: str = ".") -> Callable[[str], str]:
     'db.csv'
     >>> dbpath("readme", "md")
     'db.readme.md'"""
+
   def derived_paths_(*suffix: str) -> str:
     if len(suffix) < 1:
       return f
     return sep.join((f, *suffix))
+
   return derived_paths_

@@ -1,0 +1,123 @@
+{
+  "closeness": {
+    "title": "Closeness Centrality",
+    "subtitle": "multiplied x1000000",
+    "folder": "spotify-2018-centrality_stats/closeness-centrality",
+    "pad": {
+      "left": 0.129,
+      "right": 0.103,
+      "top": 0.366,
+      "bottom": -0.135
+    },
+    "genres": [
+      "classical",
+      "hip-hop",
+      "soul-rnb",
+      "jazz",
+      "avant-garde",
+      "electronic",
+      "blues",
+      "caribbean",
+      "easy listening",
+      "latin",
+      "african",
+      "pop",
+      "rock",
+      "country",
+      "asian",
+      "folk"
+    ],
+    "subfolder" : "4x4000"
+  },
+  "harmonic": {
+    "title": "Harmonic Centrality",
+    "subtitle": "",
+    "folder": "spotify-2018-centrality_stats/harmonic-centrality",
+    "pad": {
+      "left": 0.129,
+      "right": 0.103,
+      "top": 0.366,
+      "bottom": -0.135
+    },
+    "genres": [
+      "classical",
+      "hip-hop",
+      "avant-garde",
+      "soul-rnb",
+      "jazz",
+      "blues",
+      "electronic",
+      "easy listening",
+      "caribbean",
+      "latin",
+      "pop",
+      "african",
+      "rock",
+      "country",
+      "folk",
+      "asian"
+    ],
+    "subfolder" : "4x4000"
+  },
+  "indegree": {
+    "title": "Indegree",
+    "subtitle": "on a logarithmic scale",
+    "folder": "spotify-2018-centrality_stats/log-indegree",
+    "pad": {
+      "left": 0.129,
+      "right": 0.103,
+      "top": 0.366,
+      "bottom": -0.135
+    },
+    "genres": [
+      "classical",
+      "hip-hop",
+      "avant-garde",
+      "jazz",
+      "latin",
+      "easy listening",
+      "blues",
+      "caribbean",
+      "electronic",
+      "soul-rnb",
+      "asian",
+      "african",
+      "folk",
+      "pop",
+      "country",
+      "rock"
+    ],
+    "subfolder" : "4x4000"
+  },
+  "pagerank": {
+    "title": "Pagerank",
+    "subtitle": "on a logarithmic scale",
+    "folder": "spotify-2018-centrality_stats/log-pagerank",
+    "pad": {
+      "left": 0.129,
+      "right": 0.103,
+      "top": 0.366,
+      "bottom": -0.135
+    },
+    "genres": [
+      "classical",
+      "hip-hop",
+      "latin",
+      "electronic",
+      "avant-garde",
+      "caribbean",
+      "soul-rnb",
+      "jazz",
+      "asian",
+      "african",
+      "easy listening",
+      "blues",
+      "pop",
+      "folk",
+      "rock",
+      "country"
+    ],
+    "subfolder" : "4x4000"
+  }
+}
+

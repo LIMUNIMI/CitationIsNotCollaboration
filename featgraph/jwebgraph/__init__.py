@@ -13,13 +13,12 @@ import json
 import os
 from typing import Optional, Iterable, Dict, Union
 
-
 _json_file: str = "dependencies.json"
 
 
-def download_to_file(
-  file, url: str, chunk_size: Optional[int] = 1 << 13
-) -> int:
+def download_to_file(file,
+                     url: str,
+                     chunk_size: Optional[int] = 1 << 13) -> int:
   """Download file from URL
 
   Args:
@@ -52,23 +51,27 @@ def path(*args, root: Optional[str] = None) -> str:
   return os.path.join(root, *args)
 
 
-def dependencies(file: Optional[str] = None) -> Dict[str, str]:
+def dependencies(
+    file: Optional[str] = None,
+    encoding="utf-8",
+) -> Dict[str, str]:
   """Get the dependency dictionary
 
   Args:
     file (str): The file path. If :data:`None` (default), then
       use default file path
+    encoding: Encoding of the JSON text file. Default is :data:`"utf-8"`
 
   Returns:
     dict: Dependency dictionary where keys are file names and values are URLs"""
   filepath = path(_json_file) if file is None else file
-  with open(filepath, "r") as fp:
+  with open(filepath, "r", encoding=encoding) as fp:
     return json.load(fp)
 
 
 def classpaths(
-  root: Optional[str] = None,
-  deps: Optional[Dict[str, str]] = None,
+    root: Optional[str] = None,
+    deps: Optional[Dict[str, str]] = None,
 ) -> Iterable[str]:
   """Get the classpath for all java library dependencies
 
@@ -81,16 +84,13 @@ def classpaths(
     iterable of str: The classpaths for the java library dependencies"""
   if deps is None:
     deps = dependencies()
-  return map(
-    functools.partial(path, root=root),
-    deps.keys()
-  )
+  return map(functools.partial(path, root=root), deps.keys())
 
 
 def download_dependencies(
-  deps: Optional[Dict[str, str]] = None,
-  overwrite: bool = False,
-  root: Optional[str] = None,
+    deps: Optional[Dict[str, str]] = None,
+    overwrite: bool = False,
+    root: Optional[str] = None,
 ):
   """Download dependency files
 
@@ -118,11 +118,11 @@ def download_dependencies(
 
 
 def start_jvm(
-  jvm_path: Optional[str] = None,
-  download: bool = True,
-  deps: Optional[Dict[str, str]] = None,
-  root: Optional[str] = None,
-  overwrite: bool = False,
+    jvm_path: Optional[str] = None,
+    download: bool = True,
+    deps: Optional[Dict[str, str]] = None,
+    root: Optional[str] = None,
+    overwrite: bool = False,
 ):
   """Add jars to classpath and start the JVM
 
@@ -137,9 +137,9 @@ def start_jvm(
       Otherwise (default) skip download for existing files"""
   if download:
     download_dependencies(
-      deps=deps,
-      overwrite=overwrite,
-      root=root,
+        deps=deps,
+        overwrite=overwrite,
+        root=root,
     )
   for cp in classpaths(root=root, deps=deps):
     jpype.addClassPath(cp)
@@ -157,6 +157,7 @@ class JVMProcess(multiprocessing.Process):
     logging_kwargs (dict): Keyword arguments for :func:`logging.basicConfig`.
       Defaults to :data:`None` (do not configure logging in the subprocess)
     kwargs: Keyword arguments for :class:`multiprocessing.Process`"""
+
   class FunctionWrapper:
     """Function wrapper used by :class:`JVMProcess`
 
@@ -167,11 +168,13 @@ class JVMProcess(multiprocessing.Process):
       jvm_kwargs (dict): Keyword arguments for :func:`start_jvm`
       logging_kwargs (dict): Keyword arguments for :func:`logging.basicConfig`.
         Defaults to :data:`None` (do not configure logging in the subprocess)"""
+
     def __init__(
-      self, target,
-      return_value: Optional[multiprocessing.Value] = None,
-      jvm_kwargs: Optional[dict] = None,
-      logging_kwargs: Optional[dict] = None,
+        self,
+        target,
+        return_value: Optional[multiprocessing.Value] = None,
+        jvm_kwargs: Optional[dict] = None,
+        logging_kwargs: Optional[dict] = None,
     ):
       self.target = target
       self.return_value = return_value
@@ -186,27 +189,26 @@ class JVMProcess(multiprocessing.Process):
       if self.return_value is not None:
         self.return_value.value = rv
 
-  def __init__(
-    self,
-    target,
-    return_value: Optional[multiprocessing.Value] = None,
-    jvm_kwargs: Optional[dict] = None,
-    logging_kwargs: Optional[dict] = None,
-    **kwargs
-  ):
-    super().__init__(
-      target=self.FunctionWrapper(
-        target=target, return_value=return_value,
-        jvm_kwargs=jvm_kwargs, logging_kwargs=logging_kwargs,
-      ),
-      **kwargs
-    )
+  def __init__(self,
+               target,
+               return_value: Optional[multiprocessing.Value] = None,
+               jvm_kwargs: Optional[dict] = None,
+               logging_kwargs: Optional[dict] = None,
+               **kwargs):
+    super().__init__(target=self.FunctionWrapper(
+        target=target,
+        return_value=return_value,
+        jvm_kwargs=jvm_kwargs,
+        logging_kwargs=logging_kwargs,
+    ),
+                     **kwargs)
 
 
-def jvm_process_run(
-  target, args=None, kwargs=None,
-  return_type: Optional[Union[type, str]] = None, **kw
-):
+def jvm_process_run(target,
+                    args=None,
+                    kwargs=None,
+                    return_type: Optional[Union[type, str]] = None,
+                    **kw):
   """Run a function in a :class:`JVMProcess`
 
   Args:
@@ -221,12 +223,12 @@ def jvm_process_run(
     The return value of the function call if a :data:`return_type` is specified
 """
   return_value = None if return_type is None else multiprocessing.Value(
-    return_type
-  )
-  p = JVMProcess(
-    target=target, return_value=return_value,
-    args=args or (), kwargs=kwargs or {}, **kw
-  )
+      return_type)
+  p = JVMProcess(target=target,
+                 return_value=return_value,
+                 args=args or (),
+                 kwargs=kwargs or {},
+                 **kw)
   p.start()
   p.join()
   if return_value is not None:

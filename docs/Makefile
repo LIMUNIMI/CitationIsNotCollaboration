@@ -3,24 +3,25 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 PROJECTDIR    = ../featgraph
-TESTDIR       = ../tests
 INDICES       = index.rst changelog.rst
-PYLINTRC      = https://google.github.io/styleguide/pylintrc
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help clean pylint rst Makefile
+.PHONY: help clean rst Makefile
 
-%: Makefile rst
+%: Makefile rst $(SOURCEDIR)/CONTRIBUTING.md
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean: clean_rst
+	rm -f $(SOURCEDIR)/CONTRIBUTING.md
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	rm -f pylintrc
 
 rst:
 	sphinx-apidoc -e -T -M -o "$(SOURCEDIR)" "$(PROJECTDIR)"
+
+$(SOURCEDIR)/CONTRIBUTING.md:
+	cp ../CONTRIBUTING.md $@
 
 clean_rst:
 	mkdir -p .tmp
@@ -31,13 +32,5 @@ clean_rst:
 	mv .tmp/* $(SOURCEDIR);
 	rm -rf .tmp
 
-pylint: pylintrc
-	pylint $(PROJECTDIR) $(TESTDIR) -r y --exit-zero --jobs 1 --persistent=n
-
 build:
 	mkdir $@
-
-pylintrc:
-ifeq (,$(wildcard $(PYLINTRC)))
-	wget $(PYLINTRC) -O $@
-endif
