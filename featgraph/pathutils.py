@@ -5,9 +5,12 @@ from featgraph import logger
 from typing import Callable, Union
 
 
-def notisfile(f: str,
-              func: Union[Callable, bool] = os.path.isfile,
-              msg: str = "Found '%s'. Skipping"):
+def notisfile(
+    f: str,
+    func: Union[Callable, bool] = os.path.isfile,
+    msg: str = "Found '%s'. Skipping",
+    log: bool = True,
+):
   """Check if file does not exist. If file is found, log a message
 
   Args:
@@ -17,6 +20,7 @@ def notisfile(f: str,
       to get the truth value. Defaults to :func:`os.path.isfile`
     msg (str): Log message. It should have a string formattable
       field where the file name will be interpolated
+    log (bool): If :data:`True`, then log a message if the file is found
 
   Example:
     >>> from featgraph.pathutils import notisfile
@@ -28,7 +32,7 @@ def notisfile(f: str,
     b = func
   else:
     b = func(f)
-  if b:
+  if b and log:
     logger.info(msg, f)
   return not b
 

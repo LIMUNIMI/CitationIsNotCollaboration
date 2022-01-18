@@ -6,13 +6,16 @@ critical transitions in eigenvector centrality"*
 
 https://doi.org/10.1093/comnet/cnaa050"""
 import networkx as nx
+import pandas as pd
 from networkx.generators import random_graphs
-from featgraph import nx2bv
+from featgraph import nx2bv, pathutils, logger
 import functools
 import itertools
+import importlib
+import contextlib
 from scipy import stats
 import numpy as np
-from typing import Optional, Sequence, Callable, Iterable
+from typing import Optional, Sequence, Callable, Iterable, Tuple, Dict
 
 
 class SGCModel:
@@ -235,3 +238,213 @@ def to_bv(
                   "class": class_suffix,
                   "popularity": popularity_suffix,
               })
+  return importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
+      bvgraph_basepath)
+
+
+class ThresholdComparison:
+  """Class for comparing graphs under threshold
+
+  Args:
+    basegraphs: Un-threshold graphs to compare
+    thresholds (array): Threshold values
+    centralities: Dictionary of centrality names and attribute string
+    attribute (str): The attribute to use for thresholding
+    attr_fmt: Attribute value formatting function for file saving
+    attr_th_fn: Function that takes a threshold values and returns a
+      check function"""
+
+  class BaseGraph:
+    """Wrapper for a graph to compare
+
+    Args:
+      graph: The BVGraph wrapper object
+      label (str): The graph's label: If unspecified, the base name is used
+      type_key (str): The name of the attribute to read for the node classes
+      type_values: Iterable of classes to compare for this graph
+      check_fn: Function that is called with a class value as argument and
+        returns the checker function for that class"""
+
+    def __init__(self,
+                 graph,
+                 label: Optional[str] = None,
+                 type_key: str = "type_sgc",
+                 type_values: Iterable = ("celebrities", "community leaders",
+                                          "masses"),
+                 check_fn=lambda g: (lambda x: g == x)):
+      self.graph = graph
+      self.label = self.graph.basename if label is None else label
+      self.type_key = type_key
+      self.type_values = type_values
+      self.check_fn = check_fn
+
+  sgc_graph = BaseGraph
+
+  @classmethod
+  def spotify_graph(cls,
+                    graph,
+                    label: Optional[str] = None,
+                    type_key: str = "supergenre",
+                    type_values: Iterable = ("classical", "hip-hop", "rock"),
+                    check_fn=lambda g: (lambda x: g in x)):
+    """Wrapper for a graph to compare, with defaults for the spotify-2018 graph.
+    For an explanation of arguments, see :class:`ThresholdComparison.BaseGraph`
+    """
+    return cls.BaseGraph(graph,
+                         label=label,
+                         type_key=type_key,
+                         type_values=type_values,
+                         check_fn=check_fn)
+
+  def __init__(self,
+               *basegraphs: Tuple[BaseGraph],
+               thresholds: Sequence[float] = tuple(range(0, 81, 5)),
+               centralities: Optional[Dict[str, str]] = None,
+               attribute: str = "popularity",
+               attr_fmt=lambda x: f"{x:02.0f}",
+               attr_th_fn=lambda t: (lambda x: x is not None and x > t)):
+    self.basegraphs = basegraphs
+    self.thresholds = thresholds
+    self.centralities = centralities
+    if self.centralities is None:
+      self.centralities = {
+          "Indegree": "indegrees",
+          "Harmonic Centrality": "harmonicc",
+          "Pagerank": "pagerank",
+          "Closeness Centrality": "closenessc",
+      }
+    self.attribute = attribute
+    self.attr_fmt = attr_fmt
+    self.attr_th_fn = attr_th_fn
+
+  def subgraph_path(self, base_graph, th) -> str:
+    """Get the path of a subgraph for the given base graph and threshold
+
+    Args:
+      base_graph (BaseGraph): The base graph to threshold
+      th (float): The threshold value
+
+    Returns:
+      str: The subgraph path"""
+    return base_graph.graph.path(f"{self.attribute}-{self.attr_fmt(th)}")
+
+  def subgraph(self, base_graph, th) -> "BVGraph":
+    """Get the subgraph for the given base graph and threshold.
+    Note: this method does not compute the subgraph
+
+    Args:
+      base_graph (BaseGraph): The base graph to threshold
+      th (float): The threshold value
+
+    Returns:
+      BVGraph: The subgraph"""
+    return importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
+        self.subgraph_path(base_graph, th), sep=base_graph.graph.sep)
+
+  def threshold_graphs(self, tqdm: Optional = None, overwrite: bool = False):
+    """Compute all thresholded subgraphs
+
+    Args:
+      tqdm: function to use for the progress bar
+      overwrite (bool): If :data:`False` (default), then skip when the
+        output file is found. Otherwise always run"""
+    it = itertools.product(self.thresholds, self.basegraphs)
+    if tqdm is not None:
+      it = tqdm(it, total=len(self.thresholds) * len(self.basegraphs))
+    for th, baseg in it:
+      subg = self.subgraph(baseg, th)
+      logger.info("Thresholding graph %s at %s threshold: %f -> %s",
+                  baseg.graph.basename, self.attribute, th, subg.basename)
+      if overwrite or pathutils.notisglob(subg.path("*")):
+        baseg.graph.transform_map(
+            subg.path(),
+            map(self.attr_th_fn(th),
+                getattr(baseg.graph, self.attribute)()))
+
+  def compute_centralities(self,
+                           tqdm: Optional = None,
+                           overwrite: bool = False):
+    """Compute centralities on all subgraphs
+
+    Args:
+      tqdm: function to use for the progress bar
+      overwrite (bool): If :data:`False` (default), then skip when the
+        output file is found. Otherwise always run"""
+    it = itertools.chain(
+        itertools.product(self.thresholds, self.basegraphs,
+                          (("Transposed graph", "transpose"),)),
+        itertools.product(self.thresholds, self.basegraphs,
+                          self.centralities.items()),
+    )
+    if tqdm is not None:
+      it = tqdm(it,
+                total=len(self.thresholds) * len(self.basegraphs) *
+                (len(self.centralities) + 1))
+    for th, baseg, (attr_name, attr) in it:
+      subg = self.subgraph(baseg, th)
+      logger.info("Computing %s for graph %s", attr_name, subg.basename)
+      getattr(subg, f"compute_{attr}")(overwrite=overwrite)
+
+  def dataframe(self,
+                csv_path: Optional[str] = None,
+                overwrite: bool = False,
+                tqdm: Optional = None) -> pd.DataFrame:
+    """Compute a dataframe with a summary of the subgraph centralities
+
+    Args:
+      csv_path (str): Save/load dataframe to/from the csv file at this path
+      tqdm: function to use for the progress bar
+      overwrite (bool): If :data:`False` (default), then skip when the
+        output file is found. Otherwise always run"""
+    if csv_path is None or overwrite or pathutils.notisfile(csv_path):
+      data = {
+          k: [] for k in (
+              "graph",
+              "threshold",
+              "nnodes",
+              "narcs",
+              "type_key",
+              "type_value",
+              "centrality",
+              "mean",
+              "std",
+              "quartile-1",
+              "median",
+              "quartile-3",
+          )
+      }
+      with (contextlib.nullcontext() if tqdm is None else tqdm(
+          total=len(self.basegraphs) * len(self.thresholds) *
+          len(self.centralities))) as pbar:
+        for baseg, th in itertools.product(self.basegraphs, self.thresholds):
+          subg = self.subgraph(baseg, th)
+          all_types = list(getattr(subg, baseg.type_key)())
+          for attr_name, attr in self.centralities.items():
+            all_values = np.array(list(getattr(subg, attr)()))
+            for tv in baseg.type_values:
+              # Add values to dataframe
+              data["graph"].append(baseg.label)
+              data["threshold"].append(th)
+              data["nnodes"].append(subg.numNodes())
+              data["narcs"].append(subg.numNodes())
+              data["type_key"].append(baseg.type_key)
+              data["type_value"].append(tv)
+              data["centrality"].append(attr_name)
+
+              values = all_values[list(map(baseg.check_fn(tv), all_types))]
+              data["mean"].append(np.mean(values))
+              data["std"].append(np.std(values))
+              for k, v in zip(("quartile-1", "median", "quartile-3"),
+                              np.quantile(values, (0.25, 0.50, 0.75))):
+                data[k].append(v)
+              del values
+            del all_values
+            if pbar is not None:
+              pbar.update(1)
+
+      df = pd.DataFrame(data=data)
+      if csv_path is not None:
+        df.to_csv(csv_path)
+    else:
+      df = pd.read_csv(csv_path, index_col=0)
+    return df
