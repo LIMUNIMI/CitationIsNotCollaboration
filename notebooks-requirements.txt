@@ -3,4 +3,3 @@ matplotlib
 seaborn
 tqdm
 python-graphviz
-pygal
