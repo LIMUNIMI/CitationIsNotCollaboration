@@ -251,18 +251,6 @@ normalized by the number of nodes
 
 ---
 
-<!-- .slide: data-auto-animate -->
-
-![Harmonic centrality th=45](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/harmonicc-boxplot-45.svg)
-
----
-
-<!-- .slide: data-auto-animate -->
-
-![Harmonic centrality th=50](https://gist.githubusercontent.com/ChromaticIsobar/ce60492f849668e1d64d370ea7440e93/raw/harmonicc-boxplot-50.svg)
-
----
-
 ## Pagerank
 
 $c_{i}^{(Pagerank)} = \frac{1 - d}{N} + d \sum_{j \in M(i)} \frac{c_{j}^{(Pagerank)}}{\sum_{k}A_{jk}}$
