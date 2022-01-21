@@ -9,7 +9,7 @@ import itertools
 import importlib
 import arviz
 from featgraph.misc import VectorOrCallable
-from featgraph import bayesian_comparison
+from featgraph import bayesian_comparison, metadata
 from typing import Optional, Callable, Dict, Tuple, Any, Sequence, Union
 
 
@@ -540,3 +540,200 @@ def plot_centrality_boxes(
   if ipython:
     return html_pygal(box_plot, ipython=ipython)
   return box_plot
+
+
+def translate_log_ticks(
+    offset: float,
+    ax: Optional[plt.Axes] = None,
+    add_zero: bool = True,
+):
+  r"""Move xticks by a specified amount on a log scale axis. Please, add
+  :data:`{"text.usetex": True, "text.latex.preamble": r"\usepackage{amsmath}"}`
+  to your matplotlib rcparams before calling this function
+
+  Args:
+    offset (float): Offset amount between position and ticks (difference
+      between the tick position and the tick label value)
+    ax: The axis. If not specified, the current axis is affected
+    add_zero (bool): Add tick on the zero"""
+  if ax is None:
+    ax = plt.gca()
+  xl = ax.get_xlim()
+  xt = 10**np.arange(np.log10(xl[-1] + 1))
+  if add_zero:
+    xt = np.array([0, *xt])
+  plt.gca().set_xticks(xt + offset)
+  plt.gca().set_xticklabels(
+      fr"$10^{'{'}{np.log10(i):.0f}{'}'}$" if i > 0 else r"$0^{\vphantom{1}}$"
+      for i in xt)
+  plt.xlim(xl)
+
+
+def hdi_monomodal(p,
+                  x: Optional[Sequence] = None,
+                  d: float = 0.94,
+                  n: Optional[int] = None,
+                  cdf: bool = False):
+  """Compute the HDI around the mode
+
+  Args:
+    p (array): Array of the probabilities of x
+    x (array): Array of variable values (if unspecified,
+      the integer range of the same length of :data:`p` is used)
+    d (float): The minimum density of the HDI
+    n (int): If specified, upsample the probability function
+      to this number of values
+    cdf (True): If :data:`True` interpret :data:`p`
+      as a cumulative probability function"""
+  if d < 0 or d > 1:
+    raise ValueError("Invalid value for density. It should be "
+                     f"a float between 0 and 1. Got {d}")
+  if cdf:
+    p = np.diff([0, *p])
+  if x is None:
+    x = np.arange(len(p))
+  if n is None:
+    n = len(x)
+  else:
+    x_ = x
+    p_ = p
+    x = np.linspace(x_[0], x_[-1], n, endpoint=True)
+    p = np.interp(x, x_, p_, left=0, right=0)
+
+  def dx(idx, arr=x):
+    l = idx if idx == 0 else idx - 1
+    r = idx if idx == len(arr) - 1 else idx + 1
+    return (arr[r] - arr[l]) / (r - l)
+
+  l = np.argmax(p)
+  r = l + 1
+  while True:
+    d_curr = sum(p[i] * dx(i) for i in range(l, r))
+    if d_curr >= d or (l == 0 and r == n):
+      break
+    if l == 0:
+      r += 1
+    elif r == n:
+      l -= 1
+    elif p[l - 1] >= p[r + 1]:
+      l -= 1
+    else:
+      r += 1
+  return x[l], x[r - 1]
+
+
+def scatter_refs(x: VectorOrCallable,
+                 y: VectorOrCallable,
+                 ref_artists: Sequence[metadata.Artist],
+                 legend_kw: Optional[dict] = None,
+                 **kwargs):
+  """Scatter plot values for reference artists
+
+  Args:
+    x (array or callable): x-coordinate values for all nodes
+    y (array or callable): y-coordinate values for all nodes
+    ref_artist (sequence of Artist): artists to include as references
+    legend_kw (dict): Keyword arguments for the legend
+    kwargs: Keyword arguments for the scatter plot"""
+  if len(ref_artists) == 0:
+    return
+  xs = x() if callable(x) else x
+  xs = [xs[a.index] for a in ref_artists]
+  ys = y() if callable(y) else y
+  ys = [ys[a.index] for a in ref_artists]
+  for xi, yi, ai in zip(xs, ys, ref_artists):
+    plt.scatter(xi, yi, label=ai.name, **kwargs)
+  plt.legend(**({} if legend_kw is None else legend_kw))
+
+
+def degrees_scatterplot(graph: "featgraph.jwebgraph.utils.BVGraph",
+                        ref_artists: Optional[Sequence[metadata.Artist]] = None,
+                        ref_kwargs: Optional[dict] = None,
+                        **kwargs):
+  """Scatterplot of indegree vs outdegree
+
+  Args:
+    graph (BVGraph): Graph whose degrees to plot
+    ref_artists (sequence of Artist): Reference artists
+    ref_kwargs (dict): Keyword arguments for reference artists scatterplot
+    kwargs: Keyword arguments for scatterplot"""
+  outdegrees = graph.outdegrees()
+  # Outdegree can be 0 and it wouldn't be plotted
+  # So, make it 1 and modify axis labels
+  for i in range(len(outdegrees)):
+    outdegrees[i] += 1
+  scatter(outdegrees,
+          graph.indegrees,
+          marker=".",
+          c=mpl.rcParams["lines.markerfacecolor"],
+          xscale="log",
+          yscale="log",
+          label=graph.basename,
+          xlabel="out-degree",
+          ylabel="in-degree",
+          **kwargs)
+  if ref_artists is not None:
+    if ref_kwargs is None:
+      ref_kwargs = {}
+    scatter_refs(outdegrees, graph.indegrees, ref_artists, **ref_kwargs,
+                 **kwargs)
+  del outdegrees
+  plt.gca().set_aspect("equal")
+  plt.minorticks_off()
+  translate_log_ticks(1)
+
+
+def plot_distances(graph: "featgraph.jwebgraph.utils.BVGraph",
+                   probability: bool = True,
+                   hdi: float = 0.94):
+  """Plot the distribution of distances in the graph
+
+  Args:
+    graph (BVGraph): Graph whose distance distribution to plot
+    probability (bool): If :data:`True` (default), then normalize sum to 1.
+      Otherwise plot absolute counts
+    hdi (float): Density of the High-Density Interval"""
+  d = graph.distances()
+  if probability:
+    d /= sum(d)
+  plt.plot(d)
+
+  plt.xlabel("distance")
+  if probability:
+    plt.ylabel("probability")
+  else:
+    plt.ylabel("frequency")
+    d /= sum(d)
+  d_mean = np.dot(np.arange(len(d)), d)
+  p_mean = np.interp(d_mean, np.arange(len(d)), d)
+
+  fsize = mpl.rcParams["font.size"] + 2
+  percent_s = r"$\%$" if mpl.rcParams["text.usetex"] else "%"
+
+  if hdi:
+    d_hdi = hdi_monomodal(d, n=max(1024, len(d)), d=hdi)
+    plt.plot(d_hdi, np.zeros(2), c=mpl.rcParams["lines.color"], linewidth=3)
+    plt.text(d_hdi[0],
+             p_mean * 0.02,
+             f"{d_hdi[0]:.2f}",
+             verticalalignment="bottom",
+             horizontalalignment="right",
+             fontsize=fsize)
+    plt.text(d_hdi[1],
+             p_mean * 0.02,
+             f"{d_hdi[1]:.2f}",
+             verticalalignment="bottom",
+             horizontalalignment="left",
+             fontsize=fsize)
+    plt.text(np.mean(d_hdi),
+             p_mean * 0.125,
+             f"{hdi * 100:.0f}{percent_s} HDI",
+             verticalalignment="center",
+             horizontalalignment="center",
+             fontsize=fsize)
+  plt.text(d_mean,
+           p_mean * 0.90,
+           f"mean = {d_mean:.2f}",
+           verticalalignment="center",
+           horizontalalignment="center",
+           fontsize=fsize)
