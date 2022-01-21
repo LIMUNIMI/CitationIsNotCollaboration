@@ -65,6 +65,7 @@ docs/source
 
 # IDE
 .idea
+.vscode
 
 # Coverage
 .coverage*
