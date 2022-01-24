@@ -1,7 +1,6 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt, patches
 import matplotlib as mpl
-import pygal
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -10,7 +9,7 @@ import importlib
 import arviz
 from featgraph.misc import VectorOrCallable
 from featgraph import bayesian_comparison, metadata
-from typing import Optional, Callable, Dict, Tuple, Any, Sequence, Union
+from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
 def scatter(
@@ -435,111 +434,6 @@ def plot_centrality_transitions(
           ("-semilogy" if logy else "") + \
           f".{figext}" if isinstance(save, bool) else save
     plt.savefig(fpath, bbox_inches="tight")
-
-
-_html_pygal = """
-<!DOCTYPE html>
-<html>
-  <head>
-  <script type="text/javascript" src="http://kozea.github.com/pygal.js/javascripts/svg.jquery.js"></script>
-  <script type="text/javascript" src="https://kozea.github.io/pygal.js/2.0.x/pygal-tooltips.min.js""></script>
-  </head>
-  <body>
-    <figure>
-      {pygal_render}
-    </figure>
-  </body>
-</html>
-"""
-
-
-def html_pygal(pygal_plot,
-               ipython: bool = False) -> Union[str, "IPython.display.HTML"]:
-  """Render a pygal plot in HTML
-
-  Args:
-    pygal_plot: The plot to render
-    ipython (bool): If :data:`True`,
-      wrap the HTML text in an IPython HTML object"""
-  r = _html_pygal.format(pygal_render=pygal_plot.render(is_unicode=True))
-  if ipython:
-    r = importlib.import_module("IPython.display").HTML(r)
-  return r
-
-
-def _isnotebook() -> bool:
-  """Check if running in a notebook.
-  Code from https://stackoverflow.com/a/39662359
-
-  Returns:
-    bool: :data:`True` if running in a notebook, :data:`False` otherwise"""
-  try:
-    shell = get_ipython().__class__.__name__
-  except NameError:
-    return False  # Probably standard Python interpreter
-  else:
-    if shell == "ZMQInteractiveShell":
-      return True  # Jupyter notebook or qtconsole
-    elif shell == "TerminalInteractiveShell":
-      return False  # Terminal running IPython
-    else:
-      return False  # Other type (?)
-
-
-def plot_centrality_boxes(
-    tc: "featgraph.sgc.ThresholdComparison",
-    centrality: str,
-    th: float = 0,
-    graph_name: str = "spotify-2018",
-    save: bool = False,
-    figext: str = "svg",
-    ipython: Optional[bool] = None,
-    **kwargs,
-):
-  """Plot centrality boxplots
-
-  Args:
-    tc (ThresholdComparison): The ThresholdComparison wrapper object
-    centrality (str): The name of the centrality measure to plot
-    th (float): The threshold value to apply
-    graph_name (str): The name of the graph whose values to display
-    save (bool): If :data:`True`, save the figure to a file. If a string,
-      save to the specific filepath
-    figext (str): Extension of the figure file
-    ipython (bool): If :data:`True`, then return an IPython HTML
-      object. If :data:`None`, return an IPython HTML object if
-      running in a notebook
-    kwargs: Keyword arguments for :class:`pygal.Box`"""
-  box_plot = pygal.Box(**kwargs)
-  box_plot.title = \
-    f"{centrality}\n{graph_name}\n{tc.attribute} > {tc.attr_fmt(th)}"
-
-  baseg = next(g for g in tc.basegraphs if g.label == graph_name)
-  gen_k = baseg.type_key
-  gen_vals = baseg.type_values
-  check_fn = baseg.check_fn
-
-  g = tc.subgraph(baseg, th)
-
-  for gen in gen_vals:
-    box_plot.add(
-        gen,
-        np.array(
-            list(
-                itertools.compress(
-                    getattr(g, tc.centralities[centrality])(),
-                    map(check_fn(gen),
-                        getattr(g, gen_k)())))))
-
-  if save:
-    fpath = f"boxplot-{graph_name}-{centrality}.{figext}" if isinstance(
-        save, bool) else save
-    box_plot.render_to_file(fpath)
-  if ipython is None:
-    ipython = _isnotebook()
-  if ipython:
-    return html_pygal(box_plot, ipython=ipython)
-  return box_plot
 
 
 def translate_log_ticks(
