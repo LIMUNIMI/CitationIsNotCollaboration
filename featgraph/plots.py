@@ -631,3 +631,20 @@ def plot_distances(graph: "featgraph.jwebgraph.utils.BVGraph",
            verticalalignment="center",
            horizontalalignment="center",
            fontsize=fsize)
+
+
+class ExponentFormatter(mpl.ticker.ScalarFormatter):
+  """Ticks formatter for setting an explicit exponent
+
+  Args:
+    args: Positional arguments for :class:`ScalarFormatter`
+    exponent (int): Explicit exponent
+    kwargs: Keyword arguments for :class:`ScalarFormatter`"""
+
+  def __init__(self, *args, exponent: Optional[int] = None, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.orderOfMagnitude = exponent
+
+  def _set_order_of_magnitude(self):
+    if self.orderOfMagnitude is None:
+      super()._set_order_of_magnitude()

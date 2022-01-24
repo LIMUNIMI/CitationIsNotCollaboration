@@ -1,11 +1,23 @@
 """Utils for CLI scripts"""
 from featgraph import jwebgraph, logger, pathutils
+import collections
 import numpy as np
 import argparse
 import logging
 import importlib
+import json
 import os
 from typing import Optional
+
+
+class EchoDict(dict):
+  """Dictionary that defaults to the key value on misses"""
+
+  def __getitem__(self, k):
+    try:
+      return super().__getitem__(k)
+    except KeyError:
+      return k
 
 
 class FeatgraphArgParse(argparse.ArgumentParser):
@@ -62,6 +74,8 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
 
   def __init__(self,
                style_file: Optional[str] = None,
+               abbrev_file: Optional[str] = None,
+               palette_file: Optional[str] = None,
                max_width: float = 10.0,
                max_height: float = 10.0,
                **kwargs):
@@ -108,6 +122,22 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
                       metavar="FILEPATH",
                       default=style_file,
                       help="The path of the matplotlib style file")
+    self.add_argument("--abbrev",
+                      metavar="FILEPATH",
+                      default=abbrev_file,
+                      help="The path of the genre abbreviations JSON file")
+    self.add_argument("--palette",
+                      metavar="FILEPATH",
+                      default=palette_file,
+                      help="The path of the genre palette JSON file")
+    self.add_argument("--palette-saturation",
+                      metavar="S",
+                      default=0.75,
+                      help="Palette saturation multiplier")
+    self.add_argument("--palette-alpha",
+                      metavar="A",
+                      default=0.85,
+                      help="Palette opacity")
 
   @staticmethod
   def none_or_expand(s: Optional[str]) -> Optional[str]:
@@ -205,6 +235,21 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
                                                    **kwargs_)
 
     args.must_write = must_write
+
+    # Load JSON settings
+    if args.abbrev is None:
+      args.abbrev = {}
+    else:
+      with open(args.abbrev, encoding="utf-8") as f:
+        args.abbrev = json.load(f)
+    args.abbrev = EchoDict(args.abbrev)
+
+    palette_fname = args.palette
+    args.palette = collections.defaultdict(lambda: "#cccccc")
+    if palette_fname is not None:
+      with open(palette_fname, encoding="utf-8") as f:
+        for k, v in json.load(f).items():
+          args.palette[k] = v
 
     return args
 
