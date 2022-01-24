@@ -4,6 +4,7 @@ import json
 import functools
 import itertools
 import jpype
+import sortedcontainers
 from featgraph import pathutils, metadata, genre_map
 import os
 import numpy as np
@@ -494,3 +495,86 @@ class BVGraph:
     else:
       arg = arg[:n]
     return [self.artist(index=i) for i in arg]
+
+  def compute_reciprocity(self,
+                          overwrite: bool = False,
+                          tqdm: Optional = None,
+                          log: bool = False):
+    """Compute the reciprocity of the graph, as defined in
+    *"Garlaschelli, D., & Loffredo, M. I. (2004).
+    Patterns of link reciprocity in directed networks.
+    Physical review letters, 93(26), 268701"*
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      tqdm: function to use for the progress bar
+      log (bool): If :data:`True`, then log if file was found"""
+    path = self.path("reciprocity", "txt")
+    if overwrite or pathutils.notisglob(path + "*", log=log):
+      self_t = BVGraph(self.path("transpose"))
+
+      it = self.nodeIterator()
+      it_t = self_t.nodeIterator()
+      zit = zip(it, it_t)
+      if tqdm is not None:
+        zit = tqdm(zit, total=self.numNodes())
+
+      counts = [0, 0, 0, 0]
+      for i, _ in zit:
+        # assert i == _
+        # Out-neighborhood
+        n_out = sortedcontainers.SortedSet(
+            filter(lambda j: i != j,
+                   featgraph.misc.NodeIteratorWrapper(it.successors())))
+        # In-neighborhood
+        n_in = sortedcontainers.SortedSet(
+            filter(lambda j: i != j,
+                   featgraph.misc.NodeIteratorWrapper(it_t.successors())))
+        n_adj = n_out.union(n_in)
+        n_both = n_out.intersection(n_in)
+        counts[0] += self.numNodes() - len(n_adj) - 1  # No edges
+        counts[1] += len(n_adj) - len(n_both)  # Edge in only one direction
+        counts[2] += len(n_both)  # Both edges
+        counts[3] += it.outdegree() - len(n_out)  # Self loops
+      # for c in counts[:-1]:
+      #   assert c % 2 == 0
+      # assert sum(counts[:-1]) + self.numNodes() == self.numNodes() * self.numNodes()
+
+      a_avg = (self.numArcs() - counts[3]) / (self.numNodes() *
+                                              (self.numNodes() - 1))
+      a_0 = -a_avg
+      a_1 = 1 - a_avg
+      a_00 = a_0 * a_0
+      a_01 = a_0 * a_1
+      a_11 = a_1 * a_1
+      p = (counts[0] * a_00 + counts[1] * a_01 + counts[2] * a_11) / \
+          ((counts[0] + counts[1] // 2) * a_00 + (counts[2] + counts[1] // 2) * a_11)
+      with open(path, mode="w", encoding="utf-8") as f:
+        json.dump([p, counts[3]], f)
+
+  def self_loops(self) -> int:
+    """Load the number of self-loops from file
+
+    Returns:
+      int: Number of self-loops in the graph"""
+    with open(self.path("reciprocity", "txt"), mode="r", encoding="utf-8") as f:
+      return json.load(f)[1]
+
+  def reciprocity(self) -> float:
+    """Load the reciprocity value from file
+
+    Returns:
+      float: Reciprocity value"""
+    with open(self.path("reciprocity", "txt"), mode="r", encoding="utf-8") as f:
+      return json.load(f)[0]
+
+  def reciprocal_probability(self) -> float:
+    """Load the reciprocal probability (probability that an
+    edge is reciprocated) from file
+
+    Returns:
+      float: Reciprocal probability"""
+    a_avg = (self.numArcs() - self.self_loops()) / (self.numNodes() *
+                                                    (self.numNodes() - 1))
+    return a_avg + (1 - a_avg) * self.reciprocity()
