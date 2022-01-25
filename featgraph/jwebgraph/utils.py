@@ -513,35 +513,42 @@ class BVGraph:
     if overwrite or pathutils.notisfile(path, log=log):
       self_t = BVGraph(self.path("transpose"))
 
-      it = self.nodeIterator()
-      it_t = self_t.nodeIterator()
-      zit = zip(it, it_t)
+      nit = self.nodeIterator()
+      nit_t = self_t.nodeIterator()
+      zit = zip(nit, nit_t)
       if tqdm is not None:
         zit = tqdm(zit, total=self.numNodes())
 
       self_loops = 0
       couples = 0
 
-      def upper_triangle(r, c, update_loops=False):
+      # Check that the position is in the upper triangle of the
+      # adjacency matrix, optionally update count of self loops
+      def upper_triangle(r, c, update_loops: bool = False):
         if update_loops and c == r:
           nonlocal self_loops
           self_loops += 1
           return False
         return c > r
 
+      # Get the iterator of current node successors that correspond
+      # to positions in the upper triangle of the adjacency matrix
+      def upper_triangle_it(n, it, update_loops: bool = False):
+        return filter(
+            functools.partial(upper_triangle, n, update_loops=update_loops),
+            featgraph.misc.NodeIteratorWrapper(it.successors()))
+
       for i, _ in zit:
         # assert i == _
-        # In-neighborhood
-        n_in = list(
-            filter(functools.partial(upper_triangle, i, update_loops=False),
-                   featgraph.misc.NodeIteratorWrapper(it_t.successors())))
         # For each successor in the upper triangle of the matrix,
         # check if it is also in the adjacent matrix
+        def in_adjacent(j,
+                        adj=tuple(
+                            upper_triangle_it(i, nit_t, update_loops=False))):
+          return j in adj
+
         couples += sum(
-            map(
-                lambda j: j in n_in,
-                filter(functools.partial(upper_triangle, i, update_loops=True),
-                       featgraph.misc.NodeIteratorWrapper(it.successors()))))
+            map(in_adjacent, upper_triangle_it(i, nit, update_loops=True)))
       with open(path, mode="w", encoding="utf-8") as f:
         json.dump(dict(
             self_loops=self_loops,
