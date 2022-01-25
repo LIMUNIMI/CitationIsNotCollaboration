@@ -510,7 +510,7 @@ class BVGraph:
       tqdm: function to use for the progress bar
       log (bool): If :data:`True`, then log if file was found"""
     path = self.path("reciprocity", "json")
-    if overwrite or pathutils.notisglob(path + "*", log=log):
+    if overwrite or pathutils.notisfile(path, log=log):
       self_t = BVGraph(self.path("transpose"))
 
       it = self.nodeIterator()
