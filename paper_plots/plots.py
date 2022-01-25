@@ -82,7 +82,6 @@ def main(*argv):
         for ytl in yt_labels:
           ytl.set_text(args.abbrev[ytl.get_text()])
       ax.set_yticklabels(yt_labels, size="small")
-      ax.tick_params(length=0, width=0, color="w")
 
       for c, b, d, w, x in zip(
           map(args.palette.get, median_order(df, k)),  # Colors
@@ -102,4 +101,50 @@ def main(*argv):
         x.set(zorder=102)
         d.set(zorder=103)
     args.save_fig(violin_fname)
+  # ---------------------------------------------------------------------------
+
+  # --- Centrality transitions ------------------------------------------------
+  transition_plot_fname = "centrality-transitions.pdf"
+  df, plot_comparison = parser.perform_threshold_comparison(
+      args, lambda *_: transition_plot_fname)
+  if plot_comparison:
+    n = len(args.centrality_specs)
+    fig, ax = plt.subplots(2, n, sharex=True)
+    for i, (_, (_, _, norm, logy,
+                k)) in enumerate(args.centrality_specs.items()):
+      logger.info("Plotting %s", k)
+      plots.plot_centrality_transitions(
+          df,
+          k,
+          median=False,
+          norm=norm,
+          logy=logy,
+          fill_alpha=0.1,
+          cmap={
+              "celebrities": args.palette["hip-hop"],
+              "community leaders": args.palette["classical"],
+              "masses": args.palette["rock"],
+              "hip-hop": args.palette["hip-hop"],
+              "classical": args.palette["classical"],
+              "rock": args.palette["rock"],
+          },
+          legend_kw=dict(loc="lower right"),
+          ax=ax[:, i])
+      for a in ax[:, i]:
+        yl = a.set_ylabel("" if i else a.get_title())
+        yl.set_rotation(0)
+        yl.set_horizontalalignment("left")
+        a.yaxis.set_label_coords(-0.05, 1.05)
+        a.set_title("")
+        a.grid()
+        if i == n - 1:
+          pass
+        else:
+          a.get_legend().remove()
+      ax[0, i].set_xlabel("")
+      ax[0, i].set_title("\n".join(
+          (k, args.norm_str.get(norm, f"normalized by {norm}"))))
+    fig.set_size_inches(mpl.rcParams["figure.figsize"][0] * 2 *
+                        np.array([1, 2 / n]))
+    args.save_fig(transition_plot_fname)
   # ---------------------------------------------------------------------------

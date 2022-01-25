@@ -156,35 +156,42 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
     mpl = importlib.import_module("matplotlib")
     logger.info("Setting style: %s", args.mpl_style)
     plt.style.use(args.mpl_style)
-    args.centrality_specs = dict(
-      indegrees=(
+    args.centrality_specs = dict((
+      ("indegrees", (
         r"$\log_{10}$indegree" if mpl.rcParams["text.usetex"] \
           else "log-indegree",
         np.log10,
         "nnodes",
         True,
-        "Indegree"),
-      harmonicc=(
-        "harmonic centrality",
-        None,
-        "nnodes",
-        False,
-        "Harmonic Centrality"),
-      pagerank=(
+        "Indegree")),
+      ("pagerank", (
         r"$\log_{10}$pagerank" if mpl.rcParams["text.usetex"] \
           else "log-pagerank",
         np.log10,
         "nnodes_inv",
         True,
-        "Pagerank"),
-      closenessc=(
+        "Pagerank")),
+      ("harmonicc", (
+        "harmonic centrality",
+        None,
+        "nnodes",
+        False,
+        "Harmonic Centrality")),
+      ("closenessc", (
         r"closeness centrality $\times10^7$" if mpl.rcParams["text.usetex"] \
           else "closeness-centrality * 1e7",
         lambda x: x * 1e7,
-        "nnodes",
+        None, #"nnodes",
         True,
-        "Closeness Centrality"),
-    )
+        "Closeness Centrality")),
+    ))
+    args.norm_str = {
+        None: "",
+        "nnodes": r"$/ n_{nodes}$",
+        "nnodes_inv": r"$\times n_{nodes}$",
+        "narcs": r"$/ n_{arcs}$",
+        "narcs_inv": r"$\times n_{arcs}$",
+    }
 
     # Dataset preprocessing function
     def preprocessed_dataset(graph, centrality: str, drop_other: bool = True):
@@ -264,6 +271,7 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
     tc = sgc.ThresholdComparison(
         sgc.ThresholdComparison.sgc_graph(sgc_graph),
         sgc.ThresholdComparison.spotify_graph(args.graph),
+        thresholds=tuple(range(0, 81, 1)),
     )
 
     # Skip if all images are found

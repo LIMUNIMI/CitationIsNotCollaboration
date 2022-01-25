@@ -325,10 +325,11 @@ def plot_centrality_transitions(
     quartile1_key: str = "quartile-1",
     median_key: str = "median",
     quartile3_key: str = "quartile-3",
-    std_scale: float = 0.7,
+    std_scale: float = 0.6744897501960817,  # 50% density
     fill_alpha: float = 0.25,
     fig=None,
     ax=None,
+    legend_kw: Optional[dict] = None,
 ):
   """Plot centrality transitions for multiple graphs
 
@@ -373,7 +374,8 @@ def plot_centrality_transitions(
     ax: Array of axes onto which to plot
     save (bool): If :data:`True`, save the figure to a file. If a string,
       save to the specific filepath
-    figext (str): Extension of the figure file"""
+    figext (str): Extension of the figure file
+    legend_kw (dict): Keyword arguments for legend"""
   if graph_names is None:
     graph_names = df[graph_name_key].unique()
   if fig is None:
@@ -431,7 +433,7 @@ def plot_centrality_transitions(
           alpha=fill_alpha,
       )
     a.set_ylim(*yl)
-    a.legend()
+    a.legend(**({} if legend_kw is None else legend_kw))
     a.set_title(graph_name)
     a.set_ylabel(centrality_name)
     a.set_xlabel(f"{threshold_attr} threshold")
