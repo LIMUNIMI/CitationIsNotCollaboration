@@ -66,6 +66,16 @@ class IteratorWrapper:
     return v
 
 
+class NodeIteratorWrapper(IteratorWrapper):
+  """Wrapper for a node iterator
+
+  Args:
+    it: NodeIterator"""
+
+  def __init__(self, it, next_method: str = "nextInt", end_value=-1):
+    super().__init__(it, next_method=next_method, end_value=end_value)
+
+
 @contextlib.contextmanager
 def multicontext(it: Iterator[ContextManager]):
   """Context manager wrapper for multiple contexts managers

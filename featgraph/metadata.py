@@ -153,9 +153,9 @@ class Artist:
           int(i) for i in self._property_from_file("neighbors").split(" ") if i)
     except FileNotFoundError:
       # fall back to BVGraph file
-      indices = featgraph.misc.IteratorWrapper(
+      indices = featgraph.misc.NodeIteratorWrapper(
           importlib.import_module("featgraph.jwebgraph.utils").BVGraph(
-              self.basepath).load().successors(self.index), "nextInt", -1)
+              self.basepath).load().successors(self.index))
     return [Artist(basepath=self.basepath, index=i) for i in indices]
 
   @property
