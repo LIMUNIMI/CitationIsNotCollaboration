@@ -20,6 +20,7 @@ dist
 *.outdegrees
 *.stats
 *.ranks
+*.reciprocity.json
 
 # Misc
 *.txt

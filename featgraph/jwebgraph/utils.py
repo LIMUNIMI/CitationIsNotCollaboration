@@ -4,7 +4,6 @@ import json
 import functools
 import itertools
 import jpype
-import sortedcontainers
 from featgraph import pathutils, metadata, genre_map
 import os
 import numpy as np
@@ -510,7 +509,7 @@ class BVGraph:
         output file is found. Otherwise always run
       tqdm: function to use for the progress bar
       log (bool): If :data:`True`, then log if file was found"""
-    path = self.path("reciprocity", "txt")
+    path = self.path("reciprocity", "json")
     if overwrite or pathutils.notisglob(path + "*", log=log):
       self_t = BVGraph(self.path("transpose"))
 
@@ -520,58 +519,71 @@ class BVGraph:
       if tqdm is not None:
         zit = tqdm(zit, total=self.numNodes())
 
-      counts = [0, 0, 0, 0]
+      self_loops = 0
+      couples = 0
+
+      def upper_triangle(r, c, update_loops=False):
+        if update_loops and c == r:
+          nonlocal self_loops
+          self_loops += 1
+          return False
+        return c > r
+
       for i, _ in zit:
         # assert i == _
-        # Out-neighborhood
-        n_out = sortedcontainers.SortedSet(
-            filter(lambda j: i != j,
-                   featgraph.misc.NodeIteratorWrapper(it.successors())))
         # In-neighborhood
-        n_in = sortedcontainers.SortedSet(
-            filter(lambda j: i != j,
+        n_in = list(
+            filter(functools.partial(upper_triangle, i, update_loops=False),
                    featgraph.misc.NodeIteratorWrapper(it_t.successors())))
-        n_adj = n_out.union(n_in)
-        n_both = n_out.intersection(n_in)
-        counts[0] += self.numNodes() - len(n_adj) - 1  # No edges
-        counts[1] += len(n_adj) - len(n_both)  # Edge in only one direction
-        counts[2] += len(n_both)  # Both edges
-        counts[3] += it.outdegree() - len(n_out)  # Self loops
-      # for c in counts[:-1]:
-      #   assert c % 2 == 0
-      # assert sum(counts[:-1]) + self.numNodes() == self.numNodes() * self.numNodes()
-
-      a_avg = (self.numArcs() - counts[3]) / (self.numNodes() *
-                                              (self.numNodes() - 1))
-      a_0 = -a_avg
-      a_1 = 1 - a_avg
-      a_00 = a_0 * a_0
-      a_01 = a_0 * a_1
-      a_11 = a_1 * a_1
-      p = (counts[0] * a_00 + counts[1] * a_01 + counts[2] * a_11) / \
-          ((counts[0] + counts[1] // 2) * a_00 + (counts[2] + counts[1] // 2) * a_11)
+        # For each successor in the upper triangle of the matrix,
+        # check if it is also in the adjacent matrix
+        couples += sum(
+            map(
+                lambda j: j in n_in,
+                filter(functools.partial(upper_triangle, i, update_loops=True),
+                       featgraph.misc.NodeIteratorWrapper(it.successors()))))
       with open(path, mode="w", encoding="utf-8") as f:
-        json.dump([p, counts[3]], f)
+        json.dump(dict(
+            self_loops=self_loops,
+            couples=couples,
+        ), f)
 
   def self_loops(self) -> int:
-    """Load the number of self-loops from file
+    """Load the number of self-loops from file.
+    The file is computed by :meth:`compute_reciprocity`
 
     Returns:
       int: Number of self-loops in the graph"""
-    with open(self.path("reciprocity", "txt"), mode="r", encoding="utf-8") as f:
-      return json.load(f)[1]
+    with open(self.path("reciprocity", "json"), mode="r",
+              encoding="utf-8") as f:
+      return json.load(f)["self_loops"]
 
-  def reciprocity(self) -> float:
-    """Load the reciprocity value from file
+  def arc_couples(self) -> int:
+    """Load the number of reciprocated arc couples from file.
+    The file is computed by :meth:`compute_reciprocity`
 
     Returns:
-      float: Reciprocity value"""
-    with open(self.path("reciprocity", "txt"), mode="r", encoding="utf-8") as f:
-      return json.load(f)[0]
+      int: Number of reciprocated arc couples in the graph"""
+    with open(self.path("reciprocity", "json"), mode="r",
+              encoding="utf-8") as f:
+      return json.load(f)["couples"]
+
+  def reciprocity(self) -> float:
+    """Load the reciprocity (correlation coefficient) from file.
+    The file is computed by :meth:`compute_reciprocity`
+
+    Returns:
+      float: Reciprocity the graph"""
+    n_entries = self.numNodes() * (self.numNodes() - 1)
+    n_valid_arcs = self.numArcs() - self.self_loops()
+    cc = (2 * n_entries * self.arc_couples() - n_valid_arcs * n_valid_arcs) / (
+        (n_entries - n_valid_arcs) * n_valid_arcs)
+    return cc
 
   def reciprocal_probability(self) -> float:
     """Load the reciprocal probability (probability that an
-    edge is reciprocated) from file
+    edge is reciprocated) from file.
+    The file is computed by :meth:`compute_reciprocity`
 
     Returns:
       float: Reciprocal probability"""
