@@ -23,6 +23,8 @@ def main(*argv):
   if args.must_write(degree_scatterplot_fname):
     logger.info("Computing degrees")
     graph.compute_degrees()
+    logger.info("Computing reciprocity")
+    graph.compute_reciprocity(tqdm=args.tqdm)
     logger.info("Plotting degrees")
     plots.degrees_scatterplot(graph=graph,
                               ref_artists=args.ref_artists,
