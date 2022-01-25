@@ -390,38 +390,47 @@ def plot_centrality_transitions(
         cmap[tv] = c["color"]
 
   for a, graph_name in zip(ax, graph_names):
-    df_ = df[(df[graph_name_key] == graph_name) &
-             (df[centrality_name_key] == centrality_name)]
-    for k in df_[type_name_key].unique():
-      dfk = df_[df_[type_name_key] == k]
-      thresholds = dfk[threshold_key].to_numpy()
-      idx = np.argsort(thresholds)
-      thresholds = thresholds[idx]
+    if logy:
+      a.set_yscale("log")
 
-      if median:
-        kq1 = dfk[quartile1_key].to_numpy()[idx]
-        kq2 = dfk[median_key].to_numpy()[idx]
-        kq3 = dfk[quartile3_key].to_numpy()[idx]
-      else:
-        kq2 = dfk[mean_key].to_numpy()[idx]
-        ks = dfk[std_key].to_numpy()[idx] * std_scale
-        kq1 = kq2 - ks
-        kq3 = kq2 + ks
-      if norm:
-        kn = dfk[norm].to_numpy()[idx]
-        kq1 /= kn
-        kq2 /= kn
-        kq3 /= kn
+    def data_iterator(df=df[(df[graph_name_key] == graph_name) &
+                            (df[centrality_name_key] == centrality_name)]):
+      for k in df[type_name_key].unique():
+        dfk = df[df[type_name_key] == k]
+        thresholds = dfk[threshold_key].to_numpy()
+        idx = np.argsort(thresholds)
+        thresholds = thresholds[idx]
+
+        if median:
+          kq1 = dfk[quartile1_key].to_numpy()[idx]
+          kq2 = dfk[median_key].to_numpy()[idx]
+          kq3 = dfk[quartile3_key].to_numpy()[idx]
+        else:
+          kq2 = dfk[mean_key].to_numpy()[idx]
+          ks = dfk[std_key].to_numpy()[idx] * std_scale
+          kq1 = kq2 - ks
+          kq3 = kq2 + ks
+        if norm:
+          kn = dfk[norm].to_numpy()[idx]
+          kq1 /= kn
+          kq2 /= kn
+          kq3 /= kn
+        yield k, thresholds, kq1, kq2, kq3
+
+    for k, thresholds, _, kq2, _ in data_iterator():
+      if logy:
+        kq2[np.argwhere(np.less_equal(kq2, 0))] = np.nan
       a.plot(thresholds, kq2, label=k, c=cmap.get(k, "k"))
+    yl = a.get_ylim()
+    for k, thresholds, kq1, _, kq3 in data_iterator():
       a.fill_between(
           thresholds,
-          kq1,
-          kq3,
+          np.clip(kq1, *yl),
+          np.clip(kq3, *yl),
           facecolor=cmap.get(k, "k"),
           alpha=fill_alpha,
       )
-    if logy:
-      a.set_yscale("log")
+    a.set_ylim(*yl)
     a.legend()
     a.set_title(graph_name)
     a.set_ylabel(centrality_name)
