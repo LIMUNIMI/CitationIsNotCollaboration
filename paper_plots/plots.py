@@ -158,18 +158,43 @@ def main(*argv):
     # logger.info("Computing reciprocity")
     # graph.compute_reciprocity()
     logger.info("Plotting degrees")
-    jp = plots.degrees_jointplot(graph,
-                       ref_artists=args.ref_artists,
-                       kind="hist", bins=42,
-                       log_marginal=True,
-                       marginal_kws=dict(
-                         linewidth=0,
-                       ),
-                       scatter_kws=dict(
-                         ec="#acc9ee",
-                       ), # kendall_tau=True, reciprocity=True, stats_kw=dict(fontsize=7),
-                       grid=True)
+    jp = plots.degrees_jointplot(
+        graph,
+        ref_artists=args.ref_artists,
+        kind="hist",
+        bins=42,
+        log_marginal=True,
+        marginal_kws=dict(linewidth=0,),
+        scatter_kws=dict(
+            ec="#acc9ee",
+        ),  # kendall_tau=True, reciprocity=True, stats_kw=dict(fontsize=7),
+        grid=True)
     jp.ax_marg_x.set_yticks(np.power(10, np.arange(1, 6, 2)))
     jp.ax_marg_y.set_xticks(jp.ax_marg_x.get_yticks())
     args.save_fig(degree_fname)
+  # ---------------------------------------------------------------------------
+
+  # --- Plot distance probability function ------------------------------------
+  neighborhhod_fname = "distances.pdf"
+  if args.must_write(neighborhhod_fname):
+    logger.info("Computing neighbourhood function")
+    graph.compute_transpose()
+    graph.compute_neighborhood()
+
+    logger.info("Plotting distance probability mass function")
+    plots.plot_distances(graph,
+                         kind="both",
+                         zorder=100,
+                         area_kws=dict(alpha=.5),
+                         hdi_hs=-0.03)
+    plt.grid()
+    plt.gca().yaxis.label.set_rotation(0)
+    plt.gca().yaxis.label.set_text("relative frequency")
+    plt.gca().yaxis.label.set_horizontalalignment("left")
+    plt.gca().yaxis.label.set_verticalalignment("bottom")
+    plt.gca().yaxis.set_label_coords(-0.06, 1.02)
+    plt.gcf().set_size_inches(mpl.rcParams["figure.figsize"] *
+                              np.array([1, 9 / 16]))
+    # plt.title(f"{graph.basename}\nHyperBall ($log_2m$ = 8)")
+    args.save_fig(neighborhhod_fname)
   # ---------------------------------------------------------------------------

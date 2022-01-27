@@ -752,60 +752,133 @@ def degrees_jointplot(graph: "featgraph.jwebgraph.utils.BVGraph",
   return jp
 
 
+def _relative_offset(x: float,
+                     y: float,
+                     offset_x: float = 0,
+                     offset_y: float = 0,
+                     ax: Optional = None):
+  """Offset a position by a fraction of the axes dimensions
+
+  Args:
+    x (float): Horizontal position
+    y (float): Vertical position
+    offset_x (float): Horizontal offset, as a fraction of the axes width
+    offset_y (float): Vertical offset, as a fraction of the axes height
+
+  Returns:
+    couple of float: Offset position"""
+  if ax is None:
+    ax = plt.gca()
+  x = x + offset_x * np.diff(ax.get_xlim())
+  y = y + offset_y * np.diff(ax.get_ylim())
+  return x, y
+
+
 def plot_distances(graph: "featgraph.jwebgraph.utils.BVGraph",
                    probability: bool = True,
-                   hdi: float = 0.94):
+                   kind: str = "line",
+                   hdi: float = 0.94,
+                   hdi_hs: float = 0,
+                   hdi_vs: float = 0.025,
+                   hdi_label_vs: float = 0.075,
+                   zorder: int = 100,
+                   line_kws: Optional[dict] = None,
+                   area_kws: Optional[dict] = None,
+                   hdi_kws: Optional[dict] = None,
+                   text_kws: Optional[dict] = None,
+                   **kwargs):
   """Plot the distribution of distances in the graph
 
   Args:
     graph (BVGraph): Graph whose distance distribution to plot
     probability (bool): If :data:`True` (default), then normalize sum to 1.
       Otherwise plot absolute counts
-    hdi (float): Density of the High-Density Interval"""
+    kind (str): Either :data:`"line"`, :data:`"area"`, or :data:`"both"`
+    hdi (float): Density of the High-Density Interval
+    hdi_hs (float): Horizontal spacing between HDI line and the edge labels
+    hdi_vs (float): Vertical spacing between HDI line and the edge labels
+    hdi_label_vs (float): Vertical spacing between HDI line and
+      the percentage label
+    zorder (int): Base zorder for the plots
+    line_kws (dict): Keyword arguments for line plot
+    area_kws (dict): Keyword arguments for area plot
+    hdi_kws (dict): Keyword arguments for hdi line plot
+    text_kws (dict): Keyword arguments for text
+    kwargs: Keyword arguments for plot function"""
   d = graph.distances()
   if probability:
     d /= sum(d)
-  plt.plot(d)
+  d_x = np.arange(len(d))
 
+  # Types of plot
+  line_kws = _dict_copy_union(line_kws, **kwargs, zorder=zorder + 1)
+  area_kws = _dict_copy_union(area_kws, **kwargs, zorder=zorder)
+  plot_fns = {
+      "line":
+          lambda: plt.plot(d_x, d, **line_kws),
+      "area":
+          lambda: plt.fill_between(d_x, np.zeros(np.shape(d)), d, **area_kws),
+  }
+  plot_fns["both"] = lambda: (plot_fns["line"](), plot_fns["area"]())
+  try:
+    plot_fns[kind]()
+  except KeyError as e:
+    a = "\'"
+    raise ValueError(
+        f"Unrecognized plot kind: '{kind}'. "
+        f"Supported kinds are: {', '.join(a+k+a for k in plot_fns)}") from e
+
+  # Labels
   plt.xlabel("distance")
   if probability:
     plt.ylabel("probability")
   else:
     plt.ylabel("frequency")
     d /= sum(d)
-  d_mean = np.dot(np.arange(len(d)), d)
-  p_mean = np.interp(d_mean, np.arange(len(d)), d)
 
-  fsize = mpl.rcParams["font.size"] + 2
-  percent_s = r"$\%$" if mpl.rcParams["text.usetex"] else "%"
+  # Compute average
+  d_mean = np.dot(d_x, d)
+  p_mean = np.interp(d_mean, d_x, d)
+
+  # Prepare text elements
+  text_kws = _dict_copy_union(text_kws, fontsize=mpl.rcParams["font.size"] + 2)
+  dollar = "$" if mpl.rcParams["text.usetex"] else ""
+  percent = r"\%" if mpl.rcParams["text.usetex"] else "%"
+  newline = "\n"
 
   if hdi:
     d_hdi = hdi_monomodal(d, n=max(1024, len(d)), d=hdi)
-    plt.plot(d_hdi, np.zeros(2), c=mpl.rcParams["lines.color"], linewidth=3)
-    plt.text(d_hdi[0],
-             p_mean * 0.02,
-             f"{d_hdi[0]:.2f}",
-             verticalalignment="bottom",
-             horizontalalignment="right",
-             fontsize=fsize)
-    plt.text(d_hdi[1],
-             p_mean * 0.02,
-             f"{d_hdi[1]:.2f}",
-             verticalalignment="bottom",
-             horizontalalignment="left",
-             fontsize=fsize)
-    plt.text(np.mean(d_hdi),
-             p_mean * 0.125,
-             f"{hdi * 100:.0f}{percent_s} HDI",
-             verticalalignment="center",
-             horizontalalignment="center",
-             fontsize=fsize)
-  plt.text(d_mean,
-           p_mean * 0.90,
-           f"mean = {d_mean:.2f}",
-           verticalalignment="center",
-           horizontalalignment="center",
-           fontsize=fsize)
+    hdi_kws = _dict_copy_union(hdi_kws,
+                               c=mpl.rcParams["lines.color"],
+                               linewidth=3,
+                               zorder=zorder + 2)
+    plt.plot(d_hdi, np.zeros(2), **hdi_kws)
+    # Left
+    l_text_kws = _dict_copy_union(text_kws,
+                                  verticalalignment="bottom",
+                                  zorder=zorder + 3)
+    l_text_kws["horizontalalignment"] = "right"
+    plt.text(*_relative_offset(d_hdi[0], 0, -hdi_hs, hdi_vs),
+             f"{dollar}{d_hdi[0]:.2f}{dollar}", **l_text_kws)
+    # # Right
+    r_text_kws = _dict_copy_union(text_kws,
+                                  verticalalignment="bottom",
+                                  zorder=zorder + 3)
+    r_text_kws["horizontalalignment"] = "left"
+    plt.text(*_relative_offset(d_hdi[1], 0, hdi_hs, hdi_vs),
+             f"{dollar}{d_hdi[1]:.2f}{dollar}", **r_text_kws)
+    # # Middle
+    c_text_kws = _dict_copy_union(text_kws,
+                                  verticalalignment="bottom",
+                                  horizontalalignment="center",
+                                  zorder=zorder + 3)
+    plt.text(*_relative_offset(np.mean(d_hdi), 0, 0, hdi_label_vs),
+             f"{dollar}{hdi * 100:.0f}{percent}{dollar} HDI", **c_text_kws)
+  p_text_kws = _dict_copy_union(text_kws,
+                                verticalalignment="bottom",
+                                horizontalalignment="center",
+                                zorder=zorder + 3)
+  plt.text(d_mean, p_mean, f"mean = {dollar}{d_mean:.2f}{dollar}", **p_text_kws)
 
 
 class ExponentFormatter(mpl.ticker.ScalarFormatter):
