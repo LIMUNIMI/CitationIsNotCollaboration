@@ -182,7 +182,7 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
           else "closeness-centrality * 1e7",
         lambda x: x * 1e7,
         None, #"nnodes",
-        True,
+        False,
         "Closeness Centrality")),
     ))
     args.norm_str = {

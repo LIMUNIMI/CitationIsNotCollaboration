@@ -128,7 +128,7 @@ def main(*argv):
               "classical": args.palette["classical"],
               "rock": args.palette["rock"],
           },
-          legend_kw=dict(loc="lower right"),
+          legend_kw=dict(loc="upper left"),
           ax=ax[:, i])
       for a in ax[:, i]:
         yl = a.set_ylabel("" if i else a.get_title())
