@@ -1,6 +1,7 @@
 """Plot utilities. This module requires matplotlib"""
 from matplotlib import pyplot as plt, patches
 import matplotlib as mpl
+import seaborn as sns
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -589,6 +590,166 @@ def degrees_scatterplot(graph: "featgraph.jwebgraph.utils.BVGraph",
   bs = "\\"
   rec = f"Reciprocity ${bs}rho = ${graph.reciprocity():.5f}"
   plt.gca().set_title(f"{plt.gca().get_title()[:-1]}, {rec})")
+
+
+def _dict_copy_union(d: Optional[dict] = None, **kwargs):
+  """Return a copy of a dictionary, eventually adding key-value pairs
+
+  Args:
+    d (dict): A dicitonary to copy or :data:`None` (start with
+      an empty dictionary)
+    kwargs: Key-value pairs to add to :data:`d` only if the
+      keys are not already in d
+
+  Returns:
+    dict: The copy dicitonary"""
+  d = {} if d is None else dict(d.items())
+  for k, v in kwargs.items():
+    if k not in d:
+      d[k] = v
+  return d
+
+
+def degrees_jointplot(graph: "featgraph.jwebgraph.utils.BVGraph",
+                      log_p1: bool = True,
+                      log_marginal: bool = False,
+                      xlabel: Optional[str] = "Outdegree",
+                      ylabel: Optional[str] = "Indegree",
+                      ref_artists: Optional[Sequence[metadata.Artist]] = None,
+                      scatter_kws: Optional[dict] = None,
+                      text_kws: Optional[dict] = None,
+                      marginal_kws: Optional[dict] = None,
+                      stats_kw: Optional[dict] = None,
+                      zorder: int = 100,
+                      grid: Optional = None,
+                      kendall_tau: bool = False,
+                      reciprocity: bool = False,
+                      **kwargs):
+  """Jointplot of indegree vs outdegree
+
+  Args:
+    graph (BVGraph): Graph whose degrees to plot
+    log_p1 (bool): If :data:`True` (default), then plot the values scaled as
+      :data:`log10(x + 1)`
+    log_marginal (bool): If :data:`True` (default), then plot the marginal
+      frequencies on a logarithmic scale
+    xlabel (str): Label for the x (out-degree) axis
+    ylabel (str): Label for the y (in-degree) axis
+    ref_artists (sequence of Artist): Reference artists
+    scatter_kwargs (dict): Keyword arguments for reference artists scatterplot
+    text_kwargs (dict): Keyword arguments for reference artists text
+    marginal_kws (dict):  Keyword arguments for marginal distributions plot
+    stats_kws (dict):  Keyword arguments for statistics text (additional
+      w.r.t. :data:`text_kwargs`)
+    zorder (int): Base zorder for plots
+    grid: Single argument or keyword arguments for turning on grids
+    kendall_tau (bool): If :data:`True`, add a text with the value of the
+      Kendall Tau correlation coefficient
+    reciprocity (bool): If :data:`True`, add a text with the value of the
+      reciprocity
+    kwargs: Keyword arguments for jointplot"""
+  # Load data
+  df = pd.DataFrame(data={
+      "outdegree": graph.outdegrees(),
+      "indegree": graph.indegrees(),
+  })
+  if log_p1:
+    kx = "log(outdegree+1)"
+    ky = "log(indegree+1)"
+    df[kx] = np.log10(df["outdegree"] + 1)
+    df[ky] = np.log10(df["indegree"] + 1)
+  else:
+    kx = "outdegree"
+    ky = "indegree"
+
+  # Plot
+  kwargs["zorder"] = zorder
+  marginal_kws = _dict_copy_union(marginal_kws, zorder=zorder)
+  if "bins" in kwargs:
+    marginal_kws["bins"] = marginal_kws.get("bins", kwargs["bins"])
+  jp = sns.jointplot(data=df, x=kx, y=ky, marginal_kws=marginal_kws, **kwargs)
+
+  # Scatter refartists
+  if ref_artists is not None:
+    ref_rows = df.iloc[[a.index for a in ref_artists]]
+    # Scatter
+    scatter_kws = _dict_copy_union(scatter_kws, zorder=zorder + 1)
+    sns.scatterplot(ax=jp.ax_joint, data=ref_rows, x=kx, y=ky, **scatter_kws)
+    # Text
+    jp_cx = np.mean(jp.ax_joint.get_xlim())
+    jp_cy = np.mean(jp.ax_joint.get_ylim())
+    for a, (_, a_row) in zip(ref_artists, ref_rows.iterrows()):
+      a_x = a_row[kx]
+      a_y = a_row[ky]
+      a_text_kws = _dict_copy_union(
+          text_kws,
+          zorder=zorder + 2,
+          horizontalalignment="left" if a_x < jp_cx else "right",
+          verticalalignment="bottom" if a_y < jp_cy else "top")
+      jp.ax_joint.text(a_x, a_y, a.name, **a_text_kws)
+
+  # Write stats
+  stats_l = []
+  if kendall_tau:
+    kt = importlib.import_module("featgraph.jwebgraph.utils").kendall_tau(
+        graph.outdegrees, graph.indegrees)
+    stats_l.append(r"Kendall $\tau = " + f"{kt:.3f}" + r"$")
+  if reciprocity:
+    r = graph.reciprocity()
+    stats_l.append(r"Reciprocity $\rho = " + f"{r:.3f}" + r"$")
+  if len(stats_l) > 0:
+    stats_s = "\n".join(stats_l)
+    stats_kw = _dict_copy_union(stats_kw,
+                                x=0.975,
+                                y=0.975,
+                                s=stats_s,
+                                horizontalalignment="right",
+                                verticalalignment="top")
+    stats_kw = _dict_copy_union(stats_kw, **_dict_copy_union(text_kws))
+    jp.fig.text(**stats_kw)
+
+  # Log-scale histograms
+  if log_marginal:
+    jp.ax_marg_x.set_yscale("log")
+    jp.ax_marg_y.set_xscale("log")
+
+  # Adjust labels
+  jp.set_axis_labels(xlabel=xlabel, ylabel=ylabel)
+  jp.ax_joint.xaxis.set_label_coords(0.5, 1.0025)
+  jp.ax_joint.xaxis.label.set_verticalalignment("bottom")
+  jp.ax_joint.yaxis.set_label_coords(1.0025, 0.5)
+  jp.ax_joint.yaxis.label.set_rotation(-90)
+  jp.ax_marg_x.tick_params(axis="y", reset=True)
+  jp.ax_marg_y.tick_params(axis="x", reset=True)
+  if log_p1:
+    # Get ticks on powers of 10, their proportional middles, and on zero
+    tick_values = np.floor(
+        2 * np.max([*jp.ax_marg_x.get_xlim(), *jp.ax_marg_y.get_ylim()]))
+    tick_values = np.log10(np.power(10, np.arange(tick_values + 1) / 2) + 1)
+    tick_values = np.array([0, *tick_values])
+
+    tick_labels = np.array([
+        f"$10^{(i - 1) // 2:.0f}$" if i % 2 == 1 else ("" if i else "$0$")
+        for i in range(len(tick_values))
+    ])
+
+    # Filter ticks outside limits
+    def ticks_between(a, b):
+      idx = [i for i, v in enumerate(tick_values) if a < v < b]
+      return tick_values[idx], tick_labels[idx]
+
+    jp.ax_joint.set_xticks(*ticks_between(*jp.ax_joint.get_xlim()))
+    jp.ax_joint.set_yticks(*ticks_between(*jp.ax_joint.get_ylim()))
+
+  # Turn on grids
+  if grid is not None:
+    for a in (jp.ax_joint, jp.ax_marg_x, jp.ax_marg_y):
+      if hasattr(grid, "items"):
+        a.grid(**grid)
+      else:
+        a.grid(grid)
+  jp.fig.set_size_inches(mpl.rcParams["figure.figsize"])
+  return jp
 
 
 def plot_distances(graph: "featgraph.jwebgraph.utils.BVGraph",

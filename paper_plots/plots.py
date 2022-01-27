@@ -148,3 +148,28 @@ def main(*argv):
                         np.array([1, 2 / n]))
     args.save_fig(transition_plot_fname)
   # ---------------------------------------------------------------------------
+
+  # --- Plot degree distribution ----------------------------------------------
+  degree_fname = "degrees.pdf"
+  if args.must_write(degree_fname):
+    logger.info("Computing degrees")
+    graph.compute_transpose()
+    graph.compute_degrees()
+    # logger.info("Computing reciprocity")
+    # graph.compute_reciprocity()
+    logger.info("Plotting degrees")
+    jp = plots.degrees_jointplot(graph,
+                       ref_artists=args.ref_artists,
+                       kind="hist", bins=42,
+                       log_marginal=True,
+                       marginal_kws=dict(
+                         linewidth=0,
+                       ),
+                       scatter_kws=dict(
+                         ec="#acc9ee",
+                       ), # kendall_tau=True, reciprocity=True, stats_kw=dict(fontsize=7),
+                       grid=True)
+    jp.ax_marg_x.set_yticks(np.power(10, np.arange(1, 6, 2)))
+    jp.ax_marg_y.set_xticks(jp.ax_marg_x.get_yticks())
+    args.save_fig(degree_fname)
+  # ---------------------------------------------------------------------------
