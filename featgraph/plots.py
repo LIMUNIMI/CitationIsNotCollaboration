@@ -1,4 +1,4 @@
-"""Plot utilities. This module requires matplotlib"""
+"""Plot utilities"""
 from matplotlib import pyplot as plt, patches
 import matplotlib as mpl
 import seaborn as sns

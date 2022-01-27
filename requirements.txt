@@ -9,3 +9,6 @@ numpy
 pymc3
 arviz>=0.11.4
 mkl-service
+matplotlib
+seaborn
+tqdm
