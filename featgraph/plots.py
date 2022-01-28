@@ -844,7 +844,6 @@ def plot_distances(graph: "featgraph.jwebgraph.utils.BVGraph",
   text_kws = _dict_copy_union(text_kws, fontsize=mpl.rcParams["font.size"] + 2)
   dollar = "$" if mpl.rcParams["text.usetex"] else ""
   percent = r"\%" if mpl.rcParams["text.usetex"] else "%"
-  newline = "\n"
 
   if hdi:
     d_hdi = hdi_monomodal(d, n=max(1024, len(d)), d=hdi)
