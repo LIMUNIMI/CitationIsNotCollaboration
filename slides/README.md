@@ -18,6 +18,5 @@ python slides.py \
   -a 4NJhFmfw43RLBLjQvxDuRS \
   -a 4RcqZYDDLikC5uAIUD8Ptx \
   -a 6eUKZXaKkcviH0Ku9w2n3V \
-  -a 1sBkRIssrMs1AbVkOJbc7a \
-  -a 7pXu47GoqSYRajmBCjxdD6
+  -a 1sBkRIssrMs1AbVkOJbc7a
 ```
