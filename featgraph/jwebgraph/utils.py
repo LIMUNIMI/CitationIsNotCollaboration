@@ -597,3 +597,61 @@ class BVGraph:
     a_avg = (self.numArcs() - self.self_loops()) / (self.numNodes() *
                                                     (self.numNodes() - 1))
     return a_avg + (1 - a_avg) * self.reciprocity()
+
+  def compute_scc(self,
+                  sizes: bool = True,
+                  renumber: bool = True,
+                  buckets: bool = True,
+                  overwrite: bool = False,
+                  log: bool = True):
+    """Compute strongly connected components
+
+    Args:
+      sizes (bool): If :data:`True` (default), then compute component sizes
+      sizes (bool): If :data:`True` (default), then renumber components in
+        decreasing-size order
+      sizes (bool): If :data:`True` (default), then compute buckets (nodes
+        belonging to a bucket component, i.e.,
+        a terminal nondangling component)
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    args = []
+    paths = []
+    if sizes:
+      args.append("--sizes")
+      paths.append(self.path("scc"))
+      paths.append(self.path("sccsizes"))
+    if renumber:
+      args.append("--renumber")
+    if buckets:
+      args.append("--buckets")
+      paths.append(self.path("buckets"))
+
+    if overwrite or any(pathutils.notisfile(p, log=log) for p in paths):
+      webgraph.algo.StronglyConnectedComponents.main([*args, self.base_path])
+
+  def scc(self):
+    """Load strongly connected components labels vector from file
+
+    Returns:
+      array of integers: Array of strongly connected components labels"""
+    return load_as_doubles(self.path("scc"), input_type="Integer")
+
+  def scc_sizes(self):
+    """Load strongly connected components sizes vector from file
+
+    Returns:
+      array of integers: Array of strongly connected components sizes"""
+    return load_as_doubles(self.path("sccsizes"), input_type="Integer")
+
+  def node_scc_sizes(self):
+    """Load the array of the strongly connected component size of each node
+
+    Returns:
+      array of integers: Array of strongly connected component sizes by node"""
+    sizes = self.scc_sizes()
+    for i in map(int, self.scc()):
+      yield int(sizes[i])
+
+  compute_node_scc_sizes = compute_scc
