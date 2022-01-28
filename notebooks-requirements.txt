@@ -1,5 +1,2 @@
 jupyter
-matplotlib
-seaborn
-tqdm
 python-graphviz

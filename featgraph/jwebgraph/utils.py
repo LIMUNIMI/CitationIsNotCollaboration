@@ -498,7 +498,7 @@ class BVGraph:
   def compute_reciprocity(self,
                           overwrite: bool = False,
                           tqdm: Optional = None,
-                          log: bool = False):
+                          log: bool = True):
     """Compute the reciprocity of the graph, as defined in
     *"Garlaschelli, D., & Loffredo, M. I. (2004).
     Patterns of link reciprocity in directed networks.

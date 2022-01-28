@@ -1,7 +1,7 @@
-"""Plot utilities. This module requires matplotlib"""
+"""Plot utilities"""
 from matplotlib import pyplot as plt, patches
 import matplotlib as mpl
-import pygal
+import seaborn as sns
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -9,8 +9,8 @@ import itertools
 import importlib
 import arviz
 from featgraph.misc import VectorOrCallable
-from featgraph import bayesian_comparison
-from typing import Optional, Callable, Dict, Tuple, Any, Sequence, Union
+from featgraph import bayesian_comparison, metadata
+from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
 def scatter(
@@ -326,10 +326,11 @@ def plot_centrality_transitions(
     quartile1_key: str = "quartile-1",
     median_key: str = "median",
     quartile3_key: str = "quartile-3",
-    std_scale: float = 0.7,
+    std_scale: float = 0.6744897501960817,  # 50% density
     fill_alpha: float = 0.25,
     fig=None,
     ax=None,
+    legend_kw: Optional[dict] = None,
 ):
   """Plot centrality transitions for multiple graphs
 
@@ -374,7 +375,8 @@ def plot_centrality_transitions(
     ax: Array of axes onto which to plot
     save (bool): If :data:`True`, save the figure to a file. If a string,
       save to the specific filepath
-    figext (str): Extension of the figure file"""
+    figext (str): Extension of the figure file
+    legend_kw (dict): Keyword arguments for legend"""
   if graph_names is None:
     graph_names = df[graph_name_key].unique()
   if fig is None:
@@ -391,39 +393,48 @@ def plot_centrality_transitions(
         cmap[tv] = c["color"]
 
   for a, graph_name in zip(ax, graph_names):
-    df_ = df[(df[graph_name_key] == graph_name) &
-             (df[centrality_name_key] == centrality_name)]
-    for k in df_[type_name_key].unique():
-      dfk = df_[df_[type_name_key] == k]
-      thresholds = dfk[threshold_key].to_numpy()
-      idx = np.argsort(thresholds)
-      thresholds = thresholds[idx]
+    if logy:
+      a.set_yscale("log")
 
-      if median:
-        kq1 = dfk[quartile1_key].to_numpy()[idx]
-        kq2 = dfk[median_key].to_numpy()[idx]
-        kq3 = dfk[quartile3_key].to_numpy()[idx]
-      else:
-        kq2 = dfk[mean_key].to_numpy()[idx]
-        ks = dfk[std_key].to_numpy()[idx] * std_scale
-        kq1 = kq2 - ks
-        kq3 = kq2 + ks
-      if norm:
-        kn = dfk[norm].to_numpy()[idx]
-        kq1 /= kn
-        kq2 /= kn
-        kq3 /= kn
+    def data_iterator(df=df[(df[graph_name_key] == graph_name) &
+                            (df[centrality_name_key] == centrality_name)]):
+      for k in df[type_name_key].unique():
+        dfk = df[df[type_name_key] == k]
+        thresholds = dfk[threshold_key].to_numpy()
+        idx = np.argsort(thresholds)
+        thresholds = thresholds[idx]
+
+        if median:
+          kq1 = dfk[quartile1_key].to_numpy()[idx]
+          kq2 = dfk[median_key].to_numpy()[idx]
+          kq3 = dfk[quartile3_key].to_numpy()[idx]
+        else:
+          kq2 = dfk[mean_key].to_numpy()[idx]
+          ks = dfk[std_key].to_numpy()[idx] * std_scale
+          kq1 = kq2 - ks
+          kq3 = kq2 + ks
+        if norm:
+          kn = dfk[norm].to_numpy()[idx]
+          kq1 /= kn
+          kq2 /= kn
+          kq3 /= kn
+        yield k, thresholds, kq1, kq2, kq3
+
+    for k, thresholds, _, kq2, _ in data_iterator():
+      if logy:
+        kq2[np.argwhere(np.less_equal(kq2, 0))] = np.nan
       a.plot(thresholds, kq2, label=k, c=cmap.get(k, "k"))
+    yl = a.get_ylim()
+    for k, thresholds, kq1, _, kq3 in data_iterator():
       a.fill_between(
           thresholds,
-          kq1,
-          kq3,
+          np.clip(kq1, *yl),
+          np.clip(kq3, *yl),
           facecolor=cmap.get(k, "k"),
           alpha=fill_alpha,
       )
-    if logy:
-      a.set_yscale("log")
-    a.legend()
+    a.set_ylim(*yl)
+    a.legend(**({} if legend_kw is None else legend_kw))
     a.set_title(graph_name)
     a.set_ylabel(centrality_name)
     a.set_xlabel(f"{threshold_attr} threshold")
@@ -437,106 +448,450 @@ def plot_centrality_transitions(
     plt.savefig(fpath, bbox_inches="tight")
 
 
-_html_pygal = """
-<!DOCTYPE html>
-<html>
-  <head>
-  <script type="text/javascript" src="http://kozea.github.com/pygal.js/javascripts/svg.jquery.js"></script>
-  <script type="text/javascript" src="https://kozea.github.io/pygal.js/2.0.x/pygal-tooltips.min.js""></script>
-  </head>
-  <body>
-    <figure>
-      {pygal_render}
-    </figure>
-  </body>
-</html>
-"""
-
-
-def html_pygal(pygal_plot,
-               ipython: bool = False) -> Union[str, "IPython.display.HTML"]:
-  """Render a pygal plot in HTML
+def translate_log_ticks(
+    offset: float,
+    ax: Optional[plt.Axes] = None,
+    add_zero: bool = True,
+):
+  r"""Move xticks by a specified amount on a log scale axis. Please, add
+  :data:`{"text.usetex": True, "text.latex.preamble": r"\usepackage{amsmath}"}`
+  to your matplotlib rcparams before calling this function
 
   Args:
-    pygal_plot: The plot to render
-    ipython (bool): If :data:`True`,
-      wrap the HTML text in an IPython HTML object"""
-  r = _html_pygal.format(pygal_render=pygal_plot.render(is_unicode=True))
-  if ipython:
-    r = importlib.import_module("IPython.display").HTML(r)
-  return r
+    offset (float): Offset amount between position and ticks (difference
+      between the tick position and the tick label value)
+    ax: The axis. If not specified, the current axis is affected
+    add_zero (bool): Add tick on the zero"""
+  if ax is None:
+    ax = plt.gca()
+  xl = ax.get_xlim()
+  xt = 10**np.arange(np.log10(xl[-1] + 1))
+  if add_zero:
+    xt = np.array([0, *xt])
+  plt.gca().set_xticks(xt + offset)
+  plt.gca().set_xticklabels(
+      fr"$10^{'{'}{np.log10(i):.0f}{'}'}$" if i > 0 else r"$0^{\vphantom{1}}$"
+      for i in xt)
+  plt.xlim(xl)
 
 
-def _isnotebook() -> bool:
-  """Check if running in a notebook.
-  Code from https://stackoverflow.com/a/39662359
+def hdi_monomodal(p,
+                  x: Optional[Sequence] = None,
+                  d: float = 0.94,
+                  n: Optional[int] = None,
+                  cdf: bool = False):
+  """Compute the HDI around the mode
+
+  Args:
+    p (array): Array of the probabilities of x
+    x (array): Array of variable values (if unspecified,
+      the integer range of the same length of :data:`p` is used)
+    d (float): The minimum density of the HDI
+    n (int): If specified, upsample the probability function
+      to this number of values
+    cdf (True): If :data:`True` interpret :data:`p`
+      as a cumulative probability function"""
+  if d < 0 or d > 1:
+    raise ValueError("Invalid value for density. It should be "
+                     f"a float between 0 and 1. Got {d}")
+  if cdf:
+    p = np.diff([0, *p])
+  if x is None:
+    x = np.arange(len(p))
+  if n is None:
+    n = len(x)
+  else:
+    x_ = x
+    p_ = p
+    x = np.linspace(x_[0], x_[-1], n, endpoint=True)
+    p = np.interp(x, x_, p_, left=0, right=0)
+
+  def dx(idx, arr=x):
+    l = idx if idx == 0 else idx - 1
+    r = idx if idx == len(arr) - 1 else idx + 1
+    return (arr[r] - arr[l]) / (r - l)
+
+  l = np.argmax(p)
+  r = l + 1
+  while True:
+    d_curr = sum(p[i] * dx(i) for i in range(l, r))
+    if d_curr >= d or (l == 0 and r == n):
+      break
+    if l == 0:
+      r += 1
+    elif r == n:
+      l -= 1
+    elif p[l - 1] >= p[r + 1]:
+      l -= 1
+    else:
+      r += 1
+  return x[l], x[r - 1]
+
+
+def scatter_refs(x: VectorOrCallable,
+                 y: VectorOrCallable,
+                 ref_artists: Sequence[metadata.Artist],
+                 legend_kw: Optional[dict] = None,
+                 **kwargs):
+  """Scatter plot values for reference artists
+
+  Args:
+    x (array or callable): x-coordinate values for all nodes
+    y (array or callable): y-coordinate values for all nodes
+    ref_artist (sequence of Artist): artists to include as references
+    legend_kw (dict): Keyword arguments for the legend
+    kwargs: Keyword arguments for the scatter plot"""
+  if len(ref_artists) == 0:
+    return
+  xs = x() if callable(x) else x
+  xs = [xs[a.index] for a in ref_artists]
+  ys = y() if callable(y) else y
+  ys = [ys[a.index] for a in ref_artists]
+  for xi, yi, ai in zip(xs, ys, ref_artists):
+    plt.scatter(xi, yi, label=ai.name, **kwargs)
+  plt.legend(**({} if legend_kw is None else legend_kw))
+
+
+def degrees_scatterplot(graph: "featgraph.jwebgraph.utils.BVGraph",
+                        ref_artists: Optional[Sequence[metadata.Artist]] = None,
+                        ref_kwargs: Optional[dict] = None,
+                        **kwargs):
+  """Scatterplot of indegree vs outdegree
+
+  Args:
+    graph (BVGraph): Graph whose degrees to plot
+    ref_artists (sequence of Artist): Reference artists
+    ref_kwargs (dict): Keyword arguments for reference artists scatterplot
+    kwargs: Keyword arguments for scatterplot"""
+  outdegrees = graph.outdegrees()
+  # Outdegree can be 0 and it wouldn't be plotted
+  # So, make it 1 and modify axis labels
+  for i in range(len(outdegrees)):
+    outdegrees[i] += 1
+  scatter(outdegrees,
+          graph.indegrees,
+          marker=".",
+          c=mpl.rcParams["lines.markerfacecolor"],
+          xscale="log",
+          yscale="log",
+          label=graph.basename,
+          xlabel="out-degree",
+          ylabel="in-degree",
+          **kwargs)
+  if ref_artists is not None:
+    if ref_kwargs is None:
+      ref_kwargs = {}
+    scatter_refs(outdegrees, graph.indegrees, ref_artists, **ref_kwargs,
+                 **kwargs)
+  del outdegrees
+  plt.gca().set_aspect("equal")
+  plt.minorticks_off()
+  translate_log_ticks(1)
+  bs = "\\"
+  rec = f"Reciprocity ${bs}rho = ${graph.reciprocity():.5f}"
+  plt.gca().set_title(f"{plt.gca().get_title()[:-1]}, {rec})")
+
+
+def _dict_copy_union(d: Optional[dict] = None, **kwargs):
+  """Return a copy of a dictionary, eventually adding key-value pairs
+
+  Args:
+    d (dict): A dicitonary to copy or :data:`None` (start with
+      an empty dictionary)
+    kwargs: Key-value pairs to add to :data:`d` only if the
+      keys are not already in d
 
   Returns:
-    bool: :data:`True` if running in a notebook, :data:`False` otherwise"""
-  try:
-    shell = get_ipython().__class__.__name__
-  except NameError:
-    return False  # Probably standard Python interpreter
-  else:
-    if shell == "ZMQInteractiveShell":
-      return True  # Jupyter notebook or qtconsole
-    elif shell == "TerminalInteractiveShell":
-      return False  # Terminal running IPython
-    else:
-      return False  # Other type (?)
+    dict: The copy dicitonary"""
+  d = {} if d is None else dict(d.items())
+  for k, v in kwargs.items():
+    if k not in d:
+      d[k] = v
+  return d
 
 
-def plot_centrality_boxes(
-    tc: "featgraph.sgc.ThresholdComparison",
-    centrality: str,
-    th: float = 0,
-    graph_name: str = "spotify-2018",
-    save: bool = False,
-    figext: str = "svg",
-    ipython: Optional[bool] = None,
-    **kwargs,
-):
-  """Plot centrality boxplots
+def degrees_jointplot(graph: "featgraph.jwebgraph.utils.BVGraph",
+                      log_p1: bool = True,
+                      log_marginal: bool = False,
+                      xlabel: Optional[str] = "Outdegree",
+                      ylabel: Optional[str] = "Indegree",
+                      ref_artists: Optional[Sequence[metadata.Artist]] = None,
+                      scatter_kws: Optional[dict] = None,
+                      text_kws: Optional[dict] = None,
+                      marginal_kws: Optional[dict] = None,
+                      stats_kw: Optional[dict] = None,
+                      zorder: int = 100,
+                      grid: Optional = None,
+                      kendall_tau: bool = False,
+                      reciprocity: bool = False,
+                      **kwargs):
+  """Jointplot of indegree vs outdegree
 
   Args:
-    tc (ThresholdComparison): The ThresholdComparison wrapper object
-    centrality (str): The name of the centrality measure to plot
-    th (float): The threshold value to apply
-    graph_name (str): The name of the graph whose values to display
-    save (bool): If :data:`True`, save the figure to a file. If a string,
-      save to the specific filepath
-    figext (str): Extension of the figure file
-    ipython (bool): If :data:`True`, then return an IPython HTML
-      object. If :data:`None`, return an IPython HTML object if
-      running in a notebook
-    kwargs: Keyword arguments for :class:`pygal.Box`"""
-  box_plot = pygal.Box(**kwargs)
-  box_plot.title = \
-    f"{centrality}\n{graph_name}\n{tc.attribute} > {tc.attr_fmt(th)}"
+    graph (BVGraph): Graph whose degrees to plot
+    log_p1 (bool): If :data:`True` (default), then plot the values scaled as
+      :data:`log10(x + 1)`
+    log_marginal (bool): If :data:`True` (default), then plot the marginal
+      frequencies on a logarithmic scale
+    xlabel (str): Label for the x (out-degree) axis
+    ylabel (str): Label for the y (in-degree) axis
+    ref_artists (sequence of Artist): Reference artists
+    scatter_kwargs (dict): Keyword arguments for reference artists scatterplot
+    text_kwargs (dict): Keyword arguments for reference artists text
+    marginal_kws (dict):  Keyword arguments for marginal distributions plot
+    stats_kws (dict):  Keyword arguments for statistics text (additional
+      w.r.t. :data:`text_kwargs`)
+    zorder (int): Base zorder for plots
+    grid: Single argument or keyword arguments for turning on grids
+    kendall_tau (bool): If :data:`True`, add a text with the value of the
+      Kendall Tau correlation coefficient
+    reciprocity (bool): If :data:`True`, add a text with the value of the
+      reciprocity
+    kwargs: Keyword arguments for jointplot"""
+  # Load data
+  df = pd.DataFrame(data={
+      "outdegree": graph.outdegrees(),
+      "indegree": graph.indegrees(),
+  })
+  if log_p1:
+    kx = "log(outdegree+1)"
+    ky = "log(indegree+1)"
+    df[kx] = np.log10(df["outdegree"] + 1)
+    df[ky] = np.log10(df["indegree"] + 1)
+  else:
+    kx = "outdegree"
+    ky = "indegree"
 
-  baseg = next(g for g in tc.basegraphs if g.label == graph_name)
-  gen_k = baseg.type_key
-  gen_vals = baseg.type_values
-  check_fn = baseg.check_fn
+  # Plot
+  kwargs["zorder"] = zorder
+  marginal_kws = _dict_copy_union(marginal_kws, zorder=zorder)
+  if "bins" in kwargs:
+    marginal_kws["bins"] = marginal_kws.get("bins", kwargs["bins"])
+  jp = sns.jointplot(data=df, x=kx, y=ky, marginal_kws=marginal_kws, **kwargs)
 
-  g = tc.subgraph(baseg, th)
+  # Scatter refartists
+  if ref_artists is not None:
+    ref_rows = df.iloc[[a.index for a in ref_artists]]
+    # Scatter
+    scatter_kws = _dict_copy_union(scatter_kws, zorder=zorder + 1)
+    sns.scatterplot(ax=jp.ax_joint, data=ref_rows, x=kx, y=ky, **scatter_kws)
+    # Text
+    jp_cx = np.mean(jp.ax_joint.get_xlim())
+    jp_cy = np.mean(jp.ax_joint.get_ylim())
+    for a, (_, a_row) in zip(ref_artists, ref_rows.iterrows()):
+      a_x = a_row[kx]
+      a_y = a_row[ky]
+      a_text_kws = _dict_copy_union(
+          text_kws,
+          zorder=zorder + 2,
+          horizontalalignment="left" if a_x < jp_cx else "right",
+          verticalalignment="bottom" if a_y < jp_cy else "top")
+      jp.ax_joint.text(a_x, a_y, a.name, **a_text_kws)
 
-  for gen in gen_vals:
-    box_plot.add(
-        gen,
-        np.array(
-            list(
-                itertools.compress(
-                    getattr(g, tc.centralities[centrality])(),
-                    map(check_fn(gen),
-                        getattr(g, gen_k)())))))
+  # Write stats
+  stats_l = []
+  if kendall_tau:
+    kt = importlib.import_module("featgraph.jwebgraph.utils").kendall_tau(
+        graph.outdegrees, graph.indegrees)
+    stats_l.append(r"Kendall $\tau = " + f"{kt:.3f}" + r"$")
+  if reciprocity:
+    r = graph.reciprocity()
+    stats_l.append(r"Reciprocity $\rho = " + f"{r:.3f}" + r"$")
+  if len(stats_l) > 0:
+    stats_s = "\n".join(stats_l)
+    stats_kw = _dict_copy_union(stats_kw,
+                                x=0.975,
+                                y=0.975,
+                                s=stats_s,
+                                horizontalalignment="right",
+                                verticalalignment="top")
+    stats_kw = _dict_copy_union(stats_kw, **_dict_copy_union(text_kws))
+    jp.fig.text(**stats_kw)
 
-  if save:
-    fpath = f"boxplot-{graph_name}-{centrality}.{figext}" if isinstance(
-        save, bool) else save
-    box_plot.render_to_file(fpath)
-  if ipython is None:
-    ipython = _isnotebook()
-  if ipython:
-    return html_pygal(box_plot, ipython=ipython)
-  return box_plot
+  # Log-scale histograms
+  if log_marginal:
+    jp.ax_marg_x.set_yscale("log")
+    jp.ax_marg_y.set_xscale("log")
+
+  # Adjust labels
+  jp.set_axis_labels(xlabel=xlabel, ylabel=ylabel)
+  jp.ax_joint.xaxis.set_label_coords(0.5, 1.0025)
+  jp.ax_joint.xaxis.label.set_verticalalignment("bottom")
+  jp.ax_joint.yaxis.set_label_coords(1.0025, 0.5)
+  jp.ax_joint.yaxis.label.set_rotation(-90)
+  jp.ax_marg_x.tick_params(axis="y", reset=True)
+  jp.ax_marg_y.tick_params(axis="x", reset=True)
+  if log_p1:
+    # Get ticks on powers of 10, their proportional middles, and on zero
+    tick_values = np.floor(
+        2 * np.max([*jp.ax_marg_x.get_xlim(), *jp.ax_marg_y.get_ylim()]))
+    tick_values = np.log10(np.power(10, np.arange(tick_values + 1) / 2) + 1)
+    tick_values = np.array([0, *tick_values])
+
+    tick_labels = np.array([
+        f"$10^{(i - 1) // 2:.0f}$" if i % 2 == 1 else ("" if i else "$0$")
+        for i in range(len(tick_values))
+    ])
+
+    # Filter ticks outside limits
+    def ticks_between(a, b):
+      idx = [i for i, v in enumerate(tick_values) if a < v < b]
+      return tick_values[idx], tick_labels[idx]
+
+    jp.ax_joint.set_xticks(*ticks_between(*jp.ax_joint.get_xlim()))
+    jp.ax_joint.set_yticks(*ticks_between(*jp.ax_joint.get_ylim()))
+
+  # Turn on grids
+  if grid is not None:
+    for a in (jp.ax_joint, jp.ax_marg_x, jp.ax_marg_y):
+      if hasattr(grid, "items"):
+        a.grid(**grid)
+      else:
+        a.grid(grid)
+  jp.fig.set_size_inches(mpl.rcParams["figure.figsize"])
+  return jp
+
+
+def _relative_offset(x: float,
+                     y: float,
+                     offset_x: float = 0,
+                     offset_y: float = 0,
+                     ax: Optional = None):
+  """Offset a position by a fraction of the axes dimensions
+
+  Args:
+    x (float): Horizontal position
+    y (float): Vertical position
+    offset_x (float): Horizontal offset, as a fraction of the axes width
+    offset_y (float): Vertical offset, as a fraction of the axes height
+
+  Returns:
+    couple of float: Offset position"""
+  if ax is None:
+    ax = plt.gca()
+  x = x + offset_x * np.diff(ax.get_xlim())
+  y = y + offset_y * np.diff(ax.get_ylim())
+  return x, y
+
+
+def plot_distances(graph: "featgraph.jwebgraph.utils.BVGraph",
+                   probability: bool = True,
+                   kind: str = "line",
+                   hdi: float = 0.94,
+                   hdi_hs: float = 0,
+                   hdi_vs: float = 0.025,
+                   hdi_label_vs: float = 0.075,
+                   zorder: int = 100,
+                   line_kws: Optional[dict] = None,
+                   area_kws: Optional[dict] = None,
+                   hdi_kws: Optional[dict] = None,
+                   text_kws: Optional[dict] = None,
+                   **kwargs):
+  """Plot the distribution of distances in the graph
+
+  Args:
+    graph (BVGraph): Graph whose distance distribution to plot
+    probability (bool): If :data:`True` (default), then normalize sum to 1.
+      Otherwise plot absolute counts
+    kind (str): Either :data:`"line"`, :data:`"area"`, or :data:`"both"`
+    hdi (float): Density of the High-Density Interval
+    hdi_hs (float): Horizontal spacing between HDI line and the edge labels
+    hdi_vs (float): Vertical spacing between HDI line and the edge labels
+    hdi_label_vs (float): Vertical spacing between HDI line and
+      the percentage label
+    zorder (int): Base zorder for the plots
+    line_kws (dict): Keyword arguments for line plot
+    area_kws (dict): Keyword arguments for area plot
+    hdi_kws (dict): Keyword arguments for hdi line plot
+    text_kws (dict): Keyword arguments for text
+    kwargs: Keyword arguments for plot function"""
+  d = graph.distances()
+  if probability:
+    d /= sum(d)
+  d_x = np.arange(len(d))
+
+  # Types of plot
+  line_kws = _dict_copy_union(line_kws, **kwargs, zorder=zorder + 1)
+  area_kws = _dict_copy_union(area_kws, **kwargs, zorder=zorder)
+  plot_fns = {
+      "line":
+          lambda: plt.plot(d_x, d, **line_kws),
+      "area":
+          lambda: plt.fill_between(d_x, np.zeros(np.shape(d)), d, **area_kws),
+  }
+  plot_fns["both"] = lambda: (plot_fns["line"](), plot_fns["area"]())
+  try:
+    plot_fns[kind]()
+  except KeyError as e:
+    a = "\'"
+    raise ValueError(
+        f"Unrecognized plot kind: '{kind}'. "
+        f"Supported kinds are: {', '.join(a+k+a for k in plot_fns)}") from e
+
+  # Labels
+  plt.xlabel("distance")
+  if probability:
+    plt.ylabel("probability")
+  else:
+    plt.ylabel("frequency")
+    d /= sum(d)
+
+  # Compute average
+  d_mean = np.dot(d_x, d)
+  p_mean = np.interp(d_mean, d_x, d)
+
+  # Prepare text elements
+  text_kws = _dict_copy_union(text_kws, fontsize=mpl.rcParams["font.size"] + 2)
+  dollar = "$" if mpl.rcParams["text.usetex"] else ""
+  percent = r"\%" if mpl.rcParams["text.usetex"] else "%"
+
+  if hdi:
+    d_hdi = hdi_monomodal(d, n=max(1024, len(d)), d=hdi)
+    hdi_kws = _dict_copy_union(hdi_kws,
+                               c=mpl.rcParams["lines.color"],
+                               linewidth=3,
+                               zorder=zorder + 2)
+    plt.plot(d_hdi, np.zeros(2), **hdi_kws)
+    # Left
+    l_text_kws = _dict_copy_union(text_kws,
+                                  verticalalignment="bottom",
+                                  zorder=zorder + 3)
+    l_text_kws["horizontalalignment"] = "right"
+    plt.text(*_relative_offset(d_hdi[0], 0, -hdi_hs, hdi_vs),
+             f"{dollar}{d_hdi[0]:.2f}{dollar}", **l_text_kws)
+    # # Right
+    r_text_kws = _dict_copy_union(text_kws,
+                                  verticalalignment="bottom",
+                                  zorder=zorder + 3)
+    r_text_kws["horizontalalignment"] = "left"
+    plt.text(*_relative_offset(d_hdi[1], 0, hdi_hs, hdi_vs),
+             f"{dollar}{d_hdi[1]:.2f}{dollar}", **r_text_kws)
+    # # Middle
+    c_text_kws = _dict_copy_union(text_kws,
+                                  verticalalignment="bottom",
+                                  horizontalalignment="center",
+                                  zorder=zorder + 3)
+    plt.text(*_relative_offset(np.mean(d_hdi), 0, 0, hdi_label_vs),
+             f"{dollar}{hdi * 100:.0f}{percent}{dollar} HDI", **c_text_kws)
+  p_text_kws = _dict_copy_union(text_kws,
+                                verticalalignment="bottom",
+                                horizontalalignment="center",
+                                zorder=zorder + 3)
+  plt.text(d_mean, p_mean, f"mean = {dollar}{d_mean:.2f}{dollar}", **p_text_kws)
+
+
+class ExponentFormatter(mpl.ticker.ScalarFormatter):
+  """Ticks formatter for setting an explicit exponent
+
+  Args:
+    args: Positional arguments for :class:`ScalarFormatter`
+    exponent (int): Explicit exponent
+    kwargs: Keyword arguments for :class:`ScalarFormatter`"""
+
+  def __init__(self, *args, exponent: Optional[int] = None, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.orderOfMagnitude = exponent
+
+  def _set_order_of_magnitude(self):
+    if self.orderOfMagnitude is None:
+      super()._set_order_of_magnitude()
