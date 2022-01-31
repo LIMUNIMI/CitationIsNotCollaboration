@@ -312,6 +312,7 @@ class ThresholdComparison:
           "Harmonic Centrality": "harmonicc",
           "Pagerank": "pagerank",
           "Closeness Centrality": "closenessc",
+          "Lin Centrality": "linc",
           "Strongly Connected Component Size": "node_scc_sizes",
           "Weakly Connected Component Size": "node_wcc_sizes",
       }
