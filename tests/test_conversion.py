@@ -62,7 +62,7 @@ class TestConversion(
 
     with self.check_files_exist(
         *testutils.graph_paths(self.base_path),
-        *testutils.graph_paths(self.path("transpose"), metadata_paths=False),
+        *testutils.graph_paths(self.path("transpose")),
         self.path("stats", "stats"),
         self.path("stats", "indegree"),
         self.path("stats", "indegrees"),
