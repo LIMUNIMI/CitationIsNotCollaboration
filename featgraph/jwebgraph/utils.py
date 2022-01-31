@@ -6,6 +6,7 @@ import itertools
 import jpype
 from featgraph import pathutils, metadata, genre_map
 from chromatictools import pickle
+import shutil
 import os
 import numpy as np
 import pandas as pd
@@ -183,6 +184,25 @@ class BVGraph:
       array of doubles: Array of outdegrees"""
     return load_as_doubles(self.path("stats", "outdegrees"))
 
+  def _copy_metadata(self,
+                     other: "BVGraph",
+                     suffixes=(
+                         ("followers", "txt"),
+                         ("genre", "txt"),
+                         ("ids", "txt"),
+                         ("name", "txt"),
+                         ("popularity", "txt"),
+                         ("type", "txt"),
+                     )):
+    """Copy metadata from one graph basename to another
+
+    Args:
+      other (BVGraph): The other graph
+      suffixes: Metadata file suffixes"""
+    for s in suffixes:
+      if os.path.isfile(self.path(*s)):
+        shutil.copyfile(self.path(*s), other.path(*s))
+
   def compute_transpose(self, overwrite: bool = False, log: bool = True):
     """Compute the transpose of the graph
 
@@ -193,6 +213,27 @@ class BVGraph:
     path = self.path("transpose")
     if overwrite or pathutils.notisglob(path + "*", log=log):
       webgraph.Transform.main(["transposeOffline", self.base_path, path])
+      self._copy_metadata(self.transposed())
+
+  def transposed(self) -> "BVGraph":
+    """Get the transpose of the graph (must be precomputed)"""
+    return type(self)(base_path=self.path("transpose"), sep=self.sep)
+
+  def compute_symmetrized(self, overwrite: bool = False, log: bool = True):
+    """Compute the symmetrized graph
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    path = self.path("symmetrized")
+    if overwrite or pathutils.notisglob(path + "*", log=log):
+      webgraph.Transform.main(["symmetrizeOffline", self.base_path, path])
+      self._copy_metadata(self.symmetrized())
+
+  def symmetrized(self) -> "BVGraph":
+    """Get the symmetrized graph (must be precomputed)"""
+    return type(self)(base_path=self.path("symmetrized"), sep=self.sep)
 
   def pagerank_path(self, *suffix: str, alpha: float = 0.85):
     r"""Path of PageRank files
