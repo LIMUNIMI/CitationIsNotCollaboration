@@ -270,10 +270,16 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
 
     palette_fname = args.palette
     args.palette = collections.defaultdict(lambda: "#cccccc")
+    args.palette_desaturated = collections.defaultdict(lambda: "#cccccc")
     if palette_fname is not None:
       with open(palette_fname, encoding="utf-8") as f:
+        colors = importlib.import_module("matplotlib.colors")
         for k, v in json.load(f).items():
           args.palette[k] = v
+          c = colors.rgb_to_hsv(colors.to_rgb(v))
+          c[1] *= args.palette_saturation
+          c = np.array([*colors.hsv_to_rgb(c), args.palette_alpha])
+          args.palette_desaturated[k] = c
 
     return args
 

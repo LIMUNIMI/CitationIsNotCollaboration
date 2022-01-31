@@ -1,4 +1,5 @@
 """Make the plots for the paper"""
+import functools
 from featgraph import scriptutils, plots, logger
 from chromatictools import cli
 from matplotlib import pyplot as plt, colors
@@ -53,9 +54,6 @@ def main(*argv):
     centralities_titles = tuple(
         args.centrality_specs[c][0] for c in centralities)
 
-    def median_order(df, k, column="genre"):
-      return df.groupby(by=[column])[k].median().sort_values().iloc[::-1].index
-
     logger.info("Plotting centralities violin plots")
     # Structure figure
     _, axs = plt.subplots(
@@ -72,13 +70,17 @@ def main(*argv):
 
     # Plot
     for i, (ax, k) in enumerate(zip(axs, centralities_titles)):
-      vpl = sns.violinplot(data=df,
-                           y="genre",
-                           x=k,
-                           order=median_order(df, k),
-                           cut=0,
-                           orient="h",
-                           ax=ax)
+      plots.violinplot_set(sns.violinplot(ax=ax,
+                                          data=df,
+                                          y="genre",
+                                          x=k,
+                                          order=plots.median_order(
+                                              df, sort_by=k, group_by="genre"),
+                                          cut=0,
+                                          orient="h",
+                                          palette=args.palette_desaturated),
+                           zorder=100,
+                           ec=functools.partial(colors.to_rgba, alpha=0.125))
       ax.xaxis.set_label_position("top")
       ax.grid(axis="x")
       yt_labels = ax.get_yticklabels()
@@ -87,25 +89,44 @@ def main(*argv):
         for ytl in yt_labels:
           ytl.set_text(args.abbrev[ytl.get_text()])
       ax.set_yticklabels(yt_labels, size="small")
-
-      for c, b, d, w, x in zip(
-          map(args.palette.get, median_order(df, k)),  # Colors
-          vpl.collections[::2],  # Bodies
-          vpl.collections[1::2],  # Dots
-          vpl.lines[::2],  # Whiskers
-          vpl.lines[1::2],  # Boxes
-      ):
-        fc = colors.rgb_to_hsv(colors.to_rgb(c))
-        fc[1] *= args.palette_saturation
-        fc = np.array([*colors.hsv_to_rgb(fc), args.palette_alpha])
-        ec = fc.copy()
-        ec[-1] *= 0.125
-
-        b.set(fc=fc, ec=ec, zorder=100)
-        w.set(zorder=101)
-        x.set(zorder=102)
-        d.set(zorder=103)
     args.save_fig(violin_fname)
+  # ---------------------------------------------------------------------------
+
+  # --- Reciprocity violin plots by genre -------------------------------------
+  r_violin_fname = "reciprocity-violinplots.pdf"
+  if args.must_write(r_violin_fname):
+    # Compute reciprocity
+    graph.compute_transpose()
+    graph.compute_degrees()
+    graph.compute_reciprocity()
+
+    logger.info("Loading reciprocity dataframe")
+    k = "reciprocity"
+    df = graph.supergenre_dataframe(**{k: graph.reciprocity()})
+    df.drop(df.index[np.isnan(df[k])], inplace=True)
+    df.reset_index(inplace=True)
+    df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
+    df.reset_index(inplace=True)
+
+    # Plot
+    logger.info("Plotting reciprocity violin plots")
+    plots.violinplot_set(sns.violinplot(data=df,
+                                        y="genre",
+                                        x="reciprocity",
+                                        order=plots.median_order(
+                                            df, sort_by=k, group_by="genre"),
+                                        cut=0,
+                                        orient="h",
+                                        palette=args.palette_desaturated),
+                         zorder=100,
+                         ec=functools.partial(colors.to_rgba, alpha=0.125))
+    plt.gca().xaxis.set_label_position("top")
+    plt.gca().set_ylabel(None)
+    plt.gca().grid(axis="x")
+
+    plt.gcf().set_size_inches(
+        np.array([2 / 5, 10 / 8]) * mpl.rcParams["figure.figsize"][0])
+    args.save_fig(r_violin_fname)
   # ---------------------------------------------------------------------------
 
   # --- Centrality transitions ------------------------------------------------

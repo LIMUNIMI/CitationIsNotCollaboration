@@ -611,48 +611,117 @@ class BVGraph:
             couples=couples,
         ), f)
 
-  def self_loops(self) -> int:
-    """Load the number of self-loops from file.
+  def compute_reciprocity(self,
+                          overwrite: bool = False,
+                          tqdm: Optional = None,
+                          log: bool = True):
+    """Compute the reciprocity of the arcs of each node
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      tqdm: function to use for the progress bar
+      log (bool): If :data:`True`, then log if file was found"""
+    path = self.path("reciprocity", "dat")
+    if overwrite or pathutils.notisfile(path, log=log):
+      self_t = BVGraph(self.path("transpose"))
+
+      nit = self.nodeIterator()
+      nit_t = self_t.nodeIterator()
+      zit = zip(nit, nit_t)
+      if tqdm is not None:
+        zit = tqdm(zit, total=self.numNodes())
+
+      self_loops = np.zeros(self.numNodes(), dtype=bool)
+      couples = np.zeros(self.numNodes(), dtype=int)
+
+      # Check that the position is in the upper triangle of the
+      # adjacency matrix, optionally update count of self loops
+      def upper_triangle(r, c, update_loops: bool = False):
+        if update_loops and c == r:
+          nonlocal self_loops
+          self_loops[r] = True
+          return False
+        return c > r
+
+      # Get the iterator of current node successors that correspond
+      # to positions in the upper triangle of the adjacency matrix
+      def upper_triangle_it(n, it, update_loops: bool = False):
+        return filter(
+            functools.partial(upper_triangle, n, update_loops=update_loops),
+            featgraph.misc.NodeIteratorWrapper(it.successors()))
+
+      for i, _ in zit:
+        # assert i == _
+        # For each successor in the upper triangle of the matrix,
+        # check if it is also in the adjacent matrix
+        def in_adjacent(j,
+                        adj=tuple(
+                            upper_triangle_it(i, nit_t, update_loops=False))):
+          return j in adj
+
+        for j in filter(in_adjacent, upper_triangle_it(i,
+                                                       nit,
+                                                       update_loops=True)):
+          couples[i] += 1
+          couples[j] += 1
+      pickle.save_pickled(dict(
+          self_loops=self_loops,
+          couples=couples,
+      ), path)
+
+  def self_loops(self) -> np.ndarray:
+    """Load the self-loops per node from file.
     The file is computed by :meth:`compute_reciprocity`
 
     Returns:
-      int: Number of self-loops in the graph"""
-    with open(self.path("reciprocity", "json"), mode="r",
-              encoding="utf-8") as f:
-      return json.load(f)["self_loops"]
+      array of bool: Self-loops per node"""
+    return pickle.read_pickled(self.path("reciprocity", "dat"))["self_loops"]
 
   def arc_couples(self) -> int:
-    """Load the number of reciprocated arc couples from file.
+    """Load the number of reciprocated arcs per node from file.
     The file is computed by :meth:`compute_reciprocity`
 
     Returns:
-      int: Number of reciprocated arc couples in the graph"""
-    with open(self.path("reciprocity", "json"), mode="r",
-              encoding="utf-8") as f:
-      return json.load(f)["couples"]
+      int: Number of reciprocated arc couples per node"""
+    return pickle.read_pickled(self.path("reciprocity", "dat"))["couples"]
 
-  def reciprocity(self) -> float:
-    """Load the reciprocity (correlation coefficient) from file.
-    The file is computed by :meth:`compute_reciprocity`
+  def graph_reciprocity(self) -> float:
+    """Load the reciprocity stats from file and compute the correlation
+    coefficient for the entire graph. The file is computed by
+    :meth:`compute_reciprocity`
 
     Returns:
-      float: Reciprocity the graph"""
+      float: Reciprocity of the graph"""
     n_entries = self.numNodes() * (self.numNodes() - 1)
-    n_valid_arcs = self.numArcs() - self.self_loops()
-    cc = (2 * n_entries * self.arc_couples() - n_valid_arcs * n_valid_arcs) / (
-        (n_entries - n_valid_arcs) * n_valid_arcs)
-    return cc
+    n_valid_arcs = self.numArcs() - self.self_loops().astype(int).sum()
 
-  def reciprocal_probability(self) -> float:
-    """Load the reciprocal probability (probability that an
-    edge is reciprocated) from file.
-    The file is computed by :meth:`compute_reciprocity`
+    a_avg = n_valid_arcs / n_entries
+    p_cnd = self.arc_couples().sum() / n_valid_arcs
+
+    return (p_cnd - a_avg) / (1 - a_avg)
+
+  def reciprocity(self) -> np.ndarray:
+    """Load the reciprocity stats from file and compute the correlation
+    coefficient for each node. The file is computed by
+    :meth:`compute_reciprocity`. Also, the degrees of each node are needed:
+    they are computed by :meth:`compute_degrees`.
 
     Returns:
-      float: Reciprocal probability"""
-    a_avg = (self.numArcs() - self.self_loops()) / (self.numNodes() *
-                                                    (self.numNodes() - 1))
-    return a_avg + (1 - a_avg) * self.reciprocity()
+      array of float: Reciprocity of each node"""
+    n_entries = self.numNodes() - 1
+    n_loops = self.self_loops().astype(int)
+    n_in = np.array(self.indegrees()).astype(int) - n_loops
+    n_out = np.array(self.outdegrees()).astype(int) - n_loops
+    del n_loops
+
+    a_avg_in = n_in / n_entries
+    a_avg_out = n_out / n_entries
+    p_cnd = self.arc_couples() / n_entries
+
+    return (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
+                                                    (1 - a_avg_in) *
+                                                    (1 - a_avg_out))
 
   def compute_scc(self,
                   sizes: bool = True,

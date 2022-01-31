@@ -895,3 +895,60 @@ class ExponentFormatter(mpl.ticker.ScalarFormatter):
   def _set_order_of_magnitude(self):
     if self.orderOfMagnitude is None:
       super()._set_order_of_magnitude()
+
+
+def violinplot_iterator(vpl):
+  """Iterator over violinplot components
+
+  Args:
+    vpl: Output of violinplot
+
+  Yields:
+    tuple: Violin body, median dot, whiskers line, box line"""
+  return zip(
+      vpl.collections[::2],  # Bodies
+      vpl.collections[1::2],  # Dots
+      vpl.lines[::2],  # Whiskers
+      vpl.lines[1::2],  # Boxes
+  )
+
+
+def violinplot_set(vpl, zorder: Optional[int] = None, ec: Optional = None):
+  """Set values for violinplots
+
+  Args:
+    vpl: Output of violinplot
+    zorder (int): If specified, set this as the base
+      zorder of the components
+    ec: Violin bodies edge color. If a callable, it should accept the facecolor
+      as argument
+
+  Returns:
+    vpl"""
+  for b, d, w, x in violinplot_iterator(vpl):
+    if zorder is not None:
+      b.set(zorder=zorder)
+      w.set(zorder=zorder + 1)
+      x.set(zorder=zorder + 2)
+      d.set(zorder=zorder + 3)
+    if ec is not None:
+      try:
+        b.set(ec=ec(b.get_fc()))
+      except TypeError:
+        b.set(ec=ec)
+  return vpl
+
+
+def median_order(data: "DataFrame", sort_by: str, group_by: str):
+  """Index function for ordering groups by median value.
+  Useful for seaborn plots
+
+  Args:
+    data (DataFrame): Dataframe to sort
+    sort_by (str): Column of the values by which to sort
+    group_by (str): Column of the categories to sort
+
+  Returns:
+    callable: The index function"""
+  return data.groupby(
+      by=[group_by])[sort_by].median().sort_values().iloc[::-1].index
