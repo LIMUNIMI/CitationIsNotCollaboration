@@ -5,6 +5,8 @@ import functools
 import itertools
 import jpype
 from featgraph import pathutils, metadata, genre_map
+from chromatictools import pickle
+import shutil
 import os
 import numpy as np
 import pandas as pd
@@ -182,6 +184,25 @@ class BVGraph:
       array of doubles: Array of outdegrees"""
     return load_as_doubles(self.path("stats", "outdegrees"))
 
+  def _copy_metadata(self,
+                     other: "BVGraph",
+                     suffixes=(
+                         ("followers", "txt"),
+                         ("genre", "txt"),
+                         ("ids", "txt"),
+                         ("name", "txt"),
+                         ("popularity", "txt"),
+                         ("type", "txt"),
+                     )):
+    """Copy metadata from one graph basename to another
+
+    Args:
+      other (BVGraph): The other graph
+      suffixes: Metadata file suffixes"""
+    for s in suffixes:
+      if os.path.isfile(self.path(*s)):
+        shutil.copyfile(self.path(*s), other.path(*s))
+
   def compute_transpose(self, overwrite: bool = False, log: bool = True):
     """Compute the transpose of the graph
 
@@ -192,6 +213,27 @@ class BVGraph:
     path = self.path("transpose")
     if overwrite or pathutils.notisglob(path + "*", log=log):
       webgraph.Transform.main(["transposeOffline", self.base_path, path])
+      self._copy_metadata(self.transposed())
+
+  def transposed(self) -> "BVGraph":
+    """Get the transpose of the graph (must be precomputed)"""
+    return type(self)(base_path=self.path("transpose"), sep=self.sep)
+
+  def compute_symmetrized(self, overwrite: bool = False, log: bool = True):
+    """Compute the symmetrized graph
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    path = self.path("symmetrized")
+    if overwrite or pathutils.notisglob(path + "*", log=log):
+      webgraph.Transform.main(["symmetrizeOffline", self.base_path, path])
+      self._copy_metadata(self.symmetrized())
+
+  def symmetrized(self) -> "BVGraph":
+    """Get the symmetrized graph (must be precomputed)"""
+    return type(self)(base_path=self.path("symmetrized"), sep=self.sep)
 
   def pagerank_path(self, *suffix: str, alpha: float = 0.85):
     r"""Path of PageRank files
@@ -597,3 +639,113 @@ class BVGraph:
     a_avg = (self.numArcs() - self.self_loops()) / (self.numNodes() *
                                                     (self.numNodes() - 1))
     return a_avg + (1 - a_avg) * self.reciprocity()
+
+  def compute_scc(self,
+                  sizes: bool = True,
+                  renumber: bool = True,
+                  buckets: bool = True,
+                  overwrite: bool = False,
+                  log: bool = True):
+    """Compute strongly connected components
+
+    Args:
+      sizes (bool): If :data:`True` (default), then compute component sizes
+      sizes (bool): If :data:`True` (default), then renumber components in
+        decreasing-size order
+      sizes (bool): If :data:`True` (default), then compute buckets (nodes
+        belonging to a bucket component, i.e.,
+        a terminal nondangling component)
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    args = []
+    paths = []
+    if sizes:
+      args.append("--sizes")
+      paths.append(self.path("scc"))
+      paths.append(self.path("sccsizes"))
+      paths.append(self.path("node_sccsizes", "dat"))
+    if renumber:
+      args.append("--renumber")
+    if buckets:
+      args.append("--buckets")
+      paths.append(self.path("buckets"))
+
+    if overwrite or pathutils.notisfile(
+        paths, lambda x: all(map(os.path.isfile, x)), log=log):
+      webgraph.algo.StronglyConnectedComponents.main([*args, self.base_path])
+      node_scc_sizes = np.array(list(
+          map(int, map(self.scc_sizes().__getitem__, map(int, self.scc())))),
+                                dtype=int)
+      pickle.save_pickled(node_scc_sizes, self.path("node_sccsizes", "dat"))
+
+  def scc(self):
+    """Load strongly connected components labels vector from file
+
+    Returns:
+      array of integers: Array of strongly connected components labels"""
+    return load_as_doubles(self.path("scc"), input_type="Integer")
+
+  def scc_sizes(self):
+    """Load strongly connected components sizes vector from file
+
+    Returns:
+      array of integers: Array of strongly connected components sizes"""
+    return load_as_doubles(self.path("sccsizes"), input_type="Integer")
+
+  def node_scc_sizes(self):
+    """Load the array of the strongly connected component size of each node
+
+    Returns:
+      array of integers: Array of strongly connected component sizes by node"""
+    return pickle.read_pickled(self.path("node_sccsizes", "dat"))
+
+  compute_node_scc_sizes = compute_scc
+
+  def compute_wcc(self,
+                  sizes: bool = True,
+                  renumber: bool = True,
+                  buckets: bool = True,
+                  overwrite: bool = False,
+                  log: bool = True):
+    """Compute weakly connected components.
+    Requires the symmetrized graph to be computed.
+
+    Args:
+      sizes (bool): If :data:`True` (default), then compute component sizes
+      sizes (bool): If :data:`True` (default), then renumber components in
+        decreasing-size order
+      sizes (bool): If :data:`True` (default), then compute buckets (nodes
+        belonging to a bucket component, i.e.,
+        a terminal nondangling component)
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    self.symmetrized().compute_scc(sizes=sizes,
+                                   renumber=renumber,
+                                   buckets=buckets,
+                                   overwrite=overwrite,
+                                   log=log)
+
+  def wcc(self):
+    """Load weakly connected components labels vector from file
+
+    Returns:
+      array of integers: Array of weakly connected components labels"""
+    return self.symmetrized().scc()
+
+  def wcc_sizes(self):
+    """Load weakly connected components sizes vector from file
+
+    Returns:
+      array of integers: Array of weakly connected components sizes"""
+    return self.symmetrized().scc_sizes()
+
+  def node_wcc_sizes(self):
+    """Load the array of the weakly connected component size of each node
+
+    Returns:
+      array of integers: Array of weakly connected component sizes by node"""
+    return self.symmetrized().node_scc_sizes()
+
+  compute_node_wcc_sizes = compute_wcc

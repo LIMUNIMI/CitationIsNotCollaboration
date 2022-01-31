@@ -21,6 +21,9 @@ dist
 *.stats
 *.ranks
 *.reciprocity.json
+*.scc
+*.sccsizes
+*.buckets
 
 # Misc
 *.txt
@@ -31,6 +34,7 @@ dist
 *.png
 *.svg
 *.pdf
+*.dat
 
 # LaTeX
 *.tex

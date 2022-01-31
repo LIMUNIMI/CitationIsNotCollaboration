@@ -178,12 +178,23 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
         False,
         "Harmonic Centrality")),
       ("closenessc", (
-        r"closeness centrality $\times10^7$" if mpl.rcParams["text.usetex"] \
-          else "closeness-centrality * 1e7",
-        lambda x: x * 1e7,
+        "closeness centrality",
+        None,
         None, #"nnodes",
         False,
         "Closeness Centrality")),
+      ("node_scc_sizes", (
+        "scc size",
+        None,
+        "nnodes",
+        False,
+        "Strongly Connected Component Size")),
+      ("node_wcc_sizes", (
+        "wcc size",
+        None,
+        "nnodes",
+        False,
+        "Weakly Connected Component Size"))
     ))
     args.norm_str = {
         None: "",
@@ -261,11 +272,11 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
     return args
 
   @staticmethod
-  def perform_threshold_comparison(args, plot_name_fn):
+  def perform_threshold_comparison(args, *plot_fns):
     """Perform comparison
     Args:
       args: Parsed CLI arguments
-      plot_name_fn: Function that maps centrality key to plot file name"""
+      plot_fns: Plot filenames"""
     sgc_graph = jwebgraph.utils.BVGraph(args.sgc_path)
     sgc = importlib.import_module("featgraph.sgc")
     tc = sgc.ThresholdComparison(
@@ -276,7 +287,7 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
 
     # Skip if all images are found
     if not (args.overwrite or pathutils.notisfile(
-        list(map(args.fig_path, map(plot_name_fn, tc.centralities.values()))),
+        list(map(args.fig_path, plot_fns)),
         func=lambda x: all(map(os.path.exists, x)),
     )):
       return None, False

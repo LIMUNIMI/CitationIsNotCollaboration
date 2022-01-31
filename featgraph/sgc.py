@@ -312,6 +312,8 @@ class ThresholdComparison:
           "Harmonic Centrality": "harmonicc",
           "Pagerank": "pagerank",
           "Closeness Centrality": "closenessc",
+          "Strongly Connected Component Size": "node_scc_sizes",
+          "Weakly Connected Component Size": "node_wcc_sizes",
       }
     self.attribute = attribute
     self.attr_fmt = attr_fmt
@@ -384,6 +386,9 @@ class ThresholdComparison:
       subg = self.subgraph(baseg, th)
       logger.info("Computing %s for graph %s", attr_name, subg.basename)
       getattr(subg, f"compute_{attr}")(overwrite=overwrite)
+      if attr == "transpose":
+        subg.compute_symmetrized(overwrite=overwrite)
+        subg.symmetrized().compute_transpose(overwrite=overwrite)
 
   def dataframe(self,
                 csv_path: Optional[str] = None,
