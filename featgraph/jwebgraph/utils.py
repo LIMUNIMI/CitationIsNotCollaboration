@@ -5,6 +5,7 @@ import functools
 import itertools
 import jpype
 from featgraph import pathutils, metadata, genre_map
+from chromatictools import pickle
 import os
 import numpy as np
 import pandas as pd
@@ -622,14 +623,20 @@ class BVGraph:
       args.append("--sizes")
       paths.append(self.path("scc"))
       paths.append(self.path("sccsizes"))
+      paths.append(self.path("node_sccsizes", "dat"))
     if renumber:
       args.append("--renumber")
     if buckets:
       args.append("--buckets")
       paths.append(self.path("buckets"))
 
-    if overwrite or any(pathutils.notisfile(p, log=log) for p in paths):
+    if overwrite or pathutils.notisfile(
+        paths, lambda x: all(map(os.path.isfile, x)), log=log):
       webgraph.algo.StronglyConnectedComponents.main([*args, self.base_path])
+      node_scc_sizes = np.array(list(
+          map(int, map(self.scc_sizes().__getitem__, map(int, self.scc())))),
+                                dtype=int)
+      pickle.save_pickled(node_scc_sizes, self.path("node_sccsizes", "dat"))
 
   def scc(self):
     """Load strongly connected components labels vector from file
@@ -650,8 +657,6 @@ class BVGraph:
 
     Returns:
       array of integers: Array of strongly connected component sizes by node"""
-    sizes = self.scc_sizes()
-    for i in map(int, self.scc()):
-      yield int(sizes[i])
+    return pickle.read_pickled(self.path("node_sccsizes", "dat"))
 
   compute_node_scc_sizes = compute_scc
