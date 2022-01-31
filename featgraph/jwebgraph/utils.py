@@ -701,3 +701,51 @@ class BVGraph:
     return pickle.read_pickled(self.path("node_sccsizes", "dat"))
 
   compute_node_scc_sizes = compute_scc
+
+  def compute_wcc(self,
+                  sizes: bool = True,
+                  renumber: bool = True,
+                  buckets: bool = True,
+                  overwrite: bool = False,
+                  log: bool = True):
+    """Compute weakly connected components.
+    Requires the symmetrized graph to be computed.
+
+    Args:
+      sizes (bool): If :data:`True` (default), then compute component sizes
+      sizes (bool): If :data:`True` (default), then renumber components in
+        decreasing-size order
+      sizes (bool): If :data:`True` (default), then compute buckets (nodes
+        belonging to a bucket component, i.e.,
+        a terminal nondangling component)
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    self.symmetrized().compute_scc(sizes=sizes,
+                                   renumber=renumber,
+                                   buckets=buckets,
+                                   overwrite=overwrite,
+                                   log=log)
+
+  def wcc(self):
+    """Load weakly connected components labels vector from file
+
+    Returns:
+      array of integers: Array of weakly connected components labels"""
+    return self.symmetrized().scc()
+
+  def wcc_sizes(self):
+    """Load weakly connected components sizes vector from file
+
+    Returns:
+      array of integers: Array of weakly connected components sizes"""
+    return self.symmetrized().scc_sizes()
+
+  def node_wcc_sizes(self):
+    """Load the array of the weakly connected component size of each node
+
+    Returns:
+      array of integers: Array of weakly connected component sizes by node"""
+    return self.symmetrized().node_scc_sizes()
+
+  compute_node_wcc_sizes = compute_wcc
