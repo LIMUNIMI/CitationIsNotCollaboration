@@ -26,28 +26,32 @@ def main(*argv):
   if args.must_write(violin_fname):
     # Compute centralities
     graph.compute_transpose()
+    graph.compute_symmetrized()
+
+    centralities = (
+        "indegrees",
+        "pagerank",
+        "harmonicc",
+        "linc",
+        "closenessc",
+    )
     for c in args.centrality_specs:
       getattr(graph, f"compute_{c}")()
     logger.info("Loading centralities dataframe")
-    df = graph.supergenre_dataframe(indegrees=graph.indegrees(),
-                                    pagerank=graph.pagerank(),
-                                    closenessc=graph.closenessc(),
-                                    harmonicc=graph.harmonicc())
+    df = graph.supergenre_dataframe(
+        **{c: getattr(graph, c)() for c in centralities})
 
     # Preprocess dataframe
     logger.info("Preprocessing centralities dataframe")
     df.drop((i for i, g in enumerate(df.genre) if g == "other"), inplace=True)
     for k, (fn_k, fn, _, _, _) in args.centrality_specs.items():
-      if fn is None:
-        fn = lambda x: x
-      df[fn_k] = fn(df[k])
+      if k in df.columns:
+        if fn is None:
+          fn = lambda x: x
+        df[fn_k] = fn(df[k])
 
-    centralities = (
-        args.centrality_specs["indegrees"][0],
-        args.centrality_specs["pagerank"][0],
-        args.centrality_specs["harmonicc"][0],
-        args.centrality_specs["closenessc"][0],
-    )
+    centralities_titles = tuple(
+        args.centrality_specs[c][0] for c in centralities)
 
     def median_order(df, k, column="genre"):
       return df.groupby(by=[column])[k].median().sort_values().iloc[::-1].index
@@ -58,15 +62,16 @@ def main(*argv):
         1,
         len(centralities),
         figsize=np.array([1, 10 / 16]) * mpl.rcParams["figure.figsize"][0] * 2,
-        gridspec_kw=dict(wspace=0.25),
+        gridspec_kw=dict(wspace=0.275),
     )
 
-    axs[centralities.index(
-        args.centrality_specs["harmonicc"][0])].xaxis.set_major_formatter(
-            plots.ExponentFormatter(exponent=5))
+    axs[centralities.index("harmonicc")].xaxis.set_major_formatter(
+        plots.ExponentFormatter(exponent=5))
+    axs[centralities.index("linc")].xaxis.set_major_formatter(
+        plots.ExponentFormatter(exponent=5))
 
     # Plot
-    for i, (ax, k) in enumerate(zip(axs, centralities)):
+    for i, (ax, k) in enumerate(zip(axs, centralities_titles)):
       vpl = sns.violinplot(data=df,
                            y="genre",
                            x=k,
@@ -109,17 +114,19 @@ def main(*argv):
   df, plot_comparison = parser.perform_threshold_comparison(
       args, transition_plot_fname, cc_sizes_fname)
   if plot_comparison:
-    for fname, centralities, scale, legend_kw in (
+    for fname, centralities, scale, legend_kw, subplot_kw in (
         (
             transition_plot_fname,
             (
                 "indegrees",
                 "pagerank",
                 "harmonicc",
+                "linc",
                 "closenessc",
             ),
             2,
             dict(loc="upper left"),
+            dict(sharex=True),
         ),
         (
             cc_sizes_fname,
@@ -129,11 +136,12 @@ def main(*argv):
             ),
             1,
             dict(loc="lower left"),
+            dict(sharex=True, sharey=True),
         ),
     ):
       if args.must_write(fname):
         n = len(centralities)
-        fig, ax = plt.subplots(2, n, sharex=True)
+        fig, ax = plt.subplots(2, n, **subplot_kw)
         for i, k_s in enumerate(centralities):
           _, _, norm, logy, k = args.centrality_specs[k_s]
           logger.info("Plotting %s", k)

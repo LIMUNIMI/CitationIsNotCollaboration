@@ -364,6 +364,20 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
+  def compute_linc(self, **kwargs):
+    """Compute the Lin Centrality with HyperBall
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-L", path=self.path("linc", "ranks"), **kwargs)
+
+  def linc(self):
+    """Load the Lin Centrality vector from file
+
+    Returns:
+      array of doubles: Array of Lin Centralities"""
+    return load_as_doubles(self.path("linc", "ranks"), "Float")
+
   def transform_map(
       self,
       dest_path: str,

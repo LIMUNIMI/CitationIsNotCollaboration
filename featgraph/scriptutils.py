@@ -183,6 +183,12 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
         None, #"nnodes",
         False,
         "Closeness Centrality")),
+      ("linc", (
+        "lin centrality",
+        None,
+        "nnodes",
+        False,
+        "Lin Centrality")),
       ("node_scc_sizes", (
         "scc size",
         None,
