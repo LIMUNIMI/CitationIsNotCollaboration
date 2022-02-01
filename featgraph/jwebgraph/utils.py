@@ -555,67 +555,8 @@ class BVGraph:
                           overwrite: bool = False,
                           tqdm: Optional = None,
                           log: bool = True):
-    """Compute the reciprocity of the graph, as defined in
-    *"Garlaschelli, D., & Loffredo, M. I. (2004).
-    Patterns of link reciprocity in directed networks.
-    Physical review letters, 93(26), 268701"*
-
-    Args:
-      overwrite (bool): If :data:`False` (default), then skip if the
-        output file is found. Otherwise always run
-      tqdm: function to use for the progress bar
-      log (bool): If :data:`True`, then log if file was found"""
-    path = self.path("reciprocity", "json")
-    if overwrite or pathutils.notisfile(path, log=log):
-      self_t = BVGraph(self.path("transpose"))
-
-      nit = self.nodeIterator()
-      nit_t = self_t.nodeIterator()
-      zit = zip(nit, nit_t)
-      if tqdm is not None:
-        zit = tqdm(zit, total=self.numNodes())
-
-      self_loops = 0
-      couples = 0
-
-      # Check that the position is in the upper triangle of the
-      # adjacency matrix, optionally update count of self loops
-      def upper_triangle(r, c, update_loops: bool = False):
-        if update_loops and c == r:
-          nonlocal self_loops
-          self_loops += 1
-          return False
-        return c > r
-
-      # Get the iterator of current node successors that correspond
-      # to positions in the upper triangle of the adjacency matrix
-      def upper_triangle_it(n, it, update_loops: bool = False):
-        return filter(
-            functools.partial(upper_triangle, n, update_loops=update_loops),
-            featgraph.misc.NodeIteratorWrapper(it.successors()))
-
-      for i, _ in zit:
-        # assert i == _
-        # For each successor in the upper triangle of the matrix,
-        # check if it is also in the adjacent matrix
-        def in_adjacent(j,
-                        adj=tuple(
-                            upper_triangle_it(i, nit_t, update_loops=False))):
-          return j in adj
-
-        couples += sum(
-            map(in_adjacent, upper_triangle_it(i, nit, update_loops=True)))
-      with open(path, mode="w", encoding="utf-8") as f:
-        json.dump(dict(
-            self_loops=self_loops,
-            couples=couples,
-        ), f)
-
-  def compute_reciprocity(self,
-                          overwrite: bool = False,
-                          tqdm: Optional = None,
-                          log: bool = True):
     """Compute the reciprocity of the arcs of each node
+    by counting self-loops and reciprocated arc couples
 
     Args:
       overwrite (bool): If :data:`False` (default), then skip if the
