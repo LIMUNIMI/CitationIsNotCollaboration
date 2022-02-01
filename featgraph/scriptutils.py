@@ -78,6 +78,7 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
                palette_file: Optional[str] = None,
                max_width: float = 10.0,
                max_height: float = 10.0,
+               default_suffix: str = ".pdf",
                **kwargs):
     super().__init__(**kwargs)
 
@@ -85,6 +86,9 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
     self.add_argument("dest_path",
                       help="The destination path (directory) "
                       "for the plot files")
+    self.add_argument("--suffix",
+                      default=default_suffix,
+                      help="The suffix for figures")
     self.add_argument("--csv-path",
                       default=None,
                       help="The path of the centralities summary dataframe")
@@ -242,7 +246,8 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
 
     # Prepare figure saving
     def fig_path(filename: str) -> str:
-      return os.path.join(args.dest_path, filename)
+      ext = "" if "." in os.path.basename(filename)[1:] else args.suffix
+      return os.path.join(args.dest_path, f"{filename}{ext}")
 
     args.fig_path = fig_path
 

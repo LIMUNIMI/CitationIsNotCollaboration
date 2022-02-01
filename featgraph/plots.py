@@ -588,7 +588,7 @@ def degrees_scatterplot(graph: "featgraph.jwebgraph.utils.BVGraph",
   plt.minorticks_off()
   translate_log_ticks(1)
   bs = "\\"
-  rec = f"Reciprocity ${bs}rho = ${graph.reciprocity():.5f}"
+  rec = f"Reciprocity ${bs}rho = ${graph.graph_reciprocity():.5f}"
   plt.gca().set_title(f"{plt.gca().get_title()[:-1]}, {rec})")
 
 

@@ -1,4 +1,4 @@
-"""Make the plots for the paper"""
+"""Make the plots for the paper or for the slides"""
 import functools
 from featgraph import scriptutils, plots, logger
 from chromatictools import cli
@@ -23,7 +23,7 @@ def main(*argv):
   graph = args.graph
 
   # --- Violin plots by genre -------------------------------------------------
-  violin_fname = "violinplots.pdf"
+  violin_fname = "violinplots"
   if args.must_write(violin_fname):
     # Compute centralities
     graph.compute_transpose()
@@ -60,7 +60,7 @@ def main(*argv):
         1,
         len(centralities),
         figsize=np.array([1, 10 / 16]) * mpl.rcParams["figure.figsize"][0] * 2,
-        gridspec_kw=dict(wspace=0.275),
+        gridspec_kw=dict(wspace=0.32),
     )
 
     axs[centralities.index("harmonicc")].xaxis.set_major_formatter(
@@ -93,7 +93,7 @@ def main(*argv):
   # ---------------------------------------------------------------------------
 
   # --- Reciprocity violin plots by genre -------------------------------------
-  r_violin_fname = "reciprocity-violinplots.pdf"
+  r_violin_fname = "reciprocity-violinplots"
   if args.must_write(r_violin_fname):
     # Compute reciprocity
     graph.compute_transpose()
@@ -130,8 +130,8 @@ def main(*argv):
   # ---------------------------------------------------------------------------
 
   # --- Centrality transitions ------------------------------------------------
-  transition_plot_fname = "centrality-transitions.pdf"
-  cc_sizes_fname = "cc-transitions.pdf"
+  transition_plot_fname = "centrality-transitions"
+  cc_sizes_fname = "cc-transitions"
   df, plot_comparison = parser.perform_threshold_comparison(
       args, transition_plot_fname, cc_sizes_fname)
   if plot_comparison:
@@ -203,7 +203,7 @@ def main(*argv):
   # ---------------------------------------------------------------------------
 
   # --- Plot degree distribution ----------------------------------------------
-  degree_fname = "degrees.pdf"
+  degree_fname = "degrees"
   if args.must_write(degree_fname):
     logger.info("Computing degrees")
     graph.compute_transpose()
@@ -228,7 +228,7 @@ def main(*argv):
   # ---------------------------------------------------------------------------
 
   # --- Plot distance probability function ------------------------------------
-  neighborhhod_fname = "distances.pdf"
+  neighborhhod_fname = "distances"
   if args.must_write(neighborhhod_fname):
     logger.info("Computing neighbourhood function")
     graph.compute_transpose()
