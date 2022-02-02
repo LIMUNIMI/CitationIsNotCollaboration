@@ -111,21 +111,24 @@ def main(*argv):
     # Plot
     logger.info("Plotting reciprocity violin plots")
     plots.violinplot_set(sns.violinplot(data=df,
-                                        y="genre",
-                                        x="reciprocity",
+                                        x="genre",
+                                        y="reciprocity",
                                         order=plots.median_order(
                                             df, sort_by=k, group_by="genre"),
                                         cut=0,
-                                        orient="h",
+                                        orient="v",
                                         palette=args.palette_desaturated),
                          zorder=100,
                          ec=functools.partial(colors.to_rgba, alpha=0.125))
-    plt.gca().xaxis.set_label_position("top")
+    # plt.gca().yaxis.set_label_position("top")
+    plt.gca().set_xlabel(None)
     plt.gca().set_ylabel(None)
-    plt.gca().grid(axis="x")
+    plt.gca().set_title("reciprocity")
+    plt.gca().grid(axis="y")
+    plt.gca().tick_params(labelsize="small")
 
     plt.gcf().set_size_inches(
-        np.array([2 / 5, 10 / 8]) * mpl.rcParams["figure.figsize"][0])
+        np.array([1, 9 / 27]) * mpl.rcParams["figure.figsize"][0] * 2)
     args.save_fig(r_violin_fname)
   # ---------------------------------------------------------------------------
 
