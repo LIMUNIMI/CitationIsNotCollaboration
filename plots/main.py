@@ -128,7 +128,7 @@ def main(*argv):
     plt.gca().tick_params(labelsize="small")
 
     plt.gcf().set_size_inches(
-        np.array([1, 9 / 27]) * mpl.rcParams["figure.figsize"][0] * 2)
+        np.array([1, 0.25]) * mpl.rcParams["figure.figsize"][0] * 2)
     args.save_fig(r_violin_fname)
   # ---------------------------------------------------------------------------
 
