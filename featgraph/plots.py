@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import itertools
 import importlib
+import operator
 import arviz
 import featgraph.misc
 from featgraph import bayesian_comparison, metadata
@@ -1065,3 +1066,36 @@ def centrality_correlations(df: pd.DataFrame,
   if plot:
     return df_, fig, axs
   return df_
+
+
+mul_suffix: str = "\n" + r"($\times n_{nodes}$)"
+div_suffix: str = "\n" + r"($/ n_{nodes}$)"
+
+
+def preprocessed_additions(df: pd.DataFrame,
+                           preps: dict = {
+                               mul_suffix: operator.mul,
+                               div_suffix: operator.truediv
+                           },
+                           raw: bool = True):
+  """Iterator for preprocessed versions of dataframe
+  (meant as a helper for :func:`centrality_correlations`)
+
+  Args:
+    df (DataFrame): Centrality transitions dataframe
+    preps (dict): Dictionary of preprocessing function and
+      column name suffixes
+    raw (bool): If :data:`True` (default), then yield also
+      the raw version of the dataframe"""
+  extra = df.copy()
+  if raw:
+    yield extra
+  extra["std"] = None
+  extra["quartile-1"] = None
+  extra["quartile-3"] = None
+  for s, p in preps.items():
+    extra_p = extra.copy()
+    extra_p["centrality"] += s
+    extra_p["mean"] = p(extra_p["mean"], extra_p["nnodes"])
+    extra_p["median"] = p(extra_p["median"], extra_p["nnodes"])
+    yield extra_p
