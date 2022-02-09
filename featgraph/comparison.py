@@ -18,8 +18,7 @@ metrics_dict = {
         (lambda g, _: g.closenessc(), lambda g, _: g.compute_closenessc()),
     "harmonic":
         (lambda g, _: g.harmonicc(), lambda g, _: g.compute_harmonicc()),
-    "lin":
-        (lambda g, _: g.linc(), lambda g, _: g.compute_linc()),
+    "lin": (lambda g, _: g.linc(), lambda g, _: g.compute_linc()),
     "indegree": (lambda g, _: g.indegrees(), lambda g, _: g.compute_degrees()),
     "pagerank": (lambda g, a: g.pagerank(alpha=a.pagerank_alpha),
                  lambda g, a: g.compute_pagerank(alpha=a.pagerank_alpha)),
