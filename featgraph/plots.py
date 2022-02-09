@@ -1,5 +1,5 @@
 """Plot utilities"""
-from matplotlib import pyplot as plt, patches
+from matplotlib import pyplot as plt, patches, colors
 import matplotlib as mpl
 import seaborn as sns
 import networkx as nx
@@ -7,15 +7,17 @@ import pandas as pd
 import numpy as np
 import itertools
 import importlib
+import operator
 import arviz
-from featgraph.misc import VectorOrCallable
+import featgraph.misc
 from featgraph import bayesian_comparison, metadata
+from scipy import stats
 from typing import Optional, Callable, Dict, Tuple, Any, Sequence
 
 
 def scatter(
-    x: VectorOrCallable,
-    y: VectorOrCallable,
+    x: featgraph.misc.VectorOrCallable,
+    y: featgraph.misc.VectorOrCallable,
     kendall_tau: bool = True,
     ax: Optional[plt.Axes] = None,
     xlabel: Optional[str] = None,
@@ -528,8 +530,8 @@ def hdi_monomodal(p,
   return x[l], x[r - 1]
 
 
-def scatter_refs(x: VectorOrCallable,
-                 y: VectorOrCallable,
+def scatter_refs(x: featgraph.misc.VectorOrCallable,
+                 y: featgraph.misc.VectorOrCallable,
                  ref_artists: Sequence[metadata.Artist],
                  legend_kw: Optional[dict] = None,
                  **kwargs):
@@ -939,7 +941,7 @@ def violinplot_set(vpl, zorder: Optional[int] = None, ec: Optional = None):
   return vpl
 
 
-def median_order(data: "DataFrame", sort_by: str, group_by: str):
+def median_order(data: pd.DataFrame, sort_by: str, group_by: str):
   """Index function for ordering groups by median value.
   Useful for seaborn plots
 
@@ -952,3 +954,148 @@ def median_order(data: "DataFrame", sort_by: str, group_by: str):
     callable: The index function"""
   return data.groupby(
       by=[group_by])[sort_by].median().sort_values().iloc[::-1].index
+
+
+def centrality_correlations(df: pd.DataFrame,
+                            yk: str,
+                            xk: Optional[Sequence[str]] = None,
+                            graphs: Optional[Sequence[str]] = None,
+                            plot: bool = True,
+                            cc_fn=stats.pearsonr,
+                            plt_fn=sns.scatterplot,
+                            plt_kws=None,
+                            palette: Optional[Dict] = None,
+                            p_thresholds: Optional[Sequence[float]] = None,
+                            fig=None,
+                            axs=None,
+                            subplot_kws: Optional[Dict] = None):
+  """Compute and plot centrality correlations
+
+  Args:
+    df (DataFrame): Centrality transitions dataframe
+    yk (str): Reference centrality label
+    xk (sequence of str): Other centralities labels
+    graphs (sequence of str): Sequence of graph labels
+    plot (bool): If :data:`True` (default), then plot paired plots
+    cc_fn (callable): Correlation coefficient function. It should accept two
+      vectors and return two scalars: the correlation
+      coefficient, and the p-value. Default is Pearson correlation coefficient
+    plt_fn (callable): Plot function
+    plt_kws (dict): Plot keyword arguments
+    palette (dict): Color associations for groups
+    p_thresholds (sequence of float): p-value threshold values for significance
+    fig: Figure for plots
+    axs: Axes matrix for plots
+    subplot_kws (dict): Keyword arguments for subplots
+
+  Returns:
+    Dataframe and, if :data:`plot` is :data:`True`, figure and axes"""
+  # Initialize results dataframe as dictionary
+  results = dict(
+      zip([
+          "graph",
+          "type_value",
+          "centrality",
+          "cc",
+          "p-value",
+          "effective-p-value",
+          "nstars",
+      ], map(lambda *_: [], itertools.repeat(False))))
+  # Set defaults on Nones
+  if graphs is None:
+    graphs = df["graph"].unique()
+  if xk is None:
+    xk = df["centrality"].unique()
+  if plot:
+    if axs is None:
+      if fig is None:
+        fig = plt.gcf()
+      axs = fig.subplots(len(graphs), len(xk),
+                         **({} if subplot_kws is None else subplot_kws))
+  else:
+    axs = itertools.repeat(itertools.repeat(None))
+  # Iterate over rows ---> graphs
+  #       and columns ---> centralities
+  ncases = sum(
+      len(set(df[df["graph"] == g]["type_value"])) for g in graphs) * len(xk)
+  for r, (ax_row, graph_key) in enumerate(zip(axs, graphs)):
+    types = set(df[df["graph"] == graph_key]["type_value"])
+    for c, (ax, centr_key) in enumerate(zip(ax_row, xk)):
+      for t in types:
+        # Get values
+        x = featgraph.misc.sorted_values(df,
+                                         graph=graph_key,
+                                         centrality=centr_key,
+                                         type_value=t)
+        y = featgraph.misc.sorted_values(df,
+                                         graph=graph_key,
+                                         centrality=yk,
+                                         type_value=t)
+
+        # Save correlation results
+        cc, pv = cc_fn(x, y)
+        epv = pv * ncases
+        ns = None if p_thresholds is None else sum(
+            epv < t for t in p_thresholds)
+        results["graph"].append(graph_key)
+        results["type_value"].append(t)
+        results["centrality"].append(centr_key)
+        results["cc"].append(cc)
+        results["p-value"].append(pv)
+        results["effective-p-value"].append(epv)
+        results["nstars"].append(ns)
+
+        # Plot
+        if plot:
+          lbl = t
+          if p_thresholds is not None:
+            lbl += "*" * ns
+          clr = {} if palette is None else {
+              "color": np.array([colors.to_rgb(palette[t])])
+          }
+          plt_fn(x=x,
+                 y=y,
+                 ax=ax,
+                 **clr,
+                 label=lbl,
+                 **({} if plt_kws is None else plt_kws))
+          ax.set_title(graph_key)
+          ax.set_ylabel("" if c else yk)
+          ax.set_xlabel(centr_key if r == len(graphs) - 1 else "")
+  df_ = pd.DataFrame(data=results)
+  if plot:
+    return df_, fig, axs
+  return df_
+
+
+mul_suffix: str = "\n" + r"($\times n_{nodes}$)"
+div_suffix: str = "\n" + r"($/ n_{nodes}$)"
+
+
+def preprocessed_additions(df: pd.DataFrame,
+                           preps: dict = {
+                               mul_suffix: operator.mul,
+                               div_suffix: operator.truediv
+                           },
+                           raw: bool = True):
+  """Iterator for preprocessed versions of dataframe
+  (meant as a helper for :func:`centrality_correlations`)
+
+  Args:
+    df (DataFrame): Centrality transitions dataframe
+    preps (dict): Dictionary of preprocessing function and
+      column name suffixes
+    raw (bool): If :data:`True` (default), then yield also
+      the raw version of the dataframe"""
+  extra = df.copy()
+  if raw:
+    yield extra
+  extra["std"] = None
+  extra["quartile-1"] = None
+  extra["quartile-3"] = None
+  for s, p in preps.items():
+    extra_p = extra.copy()
+    extra_p["centrality"] += s
+    extra_p["mean"] = p(extra_p["mean"], extra_p["nnodes"])
+    extra_p["median"] = p(extra_p["median"], extra_p["nnodes"])
+    yield extra_p

@@ -1,6 +1,8 @@
 """Miscellaneous functions and classes"""
+import pandas as pd
 import contextlib
-from typing import Union, Callable, Sequence, Iterator, ContextManager
+import functools
+from typing import Union, Callable, Sequence, Iterator, ContextManager, Optional
 
 VectorOrCallable = Union[Callable[[], Sequence], Sequence]
 
@@ -93,3 +95,36 @@ def multicontext(it: Iterator[ContextManager]):
     with cm as value:
       with multicontext(it) as values:
         yield (value, *values)
+
+
+def sorted_values(df: pd.DataFrame,
+                  key: str = "mean",
+                  norm: Optional[str] = None,
+                  sort_key: str = "threshold",
+                  **kwargs):
+  """Get the values of a dataframe column filtering
+  and sorting by other columns
+
+  Args:
+    df (DataFrame): The dataframe to process
+    key (str): The column name of the values to return
+    norm (str): If not :data:`None`, then normalize values by this column
+    sort_key (str): The name of the column to use for sorting
+    kwargs: Key-value pairs. Only the rows for which the column with the key
+      has the specified values are returned
+
+    Returns:
+      array: Sorted values"""
+  df_ = df[functools.reduce(
+      lambda x, y: x & y,
+      map(
+          lambda t: df[t[0]] == t[1],
+          kwargs.items(),
+      ),
+  )].copy()
+  df_.sort_values(sort_key, inplace=True)
+  df_.reset_index(inplace=True)
+  a = df_[key]
+  if norm is not None:
+    a = a / df_[norm]
+  return a

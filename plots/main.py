@@ -1,10 +1,13 @@
 """Make the plots for the paper or for the slides"""
 import functools
+import itertools
 from featgraph import scriptutils, plots, logger
 from chromatictools import cli
 from matplotlib import pyplot as plt, colors
 import matplotlib as mpl
+from scipy import stats
 import seaborn as sns
+import pandas as pd
 import numpy as np
 import sys
 import os
@@ -205,7 +208,48 @@ def main(*argv):
         args.save_fig(fname)
   # ---------------------------------------------------------------------------
 
-  # --- Plot degree distribution ----------------------------------------------
+  # --- Centrality correlations -----------------------------------------------
+  cc_cc_plot_fname = "cc-correlations"
+  df, plot_comparison = parser.perform_threshold_comparison(
+      args, cc_cc_plot_fname)
+  if plot_comparison:
+    if args.must_write(cc_cc_plot_fname):
+      logger.info("Plotting Centrality Correlations with SCC size")
+      _, fig, axs = plots.centrality_correlations(
+          pd.concat(tuple(plots.preprocessed_additions(df))),
+          "Strongly Connected Component Size" + plots.div_suffix,
+          [
+              "Indegree" + plots.div_suffix,
+              "Pagerank" + plots.mul_suffix,
+              "Harmonic Centrality" + plots.div_suffix,
+              "Lin Centrality" + plots.div_suffix,
+              "Closeness Centrality" + plots.div_suffix,
+          ],
+          cc_fn=stats.kendalltau,
+          p_thresholds=(.001,),
+          plt_kws=dict(edgecolor="none", alpha=1 / 3, zorder=100),
+          subplot_kws=dict(sharey="row"),
+          palette={
+              "celebrities": args.palette["hip-hop"],
+              "community leaders": args.palette["classical"],
+              "masses": args.palette["rock"],
+              "hip-hop": args.palette["hip-hop"],
+              "classical": args.palette["classical"],
+              "rock": args.palette["rock"],
+          },
+      )
+      for i, ax in enumerate(itertools.chain.from_iterable(axs)):
+        ax.grid()
+        if i % 5 == 4:
+          sns.move_legend(ax, "upper right")
+        else:
+          sns.move_legend(ax, "lower right")
+      fig.set_size_inches(mpl.rcParams["figure.figsize"][0] * 2 *
+                          np.array([1, 2 / 5]))
+      args.save_fig(cc_cc_plot_fname)
+# ---------------------------------------------------------------------------
+
+# --- Plot degree distribution ----------------------------------------------
   degree_fname = "degrees"
   if args.must_write(degree_fname):
     logger.info("Computing degrees")
