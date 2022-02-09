@@ -247,6 +247,8 @@ def main(*argv):
       fig.set_size_inches(mpl.rcParams["figure.figsize"][0] * 2 *
                           np.array([1, 2 / 5]))
       args.save_fig(cc_cc_plot_fname)
+
+
 # ---------------------------------------------------------------------------
 
 # --- Plot degree distribution ----------------------------------------------

@@ -1073,10 +1073,7 @@ div_suffix: str = "\n" + r"($/ n_{nodes}$)"
 
 
 def preprocessed_additions(df: pd.DataFrame,
-                           preps: dict = {
-                               mul_suffix: operator.mul,
-                               div_suffix: operator.truediv
-                           },
+                           preps: Optional[dict] = None,
                            raw: bool = True):
   """Iterator for preprocessed versions of dataframe
   (meant as a helper for :func:`centrality_correlations`)
@@ -1087,6 +1084,8 @@ def preprocessed_additions(df: pd.DataFrame,
       column name suffixes
     raw (bool): If :data:`True` (default), then yield also
       the raw version of the dataframe"""
+  if preps is None:
+    preps = {mul_suffix: operator.mul, div_suffix: operator.truediv}
   extra = df.copy()
   if raw:
     yield extra
