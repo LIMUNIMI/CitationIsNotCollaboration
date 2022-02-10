@@ -97,6 +97,25 @@ def multicontext(it: Iterator[ContextManager]):
         yield (value, *values)
 
 
+def dataframe_filter(df: pd.DataFrame, **kwargs):
+  """Filter a dataframe by column values
+
+  Args:
+    df (DataFrame): The dataframe to process
+    kwargs: Key-value pairs. Only the rows for which the column with the key
+      has the specified values are returned
+
+    Returns:
+      array: Filtered values"""
+  return df[functools.reduce(
+      lambda x, y: x & y,
+      map(
+          lambda t: df[t[0]] == t[1],
+          kwargs.items(),
+      ),
+  )]
+
+
 def sorted_values(df: pd.DataFrame,
                   key: str = "mean",
                   norm: Optional[str] = None,
@@ -115,16 +134,44 @@ def sorted_values(df: pd.DataFrame,
 
     Returns:
       array: Sorted values"""
-  df_ = df[functools.reduce(
-      lambda x, y: x & y,
-      map(
-          lambda t: df[t[0]] == t[1],
-          kwargs.items(),
-      ),
-  )].copy()
+  df_ = dataframe_filter(df, **kwargs).copy()
   df_.sort_values(sort_key, inplace=True)
   df_.reset_index(inplace=True)
   a = df_[key]
   if norm is not None:
     a = a / df_[norm]
   return a
+
+
+def switch_point(df: pd.DataFrame,
+                 k1,
+                 k2,
+                 x: str = "threshold",
+                 y: str = "mean",
+                 class_key: str = "type_value",
+                 **kwargs):
+  """Compute the switching point for a value between two groups
+
+  Args:
+    df (DataFrame): The dataframe of values
+    k1 (str): The class value for the first group
+    k2 (str): The class value for the second group
+    x (str): Column name for independent variable
+    y (str): Column name for dependent variable
+    class_key (str): Column name for classes
+    kwargs: Key-value pairs. Only the rows for which the column with the key
+      has the specified values are considered
+
+  Return:
+    The minimum value of column x for which the difference sign changes"""
+  dfs = pd.merge(
+      *tuple(
+          dataframe_filter(df, **kwargs, **{class_key: k})[[x, y]].rename(
+              columns={y: k}) for k in (k1, k2)),
+      how="inner",
+      on="threshold",
+  )
+  x_0 = dfs[x].min()
+  diffs = dfs[k1] - dfs[k2]
+  sign_0 = 1 if diffs[dfs[x] == x_0].min() >= 0 else -1
+  return dfs[diffs * sign_0 < 0][x].min()
