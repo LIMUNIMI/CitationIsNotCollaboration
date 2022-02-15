@@ -378,6 +378,35 @@ class BVGraph:
       array of doubles: Array of Lin Centralities"""
     return load_as_doubles(self.path("linc", "ranks"), "Float")
 
+  def compute_reachable(self, **kwargs):
+    """Compute the reachable set sizes with HyperBall
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-r", path=self.path("reachable", "ranks"), transpose=False, **kwargs)
+
+  def reachable(self):
+    """Load the reachable set sizes vector from file
+
+    Returns:
+      array of doubles: Array of reachable set sizes"""
+    return load_as_doubles(self.path("reachable", "ranks"), "Float")
+
+  def compute_coreachable(self, **kwargs):
+    """Compute the coreachable set sizes with HyperBall.
+    The transposed graph must be precomputed
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-r", path=self.path("coreachable", "ranks"), **kwargs)
+
+  def coreachable(self):
+    """Load the reachable set sizes vector from file
+
+    Returns:
+      array of doubles: Array of coreachable set sizes"""
+    return load_as_doubles(self.path("coreachable", "ranks"), "Float")
+
   def transform_map(
       self,
       dest_path: str,

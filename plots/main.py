@@ -160,8 +160,10 @@ def main(*argv):
             (
                 "node_scc_sizes",
                 "node_wcc_sizes",
+                "reachable",
+                "coreachable",
             ),
-            1,
+            2,
             dict(loc="lower left"),
             dict(sharex=True, sharey=True),
         ),
@@ -196,7 +198,7 @@ def main(*argv):
             a.yaxis.set_label_coords(-0.05, 1.05)
             a.set_title("")
             a.grid()
-            if i == n - 1:
+            if i == 0:
               pass
             else:
               a.get_legend().remove()

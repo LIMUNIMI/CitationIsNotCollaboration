@@ -204,7 +204,19 @@ class FeatgraphPlotsArgParse(FeatgraphArgParse):
         None,
         "nnodes",
         False,
-        "Weakly Connected Component Size"))
+        "Weakly Connected Component Size")),
+      ("reachable", (
+        "reachable",
+        None,
+        "nnodes",
+        False,
+        "Reachable Set Size")),
+      ("coreachable", (
+        "coreachable",
+        None,
+        "nnodes",
+        False,
+        "Coreachable Set Size")),
     ))
     args.norm_str = {
         None: "",

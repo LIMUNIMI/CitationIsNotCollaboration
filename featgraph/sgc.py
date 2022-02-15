@@ -315,6 +315,8 @@ class ThresholdComparison:
           "Lin Centrality": "linc",
           "Strongly Connected Component Size": "node_scc_sizes",
           "Weakly Connected Component Size": "node_wcc_sizes",
+          "Reachable Set Size": "reachable",
+          "Coreachable Set Size": "coreachable",
       }
     self.attribute = attribute
     self.attr_fmt = attr_fmt
