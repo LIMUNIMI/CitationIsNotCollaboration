@@ -676,11 +676,14 @@ class BVGraph:
 
     return (p_cnd - a_avg) / (1 - a_avg)
 
-  def reciprocity(self) -> np.ndarray:
+  def reciprocity(self, nullvalue: Optional[float] = None) -> np.ndarray:
     """Load the reciprocity stats from file and compute the correlation
     coefficient for each node. The file is computed by
     :meth:`compute_reciprocity`. Also, the degrees of each node are needed:
     they are computed by :meth:`compute_degrees`.
+
+    Args:
+      nullvalue (float): Value to replace NaNs and infinites with
 
     Returns:
       array of float: Reciprocity of each node"""
@@ -697,9 +700,10 @@ class BVGraph:
     r = (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
                                                  (1 - a_avg_in) *
                                                  (1 - a_avg_out))
-    for i, _ in itertools.filterfalse(lambda t: np.isfinite(t[1]),
-                                      enumerate(r)):
-      r[i] = 0
+    if nullvalue is not None:
+      for i, _ in itertools.filterfalse(lambda t: np.isfinite(t[1]),
+                                        enumerate(r)):
+        r[i] = nullvalue
     return r
 
   def compute_scc(self,
