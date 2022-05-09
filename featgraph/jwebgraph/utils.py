@@ -383,7 +383,10 @@ class BVGraph:
 
     Args:
       kwargs: Keyword arguments for :meth:`hyperball`"""
-    self.hyperball(command="-r", path=self.path("reachable", "ranks"), transpose=False, **kwargs)
+    self.hyperball(command="-r",
+                   path=self.path("reachable", "ranks"),
+                   transpose=False,
+                   **kwargs)
 
   def reachable(self):
     """Load the reachable set sizes vector from file
@@ -398,7 +401,9 @@ class BVGraph:
 
     Args:
       kwargs: Keyword arguments for :meth:`hyperball`"""
-    self.hyperball(command="-r", path=self.path("coreachable", "ranks"), **kwargs)
+    self.hyperball(command="-r",
+                   path=self.path("coreachable", "ranks"),
+                   **kwargs)
 
   def coreachable(self):
     """Load the reachable set sizes vector from file
@@ -689,9 +694,13 @@ class BVGraph:
     a_avg_out = n_out / n_entries
     p_cnd = self.arc_couples() / n_entries
 
-    return (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
-                                                    (1 - a_avg_in) *
-                                                    (1 - a_avg_out))
+    r = (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
+                                                 (1 - a_avg_in) *
+                                                 (1 - a_avg_out))
+    for i, _ in itertools.filterfalse(lambda t: np.isfinite(t[1]),
+                                      enumerate(r)):
+      r[i] = 0
+    return r
 
   def compute_scc(self,
                   sizes: bool = True,
