@@ -383,7 +383,10 @@ class BVGraph:
 
     Args:
       kwargs: Keyword arguments for :meth:`hyperball`"""
-    self.hyperball(command="-r", path=self.path("reachable", "ranks"), transpose=False, **kwargs)
+    self.hyperball(command="-r",
+                   path=self.path("reachable", "ranks"),
+                   transpose=False,
+                   **kwargs)
 
   def reachable(self):
     """Load the reachable set sizes vector from file
@@ -398,7 +401,9 @@ class BVGraph:
 
     Args:
       kwargs: Keyword arguments for :meth:`hyperball`"""
-    self.hyperball(command="-r", path=self.path("coreachable", "ranks"), **kwargs)
+    self.hyperball(command="-r",
+                   path=self.path("coreachable", "ranks"),
+                   **kwargs)
 
   def coreachable(self):
     """Load the reachable set sizes vector from file
@@ -466,6 +471,15 @@ class BVGraph:
     Returns:
       The iterable of ids of each artist as strings"""
     with open(self.path("ids", "txt"), "r", encoding="utf-8") as f:
+      for s in f:
+        yield s.rstrip()
+
+  def names(self) -> Iterable[str]:
+    """Get the artists names from the metadata file
+
+    Returns:
+      The iterable of names of each artist as strings"""
+    with open(self.path("name", "txt"), "r", encoding="utf-8") as f:
       for s in f:
         yield s.rstrip()
 
@@ -671,11 +685,14 @@ class BVGraph:
 
     return (p_cnd - a_avg) / (1 - a_avg)
 
-  def reciprocity(self) -> np.ndarray:
+  def reciprocity(self, nullvalue: Optional[float] = None) -> np.ndarray:
     """Load the reciprocity stats from file and compute the correlation
     coefficient for each node. The file is computed by
     :meth:`compute_reciprocity`. Also, the degrees of each node are needed:
     they are computed by :meth:`compute_degrees`.
+
+    Args:
+      nullvalue (float): Value to replace NaNs and infinites with
 
     Returns:
       array of float: Reciprocity of each node"""
@@ -689,9 +706,14 @@ class BVGraph:
     a_avg_out = n_out / n_entries
     p_cnd = self.arc_couples() / n_entries
 
-    return (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
-                                                    (1 - a_avg_in) *
-                                                    (1 - a_avg_out))
+    r = (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
+                                                 (1 - a_avg_in) *
+                                                 (1 - a_avg_out))
+    if nullvalue is not None:
+      for i, _ in itertools.filterfalse(lambda t: np.isfinite(t[1]),
+                                        enumerate(r)):
+        r[i] = nullvalue
+    return r
 
   def compute_scc(self,
                   sizes: bool = True,

@@ -22,6 +22,8 @@ metrics_dict = {
     "indegree": (lambda g, _: g.indegrees(), lambda g, _: g.compute_degrees()),
     "pagerank": (lambda g, a: g.pagerank(alpha=a.pagerank_alpha),
                  lambda g, a: g.compute_pagerank(alpha=a.pagerank_alpha)),
+    "reciprocity":
+        (lambda g, _: g.reciprocity(), lambda g, _: g.compute_reciprocity(nullvalue=0)),
 }
 
 
