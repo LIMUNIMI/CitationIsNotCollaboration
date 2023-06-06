@@ -474,6 +474,15 @@ class BVGraph:
       for s in f:
         yield s.rstrip()
 
+  def names(self) -> Iterable[str]:
+    """Get the artists names from the metadata file
+
+    Returns:
+      The iterable of names of each artist as strings"""
+    with open(self.path("name", "txt"), "r", encoding="utf-8") as f:
+      for s in f:
+        yield s.rstrip()
+
   def popularity(self, missing_value: Optional = None) -> Iterable[float]:
     """Get the popularity values from the metadata file
 
