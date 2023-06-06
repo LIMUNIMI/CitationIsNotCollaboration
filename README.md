@@ -1,18 +1,36 @@
-# FeatGraph
+# FeatGraph <!-- omit in toc -->
 <!--[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/ChromaticIsobar/featgraph/main/main?event=push)](https://github.com/ChromaticIsobar/featgraph/actions?query=workflow%3Amain)-->
 [![Coverage](https://gist.githubusercontent.com/ChromaticIsobar/18a4dd9093b1c271ce6f9d117cc5ba40/raw/featgraph-coverage-badge.svg)](https://github.com/ChromaticIsobar/featgraph/actions?query=workflow%3Amain)
 [![Pylint](https://gist.githubusercontent.com/ChromaticIsobar/18a4dd9093b1c271ce6f9d117cc5ba40/raw/featgraph-pylint-badge.svg)](https://github.com/ChromaticIsobar/featgraph/actions?query=workflow%3Amain)
 <!--[![PyPI version](https://badge.fury.io/py/featgraph.svg)](https://badge.fury.io/py/featgraph)-->
 
-Musical collaborations graph analysis using WebGraph
+## Table of Contents <!-- omit in toc -->
+- [Publications](#publications)
+- [Setup](#setup)
+  - [Create environment](#create-environment)
+  - [Add extra dependencies](#add-extra-dependencies)
+  - [Add FeatGraph](#add-featgraph)
+- [Notebooks](#notebooks)
+- [CLI](#cli)
+  - [Data conversion](#data-conversion)
+
+## Publications
+We published some of the results in the article *``Citation is not Collaboration: Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network''* at the 20th Sound and Music Computing Conference.
+```bibtex
+@inproceedings{clerici2023citation,
+  author       = {Clerici, Giulia and Tiraboschi, Marco},
+  title        = {{Citation is not Collaboration: Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network}},
+  booktitle    = {Proceedings of the 20th Sound and Music Computing Conference},
+  year         = {2023},
+  series       = {SMC},
+  address      = {Stockholm, Sweden},
+  month        = {6},
+  organization = {Sound and Music Computing Network},
+}
+```
 
 ## Setup
-Some dependencies require [`conda`](https://conda.io).
-You should
- - [create a virtual environment](#create-environment)
- - [add extra dependencies](#add-extra-dependencies) (optional, for notebooks or for development)
- - [add the `featgraph` package](#add-featgraph)
-
+Some dependencies require [`conda`](https://conda.io).  
 The following instructions assume that you are working from the root directory of the repository
 
 ### Create environment
