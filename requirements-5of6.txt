@@ -1,0 +1,3 @@
+arviz==0.13.0
+xarray-einstats==0.5.1
+
