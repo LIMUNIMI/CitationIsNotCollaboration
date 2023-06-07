@@ -34,18 +34,25 @@ Some dependencies require [`conda`](https://conda.io).
 The following instructions assume that you are working from the root directory of the repository
 
 ### Create environment
-To setup the working environment create a new environment using the yaml specifications
+There seems to be some issues with conda when trying to install too many packages.  
+So we spit the installation requirements in chunks.
 
+Create the environment
+```bash
+conda create -p ./venv python=3.8
 ```
-conda env create --prefix ./venv -f environment.yml
-```
-
-This will create a `conda` environment with runtime dependencies in the subfolder `venv` of your working directory.
-
-To activate the environment, run
-
-```
+Activate the enviroment
+```bash
 conda activate ./venv
+```
+Install packages in chunks
+```bash
+conda install -c chromaticisobar --file requirements-0of6.txt -y && \
+conda install -c conda-forge     --file requirements-1of6.txt -y && \
+conda install -c conda-forge     --file requirements-2of6.txt -y && \
+conda install -c conda-forge     --file requirements-3of6.txt -y && \
+conda install -c conda-forge     --file requirements-4of6.txt -y && \
+conda install -c conda-forge     --file requirements-5of6.txt -y
 ```
 
 ### Add extra dependencies
@@ -59,12 +66,6 @@ conda install --file <FILE> -c conda-forge
  - `docs-requirements.txt`: Docs generation dependencies
  - `style-requirements.txt`: Style check dependencies
  - `notebooks-requirements.txt`: Notebooks dependencies
-
-To install all dependencies, run
-
-```
-conda install -c conda-forge --file test-requirements.txt --file docs-requirements.txt --file style-requirements.txt --file notebooks-requirements.txt
-```
 
 ### Add FeatGraph
 To add the `featgraph` package, run
