@@ -13,12 +13,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        pyversion: [
-          "3.7",
-          "3.8",
-        ]
     container: continuumio/miniconda3
     steps:
     - uses: actions/checkout@v2
@@ -28,7 +22,7 @@ jobs:
       run: conda install conda-build
     - name: Create environment
       run: |
-        conda create -p ./venv python=${{ matrix.pyversion }}
+        conda create -p ./venv python=3.8
         conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
@@ -54,7 +48,7 @@ jobs:
       run: conda install conda-build
     - name: Create environment
       run: |
-        conda create -p ./venv python=${{ matrix.pyversion }}
+        conda create -p ./venv python=3.8
         conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
@@ -100,7 +94,7 @@ jobs:
       run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
     - name: Create environment
       run: |
-        conda create -p ./venv python=${{ matrix.pyversion }}
+        conda create -p ./venv python=3.8
         conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
@@ -142,7 +136,7 @@ jobs:
       run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre build-essential
     - name: Create environment
       run: |
-        conda create -p ./venv python=${{ matrix.pyversion }}
+        conda create -p ./venv python=3.8
         conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
         conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
