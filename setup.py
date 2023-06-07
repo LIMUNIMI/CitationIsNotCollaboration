@@ -15,7 +15,7 @@ setuptools.setup(
   description="featgraph",
   long_description=readme,
   long_description_content_type="text/markdown",
-  url="https://github.com/ChromaticIsobar/featgraph",
+  url="https://github.com/LIMUNIMI/CitationIsNotCollaboration",
   packages=setuptools.find_packages(
     include=["featgraph", "featgraph.*"]
   ),
