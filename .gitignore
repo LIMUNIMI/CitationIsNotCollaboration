@@ -28,7 +28,7 @@ dist
 # Misc
 *.txt
 *.csv
-!*requirements.txt
+!*requirements*.txt
 *.gz
 *.zip
 *.png
