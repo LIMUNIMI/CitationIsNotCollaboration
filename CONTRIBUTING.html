@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="featgraph.sgc module" href="featgraph.sgc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="featgraph.html">featgraph package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table Of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#git">Git</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#commit-frequency-vs-size">Commit frequency vs size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-branches">Feature branches</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#binary-files">Binary files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interactive-notebook-files">Interactive notebook files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coverage">Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#docs">Docs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#docstring-style">Docstring style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#github-pages">GitHub Pages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#styleguides">Styleguides</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#code-style">Code style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-format">Code format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h1>
+<p>The following is a set of guidelines for contributing to FeatGraph on GitHub.
+These are mostly guidelines, not rules. So, use your best judgment.</p>
+<section id="table-of-contents">
+<h2>Table Of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
+<p><a class="reference internal" href="#git"><span class="xref myst">Git</span></a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#commit-frequency-vs-size"><span class="xref myst">Commit frequency vs size</span></a></p></li>
+<li><p><a class="reference internal" href="#feature-branches"><span class="xref myst">Feature branches</span></a></p></li>
+<li><p><a class="reference internal" href="#binary-files"><span class="xref myst">Binary files</span></a></p></li>
+<li><p><a class="reference internal" href="#interactive-notebook-files"><span class="xref myst">Interactive notebook files</span></a></p></li>
+</ul>
+<p><a class="reference internal" href="#tests"><span class="xref myst">Tests</span></a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#unit-tests"><span class="xref myst">Unit Tests</span></a></p></li>
+<li><p><a class="reference internal" href="#coverage"><span class="xref myst">Coverage</span></a></p></li>
+</ul>
+<p><a class="reference internal" href="#docs"><span class="xref myst">Docs</span></a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#docstring-style"><span class="xref myst">Docstring style</span></a></p></li>
+<li><p><a class="reference internal" href="#github-pages"><span class="xref myst">GitHub Pages</span></a></p></li>
+</ul>
+<p><a class="reference internal" href="#styleguides"><span class="xref myst">Styleguides</span></a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#code-style"><span class="xref myst">Code style</span></a></p></li>
+<li><p><a class="reference internal" href="#code-format"><span class="xref myst">Code format</span></a></p></li>
+</ul>
+</section>
+<section id="git">
+<h2>Git<a class="headerlink" href="#git" title="Permalink to this heading"></a></h2>
+<p>We are using
+<a class="reference external" href="https://nvie.com/posts/a-successful-git-branching-model/"><code class="docutils literal notranslate"><span class="pre">git-flow</span></code></a>
+branching model. Consider using automated tools to manage your branches</p>
+<section id="commit-frequency-vs-size">
+<h3>Commit frequency vs size<a class="headerlink" href="#commit-frequency-vs-size" title="Permalink to this heading"></a></h3>
+<p>When possible, prefer a big number of small (self-contained) commits over a
+small number of big commits. This usually helps the other contributors in
+understanding what you are have done.</p>
+</section>
+<section id="feature-branches">
+<h3>Feature branches<a class="headerlink" href="#feature-branches" title="Permalink to this heading"></a></h3>
+<p>Merged feature branches should not overlap.
+To avoid this, consider rebasing your feature branch with respect to <code class="docutils literal notranslate"><span class="pre">develop</span></code>
+before merging, or use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">flow</span> <span class="pre">feature</span> <span class="pre">rebase</span></code> if you are using <code class="docutils literal notranslate"><span class="pre">git-flow</span></code>
+automated tools.</p>
+<p>This is ok, because branches have not been merged yet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span>  <span class="n">develop</span>
+        <span class="o">|</span>\
+        <span class="o">|</span> <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span>  <span class="n">feature</span><span class="o">/</span><span class="n">a</span>
+         \
+          <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span>  <span class="n">feature</span><span class="o">/</span><span class="n">b</span>
+</pre></div>
+</div>
+<p>This is not ok, because branches overlap</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---------------</span><span class="n">o</span><span class="o">--</span><span class="n">o</span>  <span class="n">develop</span>
+        <span class="o">|</span>\                 <span class="o">/</span>  <span class="o">/</span>
+        <span class="o">|</span> <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span>  <span class="o">/</span> <span class="n">feature</span><span class="o">/</span><span class="n">a</span>
+         \                  <span class="o">/</span>
+          <span class="n">o</span><span class="o">-----</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">------</span><span class="n">o</span>  <span class="n">feature</span><span class="o">/</span><span class="n">b</span>
+</pre></div>
+</div>
+<p>This is ok, because branches have been correctly rebased</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">-------------------</span><span class="n">o</span><span class="o">---------------</span><span class="n">o</span>  <span class="n">develop</span>
+             \                 <span class="o">/</span> \             <span class="o">/</span>
+              <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span>   <span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span><span class="o">---</span><span class="n">o</span>
+                <span class="n">feature</span><span class="o">/</span><span class="n">a</span>           <span class="n">feature</span><span class="o">/</span><span class="n">b</span>
+</pre></div>
+</div>
+</section>
+<section id="binary-files">
+<h3>Binary files<a class="headerlink" href="#binary-files" title="Permalink to this heading"></a></h3>
+<p>As a general rule, we should avoid versioning binary files directly using git.
+Where possible, provide download links instead.
+E.g. the <code class="docutils literal notranslate"><span class="pre">featgraph</span></code> package uses the
+<a class="reference internal" href="#featgraph/jwebgraph/dependencies.json"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dependencies.json</span></code></span></a> file to download
+the jar files for Java dependencies, instead of storing the jar files directly.</p>
+</section>
+<section id="interactive-notebook-files">
+<h3>Interactive notebook files<a class="headerlink" href="#interactive-notebook-files" title="Permalink to this heading"></a></h3>
+<p>When committing changes to <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files, be careful <strong>not</strong> to include
+notebook outputs. They should not be included because</p>
+<ul class="simple">
+<li><p>they are redundant, because they can be generated by running the notebook</p></li>
+<li><p>they can be large (possibly binary) files, that increase the repository size
+unnecessarily</p></li>
+</ul>
+<p>To avoid committing notebook outputs, you can clear all outputs from your
+Jupyter servers GUI menu before saving the file.</p>
+<p>Also, avoid committing variable values that depend on your systems state
+(e.g. the JVM path, the data path, the python version metadata, the cell
+execution count etc…).
+To  better control what you are committing,
+consider adding changes to <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files  using the <code class="docutils literal notranslate"><span class="pre">--patch</span></code> option</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">add</span> <span class="o">--</span><span class="n">patch</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">notebook</span><span class="o">.</span><span class="n">ipynb</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this heading"></a></h2>
+<p>Your code should pass all unit tests before it is merged onto <code class="docutils literal notranslate"><span class="pre">develop</span></code>.
+Install the Python packages required to run unit tests with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">--</span><span class="n">file</span> <span class="n">test</span><span class="o">-</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+</pre></div>
+</div>
+<section id="unit-tests">
+<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading"></a></h3>
+<p>To perform unit tests, run this command from the repository root directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">unittest</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+</section>
+<section id="coverage">
+<h3>Coverage<a class="headerlink" href="#coverage" title="Permalink to this heading"></a></h3>
+<p>Coverage settings are in the <a class="reference internal" href="#.coveragerc"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">.coveragerc</span></code></span></a> file.
+To evaluate test coverage, run this commands from the repository root directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coverage</span> <span class="n">run</span>
+<span class="n">coverage</span> <span class="n">combine</span>
+</pre></div>
+</div>
+<p>You can output human-readable reports with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coverage</span> <span class="n">html</span>
+<span class="n">coverage</span> <span class="n">xml</span>
+<span class="n">coverage</span> <span class="n">json</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="docs">
+<h2>Docs<a class="headerlink" href="#docs" title="Permalink to this heading"></a></h2>
+<p>Documentation is generated from docstrings with <code class="docutils literal notranslate"><span class="pre">sphinx</span></code>.
+Install the Python packages required to make documentation with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">--</span><span class="n">file</span> <span class="n">docs</span><span class="o">-</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+</pre></div>
+</div>
+<p>Build the HTML documentation running this command in the
+<a class="reference internal" href="#docs"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docs</span></code></span></a> directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">clean</span>
+<span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+<section id="docstring-style">
+<h3>Docstring style<a class="headerlink" href="#docstring-style" title="Permalink to this heading"></a></h3>
+<p>We are adopting <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">Google Style Python Docstrings</a></p>
+</section>
+<section id="github-pages">
+<h3>GitHub Pages<a class="headerlink" href="#github-pages" title="Permalink to this heading"></a></h3>
+<p>Documentation is automatically built at every commit on <code class="docutils literal notranslate"><span class="pre">develop</span></code> or <code class="docutils literal notranslate"><span class="pre">master</span></code>,
+and published on <a class="reference external" href="https://chromaticisobar.github.io/featgraph">GitHub Pages</a></p>
+</section>
+</section>
+<section id="styleguides">
+<h2>Styleguides<a class="headerlink" href="#styleguides" title="Permalink to this heading"></a></h2>
+<p>Install the Python packages required to automate style check and formatting with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">--</span><span class="n">file</span> <span class="n">style</span><span class="o">-</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+</pre></div>
+</div>
+<section id="code-style">
+<h3>Code style<a class="headerlink" href="#code-style" title="Permalink to this heading"></a></h3>
+<p>Check your code style with <code class="docutils literal notranslate"><span class="pre">pylint</span></code>.
+We are using the <code class="docutils literal notranslate"><span class="pre">pylintrc</span></code> from
+<a class="reference external" href="https://google.github.io/styleguide">Google Python Style Guide</a></p>
+<p>To check your code style, run this command from the repository root directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pylint</span> <span class="n">featgraph</span> <span class="n">tests</span> <span class="o">-</span><span class="n">r</span> <span class="n">y</span> <span class="o">--</span><span class="n">exit</span><span class="o">-</span><span class="n">zero</span> <span class="o">--</span><span class="n">jobs</span> <span class="mi">1</span> <span class="o">--</span><span class="n">persistent</span><span class="o">=</span><span class="n">n</span> <span class="o">--</span><span class="n">rcfile</span><span class="o">=</span><span class="n">pylintrc</span>
+</pre></div>
+</div>
+<p>To update the <code class="docutils literal notranslate"><span class="pre">pylintrc</span></code> file, download it from Google’s repository</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">google</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">styleguide</span><span class="o">/</span><span class="n">pylintrc</span> <span class="o">-</span><span class="n">O</span> <span class="n">pylintrc</span>
+</pre></div>
+</div>
+</section>
+<section id="code-format">
+<h3>Code format<a class="headerlink" href="#code-format" title="Permalink to this heading"></a></h3>
+<p>Format your code with the yapf auto-formatter.
+Format rules are in the <a class="reference internal" href="#.style.yapf"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">.style.yapf</span></code></span></a> file.
+As for <a class="reference internal" href="#code-style"><span class="xref myst">code style</span></a>, we are using Google’s style.
+To reformat the codebase, run this command from the repository root directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yapf</span> <span class="o">-</span><span class="n">ir</span> <span class="n">featgraph</span> <span class="n">tests</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.sgc.html" class="btn btn-neutral float-left" title="featgraph.sgc module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

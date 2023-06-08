@@ -1,0 +1,7 @@
+featgraph.metadata module
+=========================
+
+.. automodule:: featgraph.metadata
+   :members:
+   :undoc-members:
+   :show-inheritance:

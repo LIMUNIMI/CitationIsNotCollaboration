@@ -1,0 +1,7 @@
+featgraph.comparison module
+===========================
+
+.. automodule:: featgraph.comparison
+   :members:
+   :undoc-members:
+   :show-inheritance:

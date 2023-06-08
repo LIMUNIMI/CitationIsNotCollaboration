@@ -1,0 +1,34 @@
+featgraph package
+=================
+
+.. automodule:: featgraph
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   featgraph.jwebgraph
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   featgraph.bayesian_comparison
+   featgraph.comparison
+   featgraph.conversion
+   featgraph.genre_map
+   featgraph.metadata
+   featgraph.misc
+   featgraph.nx2bv
+   featgraph.pathutils
+   featgraph.plots
+   featgraph.report
+   featgraph.scriptutils
+   featgraph.sgc

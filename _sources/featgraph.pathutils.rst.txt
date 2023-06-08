@@ -1,0 +1,7 @@
+featgraph.pathutils module
+==========================
+
+.. automodule:: featgraph.pathutils
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+featgraph.nx2bv module
+======================
+
+.. automodule:: featgraph.nx2bv
+   :members:
+   :undoc-members:
+   :show-inheritance:

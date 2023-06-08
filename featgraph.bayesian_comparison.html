@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph.bayesian_comparison module &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="featgraph.comparison module" href="featgraph.comparison.html" />
+    <link rel="prev" title="featgraph.jwebgraph.utils module" href="featgraph.jwebgraph.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="featgraph.html">featgraph package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="featgraph.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="featgraph.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">featgraph.bayesian_comparison module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.bayesian_comparison.StudentTComparison"><code class="docutils literal notranslate"><span class="pre">StudentTComparison</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.bayesian_comparison.make_report"><code class="docutils literal notranslate"><span class="pre">make_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.bayesian_comparison.rope_probabilities"><code class="docutils literal notranslate"><span class="pre">rope_probabilities()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.comparison.html">featgraph.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.conversion.html">featgraph.conversion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.genre_map.html">featgraph.genre_map module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html">featgraph.metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.misc.html">featgraph.misc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.nx2bv.html">featgraph.nx2bv module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.pathutils.html">featgraph.pathutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.plots.html">featgraph.plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html">featgraph.report module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html">featgraph.scriptutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html">featgraph.sgc module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="featgraph.html">featgraph package</a></li>
+      <li class="breadcrumb-item active">featgraph.bayesian_comparison module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph.bayesian_comparison">
+<span id="featgraph-bayesian-comparison-module"></span><h1>featgraph.bayesian_comparison module<a class="headerlink" href="#module-featgraph.bayesian_comparison" title="Permalink to this heading"></a></h1>
+<p>Utilities for Bayesian comparison of populations</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.bayesian_comparison.StudentTComparison">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.bayesian_comparison.</span></span><span class="sig-name descname"><span class="pre">StudentTComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deepcopy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_std_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_std_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dof_mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.bayesian_comparison.StudentTComparison" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Bayesian comparison model for Student’s T-distributed datasets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pymc3.Model</span></code>) – Starting model to use (optional)</p></li>
+<li><p><strong>deepcopy</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then deepcopy
+the given <code class="xref py py-data docutils literal notranslate"><span class="pre">model</span></code>, otherwise use it as-is</p></li>
+<li><p><strong>mean_std_scale</strong> (<em>float</em>) – Scaling factor for the standard deviation of means</p></li>
+<li><p><strong>std_std_scale</strong> (<em>float</em>) – Scaling factor for the boundaries of the standard
+deviations distributions</p></li>
+<li><p><strong>dof_mean</strong> (<em>float</em>) – Prior expectation for the T-distribution
+degrees of freedom</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.bayesian_comparison.StudentTComparison.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.bayesian_comparison.StudentTComparison.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the comparison model to two (unpaired) population samples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Named arrays of population data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.bayesian_comparison.StudentTComparison.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.bayesian_comparison.StudentTComparison.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Sample from the fitted model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Positional arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">pymc3.sample()</span></code></p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">pymc3.sample()</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.bayesian_comparison.make_report">
+<span class="sig-prename descclassname"><span class="pre">featgraph.bayesian_comparison.</span></span><span class="sig-name descname"><span class="pre">make_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rope_var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'effect</span> <span class="pre">size'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probs_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('x</span> <span class="pre">-</span> <span class="pre">y</span> <span class="pre">&lt;</span> <span class="pre">ROPE',</span> <span class="pre">'x</span> <span class="pre">-</span> <span class="pre">y</span> <span class="pre">in</span> <span class="pre">ROPE',</span> <span class="pre">'x</span> <span class="pre">-</span> <span class="pre">y</span> <span class="pre">&gt;</span> <span class="pre">ROPE')</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker" title="featgraph.report.ReportMaker"><span class="pre">ReportMaker</span></a></span></span><a class="headerlink" href="#featgraph.bayesian_comparison.make_report" title="Permalink to this definition"></a></dt>
+<dd><p>Build a report from a ROPE probabilities dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – ROPE probabilities dataframe</p></li>
+<li><p><strong>metric</strong> (<em>str</em>) – The name of the evaluated metric</p></li>
+<li><p><strong>th</strong> (<em>float</em>) – The threshold for hypothesis rejection</p></li>
+<li><p><strong>rope</strong> (<em>couple</em><em> of </em><em>float</em>) – The boundaries of the ROPE. If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code>,
+don’t define the ROPE in the report. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></code></p></li>
+<li><p><strong>rope_var</strong> (<em>str</em>) – Name of the random variable on which the ROPE is defined.
+Default is :data:<a href="#id1"><span class="problematic" id="id2">`</span></a>”effect size”</p></li>
+<li><p><strong>names</strong> (<em>sequence</em><em> of </em><em>str</em>) – Names of the different populations.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code>, the names are inferred from the dataframe</p></li>
+<li><p><strong>order</strong> (<em>callable</em>) – Key function for sorting populations. Alternatively,
+if <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, the populations are sorted by decreasing difference
+of average probabilities above and below the ROPE</p></li>
+<li><p><strong>x_label</strong> (<em>str</em>) – Column name for first population names.
+Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code></p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) – Column name for second population names.
+Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code></p></li>
+<li><p><strong>probs_labels</strong> (<em>triplet</em><em> of </em><em>str</em>) – Column names for the probabilities below,
+within and above the ROPE</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – Type of report to output. See
+<a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker" title="featgraph.report.ReportMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">featgraph.report.ReportMaker</span></code></a> for a list of available types</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.bayesian_comparison.rope_probabilities">
+<span class="sig-prename descclassname"><span class="pre">featgraph.bayesian_comparison.</span></span><span class="sig-name descname"><span class="pre">rope_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'posterior'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'effect</span> <span class="pre">size'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.bayesian_comparison.rope_probabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Return the probabilities that a variable in the data is below,
+within or above a ROPE</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Inference data</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – Key for data values. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;posterior&quot;</span></code></p></li>
+<li><p><strong>var</strong> (<em>str</em>) – variable name. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;effect</span> <span class="pre">size&quot;</span></code></p></li>
+<li><p><strong>rope</strong> (<em>copule</em><em> of </em><em>float</em>) – The boundaries of the ROPE.
+Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The probabilities that the variable is below,
+within or above the ROPE</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>triplet of float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.jwebgraph.utils.html" class="btn btn-neutral float-left" title="featgraph.jwebgraph.utils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="featgraph.comparison.html" class="btn btn-neutral float-right" title="featgraph.comparison module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph.misc module &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="featgraph.nx2bv module" href="featgraph.nx2bv.html" />
+    <link rel="prev" title="featgraph.metadata module" href="featgraph.metadata.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="featgraph.html">featgraph package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="featgraph.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="featgraph.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="featgraph.bayesian_comparison.html">featgraph.bayesian_comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.comparison.html">featgraph.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.conversion.html">featgraph.conversion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.genre_map.html">featgraph.genre_map module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html">featgraph.metadata module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">featgraph.misc module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.IteratorWrapper"><code class="docutils literal notranslate"><span class="pre">IteratorWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.NodeIteratorWrapper"><code class="docutils literal notranslate"><span class="pre">NodeIteratorWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.dataframe_filter"><code class="docutils literal notranslate"><span class="pre">dataframe_filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.jaccard"><code class="docutils literal notranslate"><span class="pre">jaccard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.multicontext"><code class="docutils literal notranslate"><span class="pre">multicontext()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.pretty_print_int"><code class="docutils literal notranslate"><span class="pre">pretty_print_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.sorted_values"><code class="docutils literal notranslate"><span class="pre">sorted_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.misc.switch_point"><code class="docutils literal notranslate"><span class="pre">switch_point()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.nx2bv.html">featgraph.nx2bv module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.pathutils.html">featgraph.pathutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.plots.html">featgraph.plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html">featgraph.report module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html">featgraph.scriptutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html">featgraph.sgc module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="featgraph.html">featgraph package</a></li>
+      <li class="breadcrumb-item active">featgraph.misc module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph.misc">
+<span id="featgraph-misc-module"></span><h1>featgraph.misc module<a class="headerlink" href="#module-featgraph.misc" title="Permalink to this heading"></a></h1>
+<p>Miscellaneous functions and classes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.misc.IteratorWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">IteratorWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">it</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'__next__'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.misc.IteratorWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper for an iterator. Mainly intended for wrapping Java iterators</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>it</strong> – Iterator</p></li>
+<li><p><strong>next_method</strong> (<em>str</em>) – Name of the method used to iterate one step</p></li>
+<li><p><strong>end_value</strong> – Stop iteration when this value is found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.misc.NodeIteratorWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">NodeIteratorWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">it</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'nextInt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.misc.NodeIteratorWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#featgraph.misc.IteratorWrapper" title="featgraph.misc.IteratorWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">IteratorWrapper</span></code></a></p>
+<p>Wrapper for a node iterator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>it</strong> – NodeIterator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.misc.dataframe_filter">
+<span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">dataframe_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.misc.dataframe_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Filter a dataframe by column values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>) – The dataframe to process</p></li>
+<li><p><strong>kwargs</strong> – Key-value pairs. Only the rows for which the column with the key
+has the specified values are returned</p></li>
+<li><p><strong>Returns</strong> – array: Filtered values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.misc.jaccard">
+<span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">jaccard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#featgraph.misc.jaccard" title="Permalink to this definition"></a></dt>
+<dd><p>Jaccard index between sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – First set of values</p></li>
+<li><p><strong>b</strong> – Second set of values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Jaccard index</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.misc.multicontext">
+<span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">multicontext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">it</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">AbstractContextManager</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.misc.multicontext" title="Permalink to this definition"></a></dt>
+<dd><p>Context manager wrapper for multiple contexts managers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>it</strong> – Iterator of context managers to wrap</p>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple</em> – The tuple of values yielded by the individual context managers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.misc.pretty_print_int">
+<span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">pretty_print_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#featgraph.misc.pretty_print_int" title="Permalink to this definition"></a></dt>
+<dd><p>Print an integer with thousands separators</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Integer to print</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Interval for separators. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">3</span></code> (for thousands)</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Separator. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pretty string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.misc.sorted_values">
+<span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">sorted_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'threshold'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.misc.sorted_values" title="Permalink to this definition"></a></dt>
+<dd><p>Get the values of a dataframe column filtering
+and sorting by other columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>) – The dataframe to process</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The column name of the values to return</p></li>
+<li><p><strong>norm</strong> (<em>str</em>) – If not <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code>, then normalize values by this column</p></li>
+<li><p><strong>sort_key</strong> (<em>str</em>) – The name of the column to use for sorting</p></li>
+<li><p><strong>kwargs</strong> – Key-value pairs. Only the rows for which the column with the key
+has the specified values are returned</p></li>
+<li><p><strong>Returns</strong> – array: Sorted values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.misc.switch_point">
+<span class="sig-prename descclassname"><span class="pre">featgraph.misc.</span></span><span class="sig-name descname"><span class="pre">switch_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'threshold'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'type_value'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.misc.switch_point" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the switching point for a value between two groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>) – The dataframe of values</p></li>
+<li><p><strong>k1</strong> (<em>str</em>) – The class value for the first group</p></li>
+<li><p><strong>k2</strong> (<em>str</em>) – The class value for the second group</p></li>
+<li><p><strong>x</strong> (<em>str</em>) – Column name for independent variable</p></li>
+<li><p><strong>y</strong> (<em>str</em>) – Column name for dependent variable</p></li>
+<li><p><strong>class_key</strong> (<em>str</em>) – Column name for classes</p></li>
+<li><p><strong>kwargs</strong> – Key-value pairs. Only the rows for which the column with the key
+has the specified values are considered</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The minimum value of column x for which the difference sign changes</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.metadata.html" class="btn btn-neutral float-left" title="featgraph.metadata module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="featgraph.nx2bv.html" class="btn btn-neutral float-right" title="featgraph.nx2bv module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

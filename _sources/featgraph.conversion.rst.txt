@@ -1,0 +1,7 @@
+featgraph.conversion module
+===========================
+
+.. automodule:: featgraph.conversion
+   :members:
+   :undoc-members:
+   :show-inheritance:

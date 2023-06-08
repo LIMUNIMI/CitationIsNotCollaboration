@@ -1,0 +1,7 @@
+featgraph.bayesian\_comparison module
+=====================================
+
+.. automodule:: featgraph.bayesian_comparison
+   :members:
+   :undoc-members:
+   :show-inheritance:

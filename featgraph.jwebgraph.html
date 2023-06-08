@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph.jwebgraph package &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="featgraph.jwebgraph.utils module" href="featgraph.jwebgraph.utils.html" />
+    <link rel="prev" title="featgraph package" href="featgraph.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="featgraph.html">featgraph package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="featgraph.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">featgraph.jwebgraph package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.JVMProcess"><code class="docutils literal notranslate"><span class="pre">JVMProcess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.classpaths"><code class="docutils literal notranslate"><span class="pre">classpaths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.dependencies"><code class="docutils literal notranslate"><span class="pre">dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.download_dependencies"><code class="docutils literal notranslate"><span class="pre">download_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.download_to_file"><code class="docutils literal notranslate"><span class="pre">download_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.jvm_process_run"><code class="docutils literal notranslate"><span class="pre">jvm_process_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.path"><code class="docutils literal notranslate"><span class="pre">path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.jwebgraph.start_jvm"><code class="docutils literal notranslate"><span class="pre">start_jvm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="featgraph.html">featgraph package</a></li>
+      <li class="breadcrumb-item active">featgraph.jwebgraph package</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph.jwebgraph">
+<span id="featgraph-jwebgraph-package"></span><h1>featgraph.jwebgraph package<a class="headerlink" href="#module-featgraph.jwebgraph" title="Permalink to this heading"></a></h1>
+<p>Module for downloading and importing the WebGraph java library</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.JVMProcess">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">JVMProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Value</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jvm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.JVMProcess" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></p>
+<p>Process that requires a JVM start</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>callable</em>) – Target function</p></li>
+<li><p><strong>return_value</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.Value</span></code>) – Value object for storing
+the return value. Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (do not store return value)</p></li>
+<li><p><strong>jvm_kwargs</strong> (<em>dict</em>) – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.start_jvm" title="featgraph.jwebgraph.start_jvm"><code class="xref py py-func docutils literal notranslate"><span class="pre">start_jvm()</span></code></a></p></li>
+<li><p><strong>logging_kwargs</strong> (<em>dict</em>) – Keyword arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">logging.basicConfig()</span></code>.
+Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (do not configure logging in the subprocess)</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for <code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.Process</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.JVMProcess.FunctionWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FunctionWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Value</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jvm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.JVMProcess.FunctionWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Function wrapper used by <a class="reference internal" href="#featgraph.jwebgraph.JVMProcess" title="featgraph.jwebgraph.JVMProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">JVMProcess</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>callable</em>) – Target function</p></li>
+<li><p><strong>return_value</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.Value</span></code>) – Value object for storing
+the return value. Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (do not store return value)</p></li>
+<li><p><strong>jvm_kwargs</strong> (<em>dict</em>) – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.start_jvm" title="featgraph.jwebgraph.start_jvm"><code class="xref py py-func docutils literal notranslate"><span class="pre">start_jvm()</span></code></a></p></li>
+<li><p><strong>logging_kwargs</strong> (<em>dict</em>) – Keyword arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">logging.basicConfig()</span></code>.
+Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (do not configure logging in the subprocess)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.classpaths">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">classpaths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.classpaths" title="Permalink to this definition"></a></dt>
+<dd><p>Get the classpath for all java library dependencies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em>) – Root for <a class="reference internal" href="#featgraph.jwebgraph.path" title="featgraph.jwebgraph.path"><code class="xref py py-func docutils literal notranslate"><span class="pre">path()</span></code></a></p></li>
+<li><p><strong>deps</strong> (<em>dict</em>) – Dependency dictionary, as output by <a class="reference internal" href="#featgraph.jwebgraph.dependencies" title="featgraph.jwebgraph.dependencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">dependencies()</span></code></a>.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), then get it from <a class="reference internal" href="#featgraph.jwebgraph.dependencies" title="featgraph.jwebgraph.dependencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">dependencies()</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The classpaths for the java library dependencies</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>iterable of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.dependencies">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.dependencies" title="Permalink to this definition"></a></dt>
+<dd><p>Get the dependency dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – The file path. If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), then
+use default file path</p></li>
+<li><p><strong>encoding</strong> – Encoding of the JSON text file. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dependency dictionary where keys are file names and values are URLs</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.download_dependencies">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">download_dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.download_dependencies" title="Permalink to this definition"></a></dt>
+<dd><p>Download dependency files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deps</strong> (<em>dict</em>) – Dependency dictionary, as output by <a class="reference internal" href="#featgraph.jwebgraph.dependencies" title="featgraph.jwebgraph.dependencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">dependencies()</span></code></a>.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), then get it from <a class="reference internal" href="#featgraph.jwebgraph.dependencies" title="featgraph.jwebgraph.dependencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">dependencies()</span></code></a></p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then overwrite existing files.
+Otherwise (default) skip download for existing files</p></li>
+<li><p><strong>root</strong> (<em>str</em>) – Root path for downloaded files. Argument for <a class="reference internal" href="#featgraph.jwebgraph.path" title="featgraph.jwebgraph.path"><code class="xref py py-func docutils literal notranslate"><span class="pre">path()</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.download_to_file">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">download_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8192</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.download_to_file" title="Permalink to this definition"></a></dt>
+<dd><p>Download file from URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – Writable stream</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – URL of the file to download</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em>) – Chunk size for download stream</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status code</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.jvm_process_run">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">jvm_process_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.jvm_process_run" title="Permalink to this definition"></a></dt>
+<dd><p>Run a function in a <a class="reference internal" href="#featgraph.jwebgraph.JVMProcess" title="featgraph.jwebgraph.JVMProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">JVMProcess</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>callable</em>) – Target function</p></li>
+<li><p><strong>args</strong> – Positional arguments for the target function</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for the target function</p></li>
+<li><p><strong>return_type</strong> – Return value type for <code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.Value</span></code>.
+Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (do not store return value)</p></li>
+<li><p><strong>kw</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.JVMProcess" title="featgraph.jwebgraph.JVMProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">JVMProcess</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The return value of the function call if a <code class="xref py py-data docutils literal notranslate"><span class="pre">return_type</span></code> is specified</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.path">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.path" title="Permalink to this definition"></a></dt>
+<dd><p>Get the path for a webgraph-related file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Path nodes</p></li>
+<li><p><strong>root</strong> (<em>str</em>) – Root folder for webgraph-related files.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), then the directory of this
+source file is the root</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.start_jvm">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.</span></span><span class="sig-name descname"><span class="pre">start_jvm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jvm_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.start_jvm" title="Permalink to this definition"></a></dt>
+<dd><p>Add jars to classpath and start the JVM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jvm_path</strong> (<em>str</em>) – Path to a JVM executable</p></li>
+<li><p><strong>download</strong> (<em>bool</em>) – Whether to download dependency jars.
+Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>deps</strong> (<em>dict</em>) – Dependency dictionary, as output by <a class="reference internal" href="#featgraph.jwebgraph.dependencies" title="featgraph.jwebgraph.dependencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">dependencies()</span></code></a>.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), then get it from <a class="reference internal" href="#featgraph.jwebgraph.dependencies" title="featgraph.jwebgraph.dependencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">dependencies()</span></code></a></p></li>
+<li><p><strong>root</strong> (<em>str</em>) – Root path for downloaded files. Argument for <a class="reference internal" href="#featgraph.jwebgraph.path" title="featgraph.jwebgraph.path"><code class="xref py py-func docutils literal notranslate"><span class="pre">path()</span></code></a></p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then overwrite existing jar files.
+Otherwise (default) skip download for existing files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.jwebgraph.utils.html">featgraph.jwebgraph.utils module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph"><code class="docutils literal notranslate"><span class="pre">BVGraph</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.arc_couples"><code class="docutils literal notranslate"><span class="pre">BVGraph.arc_couples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.artist"><code class="docutils literal notranslate"><span class="pre">BVGraph.artist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.basename"><code class="docutils literal notranslate"><span class="pre">BVGraph.basename</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.best"><code class="docutils literal notranslate"><span class="pre">BVGraph.best()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.closenessc"><code class="docutils literal notranslate"><span class="pre">BVGraph.closenessc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_closenessc"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_closenessc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_coreachable"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_coreachable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_degrees"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_degrees()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_harmonicc"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_harmonicc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_indegrees"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_indegrees()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_linc"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_linc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_neighborhood"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_neighborhood()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_node_scc_sizes"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_node_scc_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_node_wcc_sizes"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_node_wcc_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_outdegrees"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_outdegrees()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_pagerank"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_pagerank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_reachable"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_reachable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_reciprocity"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_reciprocity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_scc"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_scc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_symmetrized"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_symmetrized()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_transpose"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_transpose()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.compute_wcc"><code class="docutils literal notranslate"><span class="pre">BVGraph.compute_wcc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.coreachable"><code class="docutils literal notranslate"><span class="pre">BVGraph.coreachable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.distances"><code class="docutils literal notranslate"><span class="pre">BVGraph.distances()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.genre"><code class="docutils literal notranslate"><span class="pre">BVGraph.genre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.graph_reciprocity"><code class="docutils literal notranslate"><span class="pre">BVGraph.graph_reciprocity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.harmonicc"><code class="docutils literal notranslate"><span class="pre">BVGraph.harmonicc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="docutils literal notranslate"><span class="pre">BVGraph.hyperball()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.ids"><code class="docutils literal notranslate"><span class="pre">BVGraph.ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.indegrees"><code class="docutils literal notranslate"><span class="pre">BVGraph.indegrees()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.linc"><code class="docutils literal notranslate"><span class="pre">BVGraph.linc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.load"><code class="docutils literal notranslate"><span class="pre">BVGraph.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.loaded"><code class="docutils literal notranslate"><span class="pre">BVGraph.loaded</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.names"><code class="docutils literal notranslate"><span class="pre">BVGraph.names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.neighborhood"><code class="docutils literal notranslate"><span class="pre">BVGraph.neighborhood()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.node_scc_sizes"><code class="docutils literal notranslate"><span class="pre">BVGraph.node_scc_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.node_wcc_sizes"><code class="docutils literal notranslate"><span class="pre">BVGraph.node_wcc_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.outdegrees"><code class="docutils literal notranslate"><span class="pre">BVGraph.outdegrees()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.pagerank"><code class="docutils literal notranslate"><span class="pre">BVGraph.pagerank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.pagerank_path"><code class="docutils literal notranslate"><span class="pre">BVGraph.pagerank_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.path"><code class="docutils literal notranslate"><span class="pre">BVGraph.path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.popularity"><code class="docutils literal notranslate"><span class="pre">BVGraph.popularity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.reachable"><code class="docutils literal notranslate"><span class="pre">BVGraph.reachable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.reciprocity"><code class="docutils literal notranslate"><span class="pre">BVGraph.reciprocity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.reconstruct_offsets"><code class="docutils literal notranslate"><span class="pre">BVGraph.reconstruct_offsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.scc"><code class="docutils literal notranslate"><span class="pre">BVGraph.scc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.scc_sizes"><code class="docutils literal notranslate"><span class="pre">BVGraph.scc_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.self_loops"><code class="docutils literal notranslate"><span class="pre">BVGraph.self_loops()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.supergenre"><code class="docutils literal notranslate"><span class="pre">BVGraph.supergenre()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.supergenre_dataframe"><code class="docutils literal notranslate"><span class="pre">BVGraph.supergenre_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.symmetrized"><code class="docutils literal notranslate"><span class="pre">BVGraph.symmetrized()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.transform_map"><code class="docutils literal notranslate"><span class="pre">BVGraph.transform_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.transposed"><code class="docutils literal notranslate"><span class="pre">BVGraph.transposed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.type_sgc"><code class="docutils literal notranslate"><span class="pre">BVGraph.type_sgc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.wcc"><code class="docutils literal notranslate"><span class="pre">BVGraph.wcc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph.wcc_sizes"><code class="docutils literal notranslate"><span class="pre">BVGraph.wcc_sizes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.jaccard"><code class="docutils literal notranslate"><span class="pre">jaccard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.kendall_tau"><code class="docutils literal notranslate"><span class="pre">kendall_tau()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.load_as_doubles"><code class="docutils literal notranslate"><span class="pre">load_as_doubles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.html" class="btn btn-neutral float-left" title="featgraph package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="featgraph.jwebgraph.utils.html" class="btn btn-neutral float-right" title="featgraph.jwebgraph.utils module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

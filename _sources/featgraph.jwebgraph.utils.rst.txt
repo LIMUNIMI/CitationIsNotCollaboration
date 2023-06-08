@@ -1,0 +1,7 @@
+featgraph.jwebgraph.utils module
+================================
+
+.. automodule:: featgraph.jwebgraph.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

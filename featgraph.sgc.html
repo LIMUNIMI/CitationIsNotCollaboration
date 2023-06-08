@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph.sgc module &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="CONTRIBUTING.html" />
+    <link rel="prev" title="featgraph.scriptutils module" href="featgraph.scriptutils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="featgraph.html">featgraph package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="featgraph.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="featgraph.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="featgraph.bayesian_comparison.html">featgraph.bayesian_comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.comparison.html">featgraph.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.conversion.html">featgraph.conversion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.genre_map.html">featgraph.genre_map module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html">featgraph.metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.misc.html">featgraph.misc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.nx2bv.html">featgraph.nx2bv module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.pathutils.html">featgraph.pathutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.plots.html">featgraph.plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html">featgraph.report module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html">featgraph.scriptutils module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">featgraph.sgc module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.sgc.SGCModel"><code class="docutils literal notranslate"><span class="pre">SGCModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.sgc.ThresholdComparison"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.sgc.to_bv"><code class="docutils literal notranslate"><span class="pre">to_bv()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="featgraph.html">featgraph package</a></li>
+      <li class="breadcrumb-item active">featgraph.sgc module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph.sgc">
+<span id="featgraph-sgc-module"></span><h1>featgraph.sgc module<a class="headerlink" href="#module-featgraph.sgc" title="Permalink to this heading"></a></h1>
+<p>Implementation of the Directed Social Group Centrality model.
+This is the directed version of the Social Group Centrality model described in</p>
+<p><em>“Popularity and centrality in Spotify networks:
+critical transitions in eigenvector centrality”</em></p>
+<p><a class="reference external" href="https://doi.org/10.1093/comnet/cnaa050">https://doi.org/10.1093/comnet/cnaa050</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.sgc.</span></span><span class="sig-name descname"><span class="pre">SGCModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_masses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_celeb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_leader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_masses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses_exp_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses_k_pop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_celeb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_leader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_celeb_back</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_leader_back</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.SGCModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Social Group Centrality model for generating random graphs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_masses</strong> (<em>int</em>) – Number of nodes in the <em>masses</em> class</p></li>
+<li><p><strong>n_celeb</strong> (<em>int</em>) – Number of nodes in the <em>celebrities</em> class</p></li>
+<li><p><strong>n_leader</strong> (<em>int</em>) – Number of nodes in the <em>community leaders</em> class</p></li>
+<li><p><strong>m_masses</strong> (<em>int</em>) – Number of edges to attach from a new node to existing nodes
+when generating the <em>masses</em> subgraph using Barabási–Albert preferential
+attachment</p></li>
+<li><p><strong>masses_exp_scale</strong> (<em>float</em>) – Scale parameter for exponential distribution
+of popularity in the <em>masses</em></p></li>
+<li><p><strong>masses_k_pop</strong> (<em>float</em>) – Popularity threshold for the <em>masses</em>. Nodes above
+the threshold will be eligible for connection with <em>celebrities</em>. Nodes
+below the threshold will be eligible for connection with <em>community
+leaders</em></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel.add_cross_class_edges">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_cross_class_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elite_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_any</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_back_if_any</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'masses'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses_pop_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.SGCModel.add_cross_class_edges" title="Permalink to this definition"></a></dt>
+<dd><p>Add edges across two classes: an <em>elite</em> class and the <em>masses</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g</strong> (<em>Graph</em>) – Graph to which to add edges</p></li>
+<li><p><strong>elite_class</strong> (<em>str</em>) – Class name of <em>elite</em> nodes</p></li>
+<li><p><strong>p_any</strong> (<em>float</em>) – Probability of any edge between a given pair of nodes</p></li>
+<li><p><strong>p_back_if_any</strong> (<em>float</em>) – Probability of an <em>elite</em> node to reciprocate
+an existing incoming edge with its symmetric</p></li>
+<li><p><strong>masses_class</strong> (<em>str</em>) – Class name of the <em>masses</em></p></li>
+<li><p><strong>masses_pop_filter</strong> (<em>callable</em>) – Filter function for masses popularity.
+If provided, the <em>elite</em> nodes will only be able to connect to the
+<em>masses</em> that have a popularity value of <code class="xref py py-data docutils literal notranslate"><span class="pre">p</span></code> for which
+<code class="xref py py-data docutils literal notranslate"><span class="pre">masses_pop_filter(p)</span></code> is <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed for random number generator</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel.celeb">
+<span class="sig-name descname"><span class="pre">celeb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.SGCModel.celeb" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the <em>celebrities</em> subgraph as a clique</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The <em>celebrities</em> subgraph</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>DiGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel.leader">
+<span class="sig-name descname"><span class="pre">leader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.SGCModel.leader" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the <em>community leaders</em> subgraph as a clique</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The <em>community leaders</em> subgraph</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>DiGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel.masses">
+<span class="sig-name descname"><span class="pre">masses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DiGraph</span></span></span><a class="headerlink" href="#featgraph.sgc.SGCModel.masses" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the <em>masses</em> subgraph using Barabási–Albert preferential
+attachment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Seed for random number generator</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The <em>masses</em> subgraph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DiGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel.n_nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#featgraph.sgc.SGCModel.n_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Number of nodes of the output graph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.SGCModel.popularity">
+<span class="sig-name descname"><span class="pre">popularity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.sgc.SGCModel.popularity" title="Permalink to this definition"></a></dt>
+<dd><p>Generate popularity values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Seed for random number generator</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The first values are the popularity values for the
+<em>masses</em>, then the values for <em>celebrities</em> and <em>community leaders</em></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.sgc.</span></span><span class="sig-name descname"><span class="pre">ThresholdComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*basegraphs:</span> <span class="pre">~typing.Tuple[~featgraph.sgc.ThresholdComparison.BaseGraph],</span> <span class="pre">thresholds:</span> <span class="pre">~typing.Sequence[float]</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">5,</span> <span class="pre">10,</span> <span class="pre">15,</span> <span class="pre">20,</span> <span class="pre">25,</span> <span class="pre">30,</span> <span class="pre">35,</span> <span class="pre">40,</span> <span class="pre">45,</span> <span class="pre">50,</span> <span class="pre">55,</span> <span class="pre">60,</span> <span class="pre">65,</span> <span class="pre">70,</span> <span class="pre">75,</span> <span class="pre">80),</span> <span class="pre">centralities:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">attribute:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'popularity',</span> <span class="pre">attr_fmt=&lt;function</span> <span class="pre">ThresholdComparison.&lt;lambda&gt;&gt;,</span> <span class="pre">attr_th_fn=&lt;function</span> <span class="pre">ThresholdComparison.&lt;lambda&gt;&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for comparing graphs under threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>basegraphs</strong> – Un-threshold graphs to compare</p></li>
+<li><p><strong>thresholds</strong> (<em>array</em>) – Threshold values</p></li>
+<li><p><strong>centralities</strong> – Dictionary of centrality names and attribute string</p></li>
+<li><p><strong>attribute</strong> (<em>str</em>) – The attribute to use for thresholding</p></li>
+<li><p><strong>attr_fmt</strong> – Attribute value formatting function for file saving</p></li>
+<li><p><strong>attr_th_fn</strong> – Function that takes a threshold values and returns a
+check function</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.BaseGraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_key:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'type_sgc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_values:</span> <span class="pre">~typing.Iterable</span> <span class="pre">=</span> <span class="pre">('celebrities'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'community</span> <span class="pre">leaders'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'masses')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_fn=&lt;function</span> <span class="pre">ThresholdComparison.BaseGraph.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.BaseGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper for a graph to compare</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> – The BVGraph wrapper object</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – The graph’s label: If unspecified, the base name is used</p></li>
+<li><p><strong>type_key</strong> (<em>str</em>) – The name of the attribute to read for the node classes</p></li>
+<li><p><strong>type_values</strong> – Iterable of classes to compare for this graph</p></li>
+<li><p><strong>check_fn</strong> – Function that is called with a class value as argument and
+returns the checker function for that class</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.compute_centralities">
+<span class="sig-name descname"><span class="pre">compute_centralities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.compute_centralities" title="Permalink to this definition"></a></dt>
+<dd><p>Compute centralities on all subgraphs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tqdm</strong> – function to use for the progress bar</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip when the
+output file is found. Otherwise always run</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.dataframe">
+<span class="sig-name descname"><span class="pre">dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Compute a dataframe with a summary of the subgraph centralities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_path</strong> (<em>str</em>) – Save/load dataframe to/from the csv file at this path</p></li>
+<li><p><strong>tqdm</strong> – function to use for the progress bar</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip when the
+output file is found. Otherwise always run</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.sgc_graph">
+<span class="sig-name descname"><span class="pre">sgc_graph</span></span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.sgc_graph" title="Permalink to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#featgraph.sgc.ThresholdComparison.BaseGraph" title="featgraph.sgc.ThresholdComparison.BaseGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.spotify_graph">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spotify_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_key:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'supergenre'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_values:</span> <span class="pre">~typing.Iterable</span> <span class="pre">=</span> <span class="pre">('classical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'hip-hop'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'rock')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_fn=&lt;function</span> <span class="pre">ThresholdComparison.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.spotify_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for a graph to compare, with defaults for the spotify-2018 graph.
+For an explanation of arguments, see <a class="reference internal" href="#featgraph.sgc.ThresholdComparison.BaseGraph" title="featgraph.sgc.ThresholdComparison.BaseGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThresholdComparison.BaseGraph</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.subgraph">
+<span class="sig-name descname"><span class="pre">subgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">BVGraph</span></a></span></span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.subgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Get the subgraph for the given base graph and threshold.
+Note: this method does not compute the subgraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_graph</strong> (<a class="reference internal" href="#featgraph.sgc.ThresholdComparison.BaseGraph" title="featgraph.sgc.ThresholdComparison.BaseGraph"><em>BaseGraph</em></a>) – The base graph to threshold</p></li>
+<li><p><strong>th</strong> (<em>float</em>) – The threshold value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The subgraph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph">BVGraph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.subgraph_path">
+<span class="sig-name descname"><span class="pre">subgraph_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.subgraph_path" title="Permalink to this definition"></a></dt>
+<dd><p>Get the path of a subgraph for the given base graph and threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_graph</strong> (<a class="reference internal" href="#featgraph.sgc.ThresholdComparison.BaseGraph" title="featgraph.sgc.ThresholdComparison.BaseGraph"><em>BaseGraph</em></a>) – The base graph to threshold</p></li>
+<li><p><strong>th</strong> (<em>float</em>) – The threshold value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The subgraph path</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.sgc.ThresholdComparison.threshold_graphs">
+<span class="sig-name descname"><span class="pre">threshold_graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.ThresholdComparison.threshold_graphs" title="Permalink to this definition"></a></dt>
+<dd><p>Compute all thresholded subgraphs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tqdm</strong> – function to use for the progress bar</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip when the
+output file is found. Otherwise always run</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.sgc.to_bv">
+<span class="sig-prename descclassname"><span class="pre">featgraph.sgc.</span></span><span class="sig-name descname"><span class="pre">to_bv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bvgraph_basepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('type',</span> <span class="pre">'txt')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popularity_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('popularity',</span> <span class="pre">'txt')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.sgc.to_bv" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a SGC networkx graph to a BVGraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>Graph</em>) – Networkx graph object</p></li>
+<li><p><strong>class_suffix</strong> (<em>tuple</em><em> of </em><em>str</em>) – Suffix for the node class file</p></li>
+<li><p><strong>popularity_suffix</strong> (<em>tuple</em><em> of </em><em>str</em>) – Suffix for the node popularity file</p></li>
+<li><p><strong>bvgraph_basepath</strong> (<em>str</em>) – Base path for the BVGraph files</p></li>
+<li><p><strong>missing</strong> – Value to print when node attribute value is missing</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>,
+then overwrite existing destination file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.scriptutils.html" class="btn btn-neutral float-left" title="featgraph.scriptutils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CONTRIBUTING.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

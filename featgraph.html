@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph package &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="featgraph.jwebgraph package" href="featgraph.jwebgraph.html" />
+    <link rel="prev" title="Citation is not Collaboration" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">featgraph package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.html">featgraph.jwebgraph package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.bayesian_comparison.html">featgraph.bayesian_comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.comparison.html">featgraph.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.conversion.html">featgraph.conversion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.genre_map.html">featgraph.genre_map module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html">featgraph.metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.misc.html">featgraph.misc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.nx2bv.html">featgraph.nx2bv module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.pathutils.html">featgraph.pathutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.plots.html">featgraph.plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html">featgraph.report module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html">featgraph.scriptutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html">featgraph.sgc module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">featgraph package</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph">
+<span id="featgraph-package"></span><h1>featgraph package<a class="headerlink" href="#module-featgraph" title="Permalink to this heading"></a></h1>
+<p>Copyright (c) 2021 Marco Tiraboschi and Giulia Clerici</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+“Software”), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.jwebgraph.html">featgraph.jwebgraph package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.JVMProcess"><code class="docutils literal notranslate"><span class="pre">JVMProcess</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.JVMProcess.FunctionWrapper"><code class="docutils literal notranslate"><span class="pre">JVMProcess.FunctionWrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.classpaths"><code class="docutils literal notranslate"><span class="pre">classpaths()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.dependencies"><code class="docutils literal notranslate"><span class="pre">dependencies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.download_dependencies"><code class="docutils literal notranslate"><span class="pre">download_dependencies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.download_to_file"><code class="docutils literal notranslate"><span class="pre">download_to_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.jvm_process_run"><code class="docutils literal notranslate"><span class="pre">jvm_process_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.path"><code class="docutils literal notranslate"><span class="pre">path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.start_jvm"><code class="docutils literal notranslate"><span class="pre">start_jvm()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.jwebgraph.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.jwebgraph.utils.html">featgraph.jwebgraph.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph"><code class="docutils literal notranslate"><span class="pre">BVGraph</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.jaccard"><code class="docutils literal notranslate"><span class="pre">jaccard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.kendall_tau"><code class="docutils literal notranslate"><span class="pre">kendall_tau()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.load_as_doubles"><code class="docutils literal notranslate"><span class="pre">load_as_doubles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.bayesian_comparison.html">featgraph.bayesian_comparison module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.bayesian_comparison.html#featgraph.bayesian_comparison.StudentTComparison"><code class="docutils literal notranslate"><span class="pre">StudentTComparison</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.bayesian_comparison.html#featgraph.bayesian_comparison.StudentTComparison.fit"><code class="docutils literal notranslate"><span class="pre">StudentTComparison.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.bayesian_comparison.html#featgraph.bayesian_comparison.StudentTComparison.sample"><code class="docutils literal notranslate"><span class="pre">StudentTComparison.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.bayesian_comparison.html#featgraph.bayesian_comparison.make_report"><code class="docutils literal notranslate"><span class="pre">make_report()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.bayesian_comparison.html#featgraph.bayesian_comparison.rope_probabilities"><code class="docutils literal notranslate"><span class="pre">rope_probabilities()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.comparison.html">featgraph.comparison module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.comparison.html#featgraph.comparison.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.conversion.html">featgraph.conversion module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.conversion.html#featgraph.conversion.compress_to_bvgraph"><code class="docutils literal notranslate"><span class="pre">compress_to_bvgraph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.conversion.html#featgraph.conversion.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.conversion.html#featgraph.conversion.make_asciigraph_txt"><code class="docutils literal notranslate"><span class="pre">make_asciigraph_txt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.conversion.html#featgraph.conversion.make_ids_txt"><code class="docutils literal notranslate"><span class="pre">make_ids_txt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.conversion.html#featgraph.conversion.make_metadata_txt"><code class="docutils literal notranslate"><span class="pre">make_metadata_txt()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.genre_map.html">featgraph.genre_map module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.genre_map.html#featgraph.genre_map.get_default_map"><code class="docutils literal notranslate"><span class="pre">get_default_map()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.genre_map.html#featgraph.genre_map.supergenres"><code class="docutils literal notranslate"><span class="pre">supergenres()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.genre_map.html#featgraph.genre_map.supergenres_from_iterable"><code class="docutils literal notranslate"><span class="pre">supergenres_from_iterable()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.metadata.html">featgraph.metadata module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist"><code class="docutils literal notranslate"><span class="pre">Artist</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.aid"><code class="docutils literal notranslate"><span class="pre">Artist.aid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.degree"><code class="docutils literal notranslate"><span class="pre">Artist.degree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.followers"><code class="docutils literal notranslate"><span class="pre">Artist.followers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.genre"><code class="docutils literal notranslate"><span class="pre">Artist.genre</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.index"><code class="docutils literal notranslate"><span class="pre">Artist.index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.name"><code class="docutils literal notranslate"><span class="pre">Artist.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.neighbors"><code class="docutils literal notranslate"><span class="pre">Artist.neighbors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.popularity"><code class="docutils literal notranslate"><span class="pre">Artist.popularity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.supergenre"><code class="docutils literal notranslate"><span class="pre">Artist.supergenre</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist.type"><code class="docutils literal notranslate"><span class="pre">Artist.type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.misc.html">featgraph.misc module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.IteratorWrapper"><code class="docutils literal notranslate"><span class="pre">IteratorWrapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.NodeIteratorWrapper"><code class="docutils literal notranslate"><span class="pre">NodeIteratorWrapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.dataframe_filter"><code class="docutils literal notranslate"><span class="pre">dataframe_filter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.jaccard"><code class="docutils literal notranslate"><span class="pre">jaccard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.multicontext"><code class="docutils literal notranslate"><span class="pre">multicontext()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.pretty_print_int"><code class="docutils literal notranslate"><span class="pre">pretty_print_int()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.sorted_values"><code class="docutils literal notranslate"><span class="pre">sorted_values()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.misc.html#featgraph.misc.switch_point"><code class="docutils literal notranslate"><span class="pre">switch_point()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.nx2bv.html">featgraph.nx2bv module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.nx2bv.html#featgraph.nx2bv.make_asciigraph_txt"><code class="docutils literal notranslate"><span class="pre">make_asciigraph_txt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.nx2bv.html#featgraph.nx2bv.make_attribute_txt"><code class="docutils literal notranslate"><span class="pre">make_attribute_txt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.nx2bv.html#featgraph.nx2bv.nx2bv"><code class="docutils literal notranslate"><span class="pre">nx2bv()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.pathutils.html">featgraph.pathutils module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.pathutils.html#featgraph.pathutils.derived_paths"><code class="docutils literal notranslate"><span class="pre">derived_paths()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.pathutils.html#featgraph.pathutils.notisfile"><code class="docutils literal notranslate"><span class="pre">notisfile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.pathutils.html#featgraph.pathutils.notisglob"><code class="docutils literal notranslate"><span class="pre">notisglob()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.plots.html">featgraph.plots module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.ExponentFormatter"><code class="docutils literal notranslate"><span class="pre">ExponentFormatter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.centrality_correlations"><code class="docutils literal notranslate"><span class="pre">centrality_correlations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.degrees_jointplot"><code class="docutils literal notranslate"><span class="pre">degrees_jointplot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.degrees_scatterplot"><code class="docutils literal notranslate"><span class="pre">degrees_scatterplot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.draw_sgc_graph"><code class="docutils literal notranslate"><span class="pre">draw_sgc_graph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.hdi_monomodal"><code class="docutils literal notranslate"><span class="pre">hdi_monomodal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.median_order"><code class="docutils literal notranslate"><span class="pre">median_order()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.plot_centrality_transitions"><code class="docutils literal notranslate"><span class="pre">plot_centrality_transitions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.plot_distances"><code class="docutils literal notranslate"><span class="pre">plot_distances()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.plot_posterior"><code class="docutils literal notranslate"><span class="pre">plot_posterior()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.preprocessed_additions"><code class="docutils literal notranslate"><span class="pre">preprocessed_additions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.rope_matrix_plot"><code class="docutils literal notranslate"><span class="pre">rope_matrix_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.scatter"><code class="docutils literal notranslate"><span class="pre">scatter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.scatter_refs"><code class="docutils literal notranslate"><span class="pre">scatter_refs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.translate_log_ticks"><code class="docutils literal notranslate"><span class="pre">translate_log_ticks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.violinplot_iterator"><code class="docutils literal notranslate"><span class="pre">violinplot_iterator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.plots.html#featgraph.plots.violinplot_set"><code class="docutils literal notranslate"><span class="pre">violinplot_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.report.html">featgraph.report module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker"><code class="docutils literal notranslate"><span class="pre">ReportMaker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.append"><code class="docutils literal notranslate"><span class="pre">ReportMaker.append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.clear"><code class="docutils literal notranslate"><span class="pre">ReportMaker.clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.display"><code class="docutils literal notranslate"><span class="pre">ReportMaker.display()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.get"><code class="docutils literal notranslate"><span class="pre">ReportMaker.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.itemize"><code class="docutils literal notranslate"><span class="pre">ReportMaker.itemize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.newline"><code class="docutils literal notranslate"><span class="pre">ReportMaker.newline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html#featgraph.report.ReportMaker.save"><code class="docutils literal notranslate"><span class="pre">ReportMaker.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.scriptutils.html">featgraph.scriptutils module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.EchoDict"><code class="docutils literal notranslate"><span class="pre">EchoDict</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.FeatgraphArgParse"><code class="docutils literal notranslate"><span class="pre">FeatgraphArgParse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.FeatgraphArgParse.custom_parse"><code class="docutils literal notranslate"><span class="pre">FeatgraphArgParse.custom_parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.FeatgraphPlotsArgParse"><code class="docutils literal notranslate"><span class="pre">FeatgraphPlotsArgParse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.FeatgraphPlotsArgParse.custom_parse"><code class="docutils literal notranslate"><span class="pre">FeatgraphPlotsArgParse.custom_parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.FeatgraphPlotsArgParse.none_or_expand"><code class="docutils literal notranslate"><span class="pre">FeatgraphPlotsArgParse.none_or_expand()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html#featgraph.scriptutils.FeatgraphPlotsArgParse.perform_threshold_comparison"><code class="docutils literal notranslate"><span class="pre">FeatgraphPlotsArgParse.perform_threshold_comparison()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="featgraph.sgc.html">featgraph.sgc module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel"><code class="docutils literal notranslate"><span class="pre">SGCModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel.add_cross_class_edges"><code class="docutils literal notranslate"><span class="pre">SGCModel.add_cross_class_edges()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel.celeb"><code class="docutils literal notranslate"><span class="pre">SGCModel.celeb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel.leader"><code class="docutils literal notranslate"><span class="pre">SGCModel.leader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel.masses"><code class="docutils literal notranslate"><span class="pre">SGCModel.masses()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel.n_nodes"><code class="docutils literal notranslate"><span class="pre">SGCModel.n_nodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.SGCModel.popularity"><code class="docutils literal notranslate"><span class="pre">SGCModel.popularity()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.BaseGraph"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.BaseGraph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.compute_centralities"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.compute_centralities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.dataframe"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.sgc_graph"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.sgc_graph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.spotify_graph"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.spotify_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.subgraph"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.subgraph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.subgraph_path"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.subgraph_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.ThresholdComparison.threshold_graphs"><code class="docutils literal notranslate"><span class="pre">ThresholdComparison.threshold_graphs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.sgc.html#featgraph.sgc.to_bv"><code class="docutils literal notranslate"><span class="pre">to_bv()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Citation is not Collaboration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="featgraph.jwebgraph.html" class="btn btn-neutral float-right" title="featgraph.jwebgraph package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph.jwebgraph.utils module &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="featgraph.bayesian_comparison module" href="featgraph.bayesian_comparison.html" />
+    <link rel="prev" title="featgraph.jwebgraph package" href="featgraph.jwebgraph.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="featgraph.html">featgraph package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="featgraph.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="featgraph.jwebgraph.html">featgraph.jwebgraph package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.JVMProcess"><code class="docutils literal notranslate"><span class="pre">JVMProcess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.classpaths"><code class="docutils literal notranslate"><span class="pre">classpaths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.dependencies"><code class="docutils literal notranslate"><span class="pre">dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.download_dependencies"><code class="docutils literal notranslate"><span class="pre">download_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.download_to_file"><code class="docutils literal notranslate"><span class="pre">download_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.jvm_process_run"><code class="docutils literal notranslate"><span class="pre">jvm_process_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.path"><code class="docutils literal notranslate"><span class="pre">path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="featgraph.jwebgraph.html#featgraph.jwebgraph.start_jvm"><code class="docutils literal notranslate"><span class="pre">start_jvm()</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="featgraph.jwebgraph.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="featgraph.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="featgraph.html">featgraph package</a></li>
+          <li class="breadcrumb-item"><a href="featgraph.jwebgraph.html">featgraph.jwebgraph package</a></li>
+      <li class="breadcrumb-item active">featgraph.jwebgraph.utils module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph.jwebgraph.utils">
+<span id="featgraph-jwebgraph-utils-module"></span><h1>featgraph.jwebgraph.utils module<a class="headerlink" href="#module-featgraph.jwebgraph.utils" title="Permalink to this heading"></a></h1>
+<p>Utility wrappers for Java functions.
+The JVM should be started before importing this module</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.utils.</span></span><span class="sig-name descname"><span class="pre">BVGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>BVGraph wrapper class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path</strong> (<em>str</em>) – Base path for graph files</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Separator for graph file suffixes</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.arc_couples">
+<span class="sig-name descname"><span class="pre">arc_couples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.arc_couples" title="Permalink to this definition"></a></dt>
+<dd><p>Load the number of reciprocated arcs per node from file.
+The file is computed by <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.compute_reciprocity" title="featgraph.jwebgraph.utils.BVGraph.compute_reciprocity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_reciprocity()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of reciprocated arc couples per node</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.artist">
+<span class="sig-name descname"><span class="pre">artist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.artist" title="Permalink to this definition"></a></dt>
+<dd><p>Get an artist from the dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><code class="xref py py-class docutils literal notranslate"><span class="pre">featgraph.metadata.Artist</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the Artist object wrapper</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist">Artist</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.basename">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">basename</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.basename" title="Permalink to this definition"></a></dt>
+<dd><p>Base name of the graph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.best">
+<span class="sig-name descname"><span class="pre">best</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.best" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the best-scoring nodes for a function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – The number of nodes to return</p></li>
+<li><p><strong>f</strong> – A vector of scores or a callable that returns a vector of scores</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default) compute maxima, otherwise
+compute minima</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The best artists for the score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><code class="xref py py-class docutils literal notranslate"><span class="pre">featgraph.metadata.Artist</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.closenessc">
+<span class="sig-name descname"><span class="pre">closenessc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.closenessc" title="Permalink to this definition"></a></dt>
+<dd><p>Load the Closeness Centrality vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of Closeness Centralities</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_closenessc">
+<span class="sig-name descname"><span class="pre">compute_closenessc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_closenessc" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the Closeness Centrality with HyperBall</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hyperball()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_coreachable">
+<span class="sig-name descname"><span class="pre">compute_coreachable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_coreachable" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the coreachable set sizes with HyperBall.
+The transposed graph must be precomputed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hyperball()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_degrees">
+<span class="sig-name descname"><span class="pre">compute_degrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_degrees" title="Permalink to this definition"></a></dt>
+<dd><p>Compute statistical data of a given graph and save
+indegrees and outdegrees in text format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_harmonicc">
+<span class="sig-name descname"><span class="pre">compute_harmonicc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_harmonicc" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the Harmonic Centrality with HyperBall</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hyperball()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_indegrees">
+<span class="sig-name descname"><span class="pre">compute_indegrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_indegrees" title="Permalink to this definition"></a></dt>
+<dd><p>Compute statistical data of a given graph and save
+indegrees and outdegrees in text format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_linc">
+<span class="sig-name descname"><span class="pre">compute_linc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_linc" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the Lin Centrality with HyperBall</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hyperball()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_neighborhood">
+<span class="sig-name descname"><span class="pre">compute_neighborhood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_neighborhood" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the neighborhood function with HyperBall</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hyperball()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_node_scc_sizes">
+<span class="sig-name descname"><span class="pre">compute_node_scc_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buckets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_node_scc_sizes" title="Permalink to this definition"></a></dt>
+<dd><p>Compute strongly connected components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sizes</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute component sizes</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then renumber components in
+decreasing-size order</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute buckets (nodes
+belonging to a bucket component, i.e.,
+a terminal nondangling component)</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_node_wcc_sizes">
+<span class="sig-name descname"><span class="pre">compute_node_wcc_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buckets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_node_wcc_sizes" title="Permalink to this definition"></a></dt>
+<dd><p>Compute weakly connected components.
+Requires the symmetrized graph to be computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sizes</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute component sizes</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then renumber components in
+decreasing-size order</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute buckets (nodes
+belonging to a bucket component, i.e.,
+a terminal nondangling component)</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_outdegrees">
+<span class="sig-name descname"><span class="pre">compute_outdegrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_outdegrees" title="Permalink to this definition"></a></dt>
+<dd><p>Compute statistical data of a given graph and save
+indegrees and outdegrees in text format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_pagerank">
+<span class="sig-name descname"><span class="pre">compute_pagerank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.85</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_pagerank" title="Permalink to this definition"></a></dt>
+<dd><p>Compute PageRank of a graph given its transpose</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em>) – PageRank <span class="math notranslate nohighlight">\(\alpha\)</span> value</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_reachable">
+<span class="sig-name descname"><span class="pre">compute_reachable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_reachable" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the reachable set sizes with HyperBall</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Keyword arguments for <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="featgraph.jwebgraph.utils.BVGraph.hyperball"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hyperball()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_reciprocity">
+<span class="sig-name descname"><span class="pre">compute_reciprocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_reciprocity" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the reciprocity of the arcs of each node
+by counting self-loops and reciprocated arc couples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>tqdm</strong> – function to use for the progress bar</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_scc">
+<span class="sig-name descname"><span class="pre">compute_scc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buckets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_scc" title="Permalink to this definition"></a></dt>
+<dd><p>Compute strongly connected components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sizes</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute component sizes</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then renumber components in
+decreasing-size order</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute buckets (nodes
+belonging to a bucket component, i.e.,
+a terminal nondangling component)</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_symmetrized">
+<span class="sig-name descname"><span class="pre">compute_symmetrized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_symmetrized" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the symmetrized graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_transpose">
+<span class="sig-name descname"><span class="pre">compute_transpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_transpose" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the transpose of the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.compute_wcc">
+<span class="sig-name descname"><span class="pre">compute_wcc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buckets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.compute_wcc" title="Permalink to this definition"></a></dt>
+<dd><p>Compute weakly connected components.
+Requires the symmetrized graph to be computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sizes</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute component sizes</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then renumber components in
+decreasing-size order</p></li>
+<li><p><strong>sizes</strong> – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute buckets (nodes
+belonging to a bucket component, i.e.,
+a terminal nondangling component)</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.coreachable">
+<span class="sig-name descname"><span class="pre">coreachable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.coreachable" title="Permalink to this definition"></a></dt>
+<dd><p>Load the reachable set sizes vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of coreachable set sizes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.distances">
+<span class="sig-name descname"><span class="pre">distances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.distances" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the distance distribution vector from the
+neighborhood fuction file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of absolute frequencies</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.genre">
+<span class="sig-name descname"><span class="pre">genre</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.genre" title="Permalink to this definition"></a></dt>
+<dd><p>Get the genres from the metadata file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The iterable of the lists of genres of each artist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.graph_reciprocity">
+<span class="sig-name descname"><span class="pre">graph_reciprocity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.graph_reciprocity" title="Permalink to this definition"></a></dt>
+<dd><p>Load the reciprocity stats from file and compute the correlation
+coefficient for the entire graph. The file is computed by
+<a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.compute_reciprocity" title="featgraph.jwebgraph.utils.BVGraph.compute_reciprocity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_reciprocity()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Reciprocity of the graph</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.harmonicc">
+<span class="sig-name descname"><span class="pre">harmonicc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.harmonicc" title="Permalink to this definition"></a></dt>
+<dd><p>Load the Harmonic Centrality vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of Harmonic Centralities</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.hyperball">
+<span class="sig-name descname"><span class="pre">hyperball</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.hyperball" title="Permalink to this definition"></a></dt>
+<dd><p>Run HyperBall on the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – Command flag</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Output file path</p></li>
+<li><p><strong>nbits</strong> (<em>int</em>) – Number of bits (<span class="math notranslate nohighlight">\(\log_2m\)</span>) for the</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em>) – Run HyperBall on the transposed graph (default)</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then log if file was found</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.ids">
+<span class="sig-name descname"><span class="pre">ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.ids" title="Permalink to this definition"></a></dt>
+<dd><p>Get the artists ids from the metadata file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The iterable of ids of each artist as strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.indegrees">
+<span class="sig-name descname"><span class="pre">indegrees</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.indegrees" title="Permalink to this definition"></a></dt>
+<dd><p>Load indegrees vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of indegrees</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.linc">
+<span class="sig-name descname"><span class="pre">linc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.linc" title="Permalink to this definition"></a></dt>
+<dd><p>Load the Lin Centrality vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of Lin Centralities</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">webgraph.BVGraph</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.load" title="Permalink to this definition"></a></dt>
+<dd><p>Load (if not already loaded) and return the java BVGraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The java BVGraph</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>webgraph.BVGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.loaded">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loaded</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.loaded" title="Permalink to this definition"></a></dt>
+<dd><p>Whether the java BVGraph has been loaded or not</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.names">
+<span class="sig-name descname"><span class="pre">names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.names" title="Permalink to this definition"></a></dt>
+<dd><p>Get the artists names from the metadata file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The iterable of names of each artist as strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.neighborhood">
+<span class="sig-name descname"><span class="pre">neighborhood</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.neighborhood" title="Permalink to this definition"></a></dt>
+<dd><p>Load neighborhood fuction vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of cumulative frequencies</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.node_scc_sizes">
+<span class="sig-name descname"><span class="pre">node_scc_sizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.node_scc_sizes" title="Permalink to this definition"></a></dt>
+<dd><p>Load the array of the strongly connected component size of each node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of strongly connected component sizes by node</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.node_wcc_sizes">
+<span class="sig-name descname"><span class="pre">node_wcc_sizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.node_wcc_sizes" title="Permalink to this definition"></a></dt>
+<dd><p>Load the array of the weakly connected component size of each node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of weakly connected component sizes by node</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.outdegrees">
+<span class="sig-name descname"><span class="pre">outdegrees</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.outdegrees" title="Permalink to this definition"></a></dt>
+<dd><p>Load outdegrees vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of outdegrees</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.pagerank">
+<span class="sig-name descname"><span class="pre">pagerank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.85</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.pagerank" title="Permalink to this definition"></a></dt>
+<dd><p>Load PageRank values vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alpha</strong> (<em>float</em>) – PageRank <span class="math notranslate nohighlight">\(\alpha\)</span> value</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of PageRank values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.pagerank_path">
+<span class="sig-name descname"><span class="pre">pagerank_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.85</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.pagerank_path" title="Permalink to this definition"></a></dt>
+<dd><p>Path of PageRank files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>suffix</strong> – Any number of suffixes</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\alpha\)</span> value for PageRank</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>File path</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.path">
+<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.path" title="Permalink to this definition"></a></dt>
+<dd><p>Derived paths for graph files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>suffix</strong> – Any number of suffixes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.popularity">
+<span class="sig-name descname"><span class="pre">popularity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">missing_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.popularity" title="Permalink to this definition"></a></dt>
+<dd><p>Get the popularity values from the metadata file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>missing_value</strong> (<em>int</em>) – value to assign to an artist in case their
+popularity is unknown</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The iterable of popularity values of each artist
+as floats between 0 and 100 (or <code class="xref py py-data docutils literal notranslate"><span class="pre">missing_value</span></code>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.reachable">
+<span class="sig-name descname"><span class="pre">reachable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.reachable" title="Permalink to this definition"></a></dt>
+<dd><p>Load the reachable set sizes vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of reachable set sizes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of doubles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.reciprocity">
+<span class="sig-name descname"><span class="pre">reciprocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nullvalue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.reciprocity" title="Permalink to this definition"></a></dt>
+<dd><p>Load the reciprocity stats from file and compute the correlation
+coefficient for each node. The file is computed by
+<a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.compute_reciprocity" title="featgraph.jwebgraph.utils.BVGraph.compute_reciprocity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_reciprocity()</span></code></a>. Also, the degrees of each node are needed:
+they are computed by <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.compute_degrees" title="featgraph.jwebgraph.utils.BVGraph.compute_degrees"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_degrees()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nullvalue</strong> (<em>float</em>) – Value to replace NaNs and infinites with</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reciprocity of each node</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.reconstruct_offsets">
+<span class="sig-name descname"><span class="pre">reconstruct_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.reconstruct_offsets" title="Permalink to this definition"></a></dt>
+<dd><p>Generate offsets for the source graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>overwrite</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code> (default), then skip if the
+output file is found. Otherwise always run</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.scc">
+<span class="sig-name descname"><span class="pre">scc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.scc" title="Permalink to this definition"></a></dt>
+<dd><p>Load strongly connected components labels vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of strongly connected components labels</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.scc_sizes">
+<span class="sig-name descname"><span class="pre">scc_sizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.scc_sizes" title="Permalink to this definition"></a></dt>
+<dd><p>Load strongly connected components sizes vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of strongly connected components sizes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.self_loops">
+<span class="sig-name descname"><span class="pre">self_loops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.self_loops" title="Permalink to this definition"></a></dt>
+<dd><p>Load the self-loops per node from file.
+The file is computed by <a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph.compute_reciprocity" title="featgraph.jwebgraph.utils.BVGraph.compute_reciprocity"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_reciprocity()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Self-loops per node</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.supergenre">
+<span class="sig-name descname"><span class="pre">supergenre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genre_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.supergenre" title="Permalink to this definition"></a></dt>
+<dd><p>Get the supergenres of each artist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>genre_dict</strong> (<em>dict</em>) – The genre map dictionary.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), the the default map is used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The iterable of the lists of supergenres of each artist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.supergenre_dataframe">
+<span class="sig-name descname"><span class="pre">supergenre_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genre_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.supergenre_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Make a dataframe of the values in the itarables and pair
+it with information about the artist’s supergenre. Every artist will have
+one row in the dataframe for each of their supergenres</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genre_dict</strong> (<em>dict</em>) – The genre map dictionary.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (default), the the default map is used.</p></li>
+<li><p><strong>kwargs</strong> (<em>iterables</em>) – Named iterables for the dataframe columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The iterable of the lists of supergenre names</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.symmetrized">
+<span class="sig-name descname"><span class="pre">symmetrized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">BVGraph</span></a></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.symmetrized" title="Permalink to this definition"></a></dt>
+<dd><p>Get the symmetrized graph (must be precomputed)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.transform_map">
+<span class="sig-name descname"><span class="pre">transform_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">it</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('ids',</span> <span class="pre">'type',</span> <span class="pre">'name',</span> <span class="pre">'popularity',</span> <span class="pre">'genre',</span> <span class="pre">'followers')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">BVGraph</span></a></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.transform_map" title="Permalink to this definition"></a></dt>
+<dd><p>Filter out the nodes at the indices for which the iterable
+value is <code class="xref py py-data docutils literal notranslate"><span class="pre">False</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest_path</strong> (<em>str</em>) – path where to save the filtered graph</p></li>
+<li><p><strong>it</strong> (<em>iterable</em><em> of </em><em>bool</em>) – iterable of boolean values. If <code class="xref py py-data docutils literal notranslate"><span class="pre">it[i]</span></code> is
+<code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, then node <code class="xref py py-data docutils literal notranslate"><span class="pre">i</span></code> is kept, otherwise the node is
+filtered out</p></li>
+<li><p><strong>metadata_list</strong> (<em>str</em>) – list of suffixes of metadata files to map</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a BVGraph which is the filtered graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.transposed">
+<span class="sig-name descname"><span class="pre">transposed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">BVGraph</span></a></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.transposed" title="Permalink to this definition"></a></dt>
+<dd><p>Get the transpose of the graph (must be precomputed)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.type_sgc">
+<span class="sig-name descname"><span class="pre">type_sgc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.type_sgc" title="Permalink to this definition"></a></dt>
+<dd><p>Get the sgc type from the metadata file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The iterable of the lists of types of each individual</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.wcc">
+<span class="sig-name descname"><span class="pre">wcc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.wcc" title="Permalink to this definition"></a></dt>
+<dd><p>Load weakly connected components labels vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of weakly connected components labels</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.BVGraph.wcc_sizes">
+<span class="sig-name descname"><span class="pre">wcc_sizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.BVGraph.wcc_sizes" title="Permalink to this definition"></a></dt>
+<dd><p>Load weakly connected components sizes vector from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of weakly connected components sizes</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of integers</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.jaccard">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.utils.</span></span><span class="sig-name descname"><span class="pre">jaccard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#featgraph.jwebgraph.utils.jaccard" title="Permalink to this definition"></a></dt>
+<dd><p>Jaccard index between sets of artists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – First set of artists</p></li>
+<li><p><strong>b</strong> – Second set of artists</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Jaccard index</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.kendall_tau">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.utils.</span></span><span class="sig-name descname"><span class="pre">kendall_tau</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.kendall_tau" title="Permalink to this definition"></a></dt>
+<dd><p>Computes Kendall’s <span class="math notranslate nohighlight">\(\tau\)</span> between two score vectors.</p>
+<p>Note that this method must be called with some care.
+More precisely, the two arguments should be built on-the-fly in
+the method call, and not stored in variables, as the first argument
+array will be null’d during the execution of this method to free
+some memory: if the array is referenced elsewhere the garbage
+collector will not be able to collect it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The first vector or a function that returns the first vector</p></li>
+<li><p><strong>y</strong> – The second vector or a function that returns the second vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kendall’s <span class="math notranslate nohighlight">\(\tau\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.jwebgraph.utils.load_as_doubles">
+<span class="sig-prename descclassname"><span class="pre">featgraph.jwebgraph.utils.</span></span><span class="sig-name descname"><span class="pre">load_as_doubles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'String'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.jwebgraph.utils.load_as_doubles" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a vector of doubles, either in binary or textual form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The file path</p></li>
+<li><p><strong>input_type</strong> (<em>str</em><em> or </em><em>type</em>) – The input type (<code class="xref py py-class docutils literal notranslate"><span class="pre">Double</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Float</span></code>,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Long</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">String</span></code> to denote a text file).
+Default is <code class="xref py py-class docutils literal notranslate"><span class="pre">String</span></code>.
+Either the type object can be passed or its name as a string</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – Whether to reverse the ranking induced by the score vector
+by loading opposite values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data read from the file</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of double</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.jwebgraph.html" class="btn btn-neutral float-left" title="featgraph.jwebgraph package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="featgraph.bayesian_comparison.html" class="btn btn-neutral float-right" title="featgraph.bayesian_comparison module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

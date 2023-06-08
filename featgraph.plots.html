@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>featgraph.plots module &mdash; featgraph 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="featgraph.report module" href="featgraph.report.html" />
+    <link rel="prev" title="featgraph.pathutils module" href="featgraph.pathutils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            featgraph
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="featgraph.html">featgraph package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="featgraph.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="featgraph.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="featgraph.bayesian_comparison.html">featgraph.bayesian_comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.comparison.html">featgraph.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.conversion.html">featgraph.conversion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.genre_map.html">featgraph.genre_map module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.metadata.html">featgraph.metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.misc.html">featgraph.misc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.nx2bv.html">featgraph.nx2bv module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.pathutils.html">featgraph.pathutils module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">featgraph.plots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.ExponentFormatter"><code class="docutils literal notranslate"><span class="pre">ExponentFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.centrality_correlations"><code class="docutils literal notranslate"><span class="pre">centrality_correlations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.degrees_jointplot"><code class="docutils literal notranslate"><span class="pre">degrees_jointplot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.degrees_scatterplot"><code class="docutils literal notranslate"><span class="pre">degrees_scatterplot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.draw_sgc_graph"><code class="docutils literal notranslate"><span class="pre">draw_sgc_graph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.hdi_monomodal"><code class="docutils literal notranslate"><span class="pre">hdi_monomodal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.median_order"><code class="docutils literal notranslate"><span class="pre">median_order()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.plot_centrality_transitions"><code class="docutils literal notranslate"><span class="pre">plot_centrality_transitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.plot_distances"><code class="docutils literal notranslate"><span class="pre">plot_distances()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.plot_posterior"><code class="docutils literal notranslate"><span class="pre">plot_posterior()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.preprocessed_additions"><code class="docutils literal notranslate"><span class="pre">preprocessed_additions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.rope_matrix_plot"><code class="docutils literal notranslate"><span class="pre">rope_matrix_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.scatter"><code class="docutils literal notranslate"><span class="pre">scatter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.scatter_refs"><code class="docutils literal notranslate"><span class="pre">scatter_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.translate_log_ticks"><code class="docutils literal notranslate"><span class="pre">translate_log_ticks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.violinplot_iterator"><code class="docutils literal notranslate"><span class="pre">violinplot_iterator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#featgraph.plots.violinplot_set"><code class="docutils literal notranslate"><span class="pre">violinplot_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.report.html">featgraph.report module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.scriptutils.html">featgraph.scriptutils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="featgraph.sgc.html">featgraph.sgc module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">featgraph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="featgraph.html">featgraph package</a></li>
+      <li class="breadcrumb-item active">featgraph.plots module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-featgraph.plots">
+<span id="featgraph-plots-module"></span><h1>featgraph.plots module<a class="headerlink" href="#module-featgraph.plots" title="Permalink to this heading"></a></h1>
+<p>Plot utilities</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="featgraph.plots.ExponentFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">ExponentFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.ExponentFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ScalarFormatter</span></code></p>
+<p>Ticks formatter for setting an explicit exponent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Positional arguments for <code class="xref py py-class docutils literal notranslate"><span class="pre">ScalarFormatter</span></code></p></li>
+<li><p><strong>exponent</strong> (<em>int</em>) – Explicit exponent</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for <code class="xref py py-class docutils literal notranslate"><span class="pre">ScalarFormatter</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.centrality_correlations">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">centrality_correlations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df:</span> <span class="pre">~pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yk:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xk:</span> <span class="pre">~typing.Sequence[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphs:</span> <span class="pre">~typing.Sequence[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc_fn=&lt;function</span> <span class="pre">pearsonr&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_fn=&lt;function</span> <span class="pre">scatterplot&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kws=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette:</span> <span class="pre">~typing.Dict</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresholds:</span> <span class="pre">~typing.Sequence[float]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subplot_kws:</span> <span class="pre">~typing.Dict</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.centrality_correlations" title="Permalink to this definition"></a></dt>
+<dd><p>Compute and plot centrality correlations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>) – Centrality transitions dataframe</p></li>
+<li><p><strong>yk</strong> (<em>str</em>) – Reference centrality label</p></li>
+<li><p><strong>xk</strong> (<em>sequence</em><em> of </em><em>str</em>) – Other centralities labels</p></li>
+<li><p><strong>graphs</strong> (<em>sequence</em><em> of </em><em>str</em>) – Sequence of graph labels</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then plot paired plots</p></li>
+<li><p><strong>cc_fn</strong> (<em>callable</em>) – Correlation coefficient function. It should accept two
+vectors and return two scalars: the correlation
+coefficient, and the p-value. Default is Pearson correlation coefficient</p></li>
+<li><p><strong>plt_fn</strong> (<em>callable</em>) – Plot function</p></li>
+<li><p><strong>plt_kws</strong> (<em>dict</em>) – Plot keyword arguments</p></li>
+<li><p><strong>palette</strong> (<em>dict</em>) – Color associations for groups</p></li>
+<li><p><strong>p_thresholds</strong> (<em>sequence</em><em> of </em><em>float</em>) – p-value threshold values for significance</p></li>
+<li><p><strong>fig</strong> – Figure for plots</p></li>
+<li><p><strong>axs</strong> – Axes matrix for plots</p></li>
+<li><p><strong>subplot_kws</strong> (<em>dict</em>) – Keyword arguments for subplots</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe and, if <code class="xref py py-data docutils literal notranslate"><span class="pre">plot</span></code> is <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, figure and axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.degrees_jointplot">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">degrees_jointplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">featgraph.jwebgraph.utils.BVGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_marginal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Outdegree'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Indegree'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_artists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marginal_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kendall_tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.degrees_jointplot" title="Permalink to this definition"></a></dt>
+<dd><p>Jointplot of indegree vs outdegree</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><em>BVGraph</em></a>) – Graph whose degrees to plot</p></li>
+<li><p><strong>log_p1</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then plot the values scaled as
+<code class="xref py py-data docutils literal notranslate"><span class="pre">log10(x</span> <span class="pre">+</span> <span class="pre">1)</span></code></p></li>
+<li><p><strong>log_marginal</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then plot the marginal
+frequencies on a logarithmic scale</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em>) – Label for the x (out-degree) axis</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – Label for the y (in-degree) axis</p></li>
+<li><p><strong>ref_artists</strong> (<em>sequence</em><em> of </em><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><em>Artist</em></a>) – Reference artists</p></li>
+<li><p><strong>scatter_kwargs</strong> (<em>dict</em>) – Keyword arguments for reference artists scatterplot</p></li>
+<li><p><strong>text_kwargs</strong> (<em>dict</em>) – Keyword arguments for reference artists text</p></li>
+<li><p><strong>marginal_kws</strong> (<em>dict</em>) – Keyword arguments for marginal distributions plot</p></li>
+<li><p><strong>stats_kws</strong> (<em>dict</em>) – Keyword arguments for statistics text (additional
+w.r.t. <code class="xref py py-data docutils literal notranslate"><span class="pre">text_kwargs</span></code>)</p></li>
+<li><p><strong>zorder</strong> (<em>int</em>) – Base zorder for plots</p></li>
+<li><p><strong>grid</strong> – Single argument or keyword arguments for turning on grids</p></li>
+<li><p><strong>kendall_tau</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, add a text with the value of the
+Kendall Tau correlation coefficient</p></li>
+<li><p><strong>reciprocity</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, add a text with the value of the
+reciprocity</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for jointplot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.degrees_scatterplot">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">degrees_scatterplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">BVGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_artists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.degrees_scatterplot" title="Permalink to this definition"></a></dt>
+<dd><p>Scatterplot of indegree vs outdegree</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><em>BVGraph</em></a>) – Graph whose degrees to plot</p></li>
+<li><p><strong>ref_artists</strong> (<em>sequence</em><em> of </em><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><em>Artist</em></a>) – Reference artists</p></li>
+<li><p><strong>ref_kwargs</strong> (<em>dict</em>) – Keyword arguments for reference artists scatterplot</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for scatterplot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.draw_sgc_graph">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">draw_sgc_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">g:</span> <span class="pre">~networkx.classes.graph.Graph,</span> <span class="pre">ax:</span> <span class="pre">~matplotlib.axes._axes.Axes</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">masses_c='C0',</span> <span class="pre">celeb_c='C1',</span> <span class="pre">leader_c='C2',</span> <span class="pre">default_c='k',</span> <span class="pre">pos_fn:</span> <span class="pre">~typing.Callable[[~networkx.classes.graph.Graph],</span> <span class="pre">~typing.Dict[int,</span> <span class="pre">~typing.Tuple[float,</span> <span class="pre">float]]]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">spring_layout&gt;,</span> <span class="pre">node_alpha:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">edge_alpha:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.1,</span> <span class="pre">draw_nodes:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">legend:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">seed:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">edges_kwargs:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">~typing.Any]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">nodes_kwargs:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">~typing.Any]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.draw_sgc_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Draw a graph output with a Social Group Centrality model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g</strong> (<em>Graph</em>) – The graph</p></li>
+<li><p><strong>ax</strong> (<em>Axes</em>) – The pyplot Axes onto which to draw the graph. Default is
+<code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code> (use the output of <code class="xref py py-func docutils literal notranslate"><span class="pre">plt.gca()</span></code>)</p></li>
+<li><p><strong>masses_c</strong> (<em>color specification</em>) – Color for the <em>masses</em></p></li>
+<li><p><strong>celeb_c</strong> (<em>color specification</em>) – Color for the <em>celebrities</em></p></li>
+<li><p><strong>leader_c</strong> (<em>color specification</em>) – Color for the <em>community leaders</em></p></li>
+<li><p><strong>default_c</strong> (<em>color specification</em>) – Color for other edges (should not happen)</p></li>
+<li><p><strong>pos_fn</strong> (<em>callable</em>) – Node positions function.
+Defaults to <code class="xref py py-func docutils literal notranslate"><span class="pre">spring_layout()</span></code></p></li>
+<li><p><strong>node_alpha</strong> (<em>float</em>) – Opacity of nodes</p></li>
+<li><p><strong>edge_alpha</strong> (<em>float</em>) – Opacity of edges</p></li>
+<li><p><strong>draw_nodes</strong> (<em>bool</em>) – Whether to draw nodes or not</p></li>
+<li><p><strong>legend</strong> (<em>bool</em>) – Whether to add a legend to the plot or not</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed for random number generator</p></li>
+<li><p><strong>edges_kwargs</strong> (<em>dict</em>) – Keyword arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">draw_networkx_edges()</span></code></p></li>
+<li><p><strong>nodes_kwargs</strong> (<em>dict</em>) – Keyword arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">draw_networkx_nodes()</span></code></p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for draw functions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pyplot Axes onto which the graph is drawn</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.hdi_monomodal">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">hdi_monomodal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.94</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cdf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.hdi_monomodal" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the HDI around the mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>array</em>) – Array of the probabilities of x</p></li>
+<li><p><strong>x</strong> (<em>array</em>) – Array of variable values (if unspecified,
+the integer range of the same length of <code class="xref py py-data docutils literal notranslate"><span class="pre">p</span></code> is used)</p></li>
+<li><p><strong>d</strong> (<em>float</em>) – The minimum density of the HDI</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – If specified, upsample the probability function
+to this number of values</p></li>
+<li><p><strong>cdf</strong> (<em>True</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> interpret <code class="xref py py-data docutils literal notranslate"><span class="pre">p</span></code>
+as a cumulative probability function</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.median_order">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">median_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.median_order" title="Permalink to this definition"></a></dt>
+<dd><p>Index function for ordering groups by median value.
+Useful for seaborn plots</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em>) – Dataframe to sort</p></li>
+<li><p><strong>sort_by</strong> (<em>str</em>) – Column of the values by which to sort</p></li>
+<li><p><strong>group_by</strong> (<em>str</em>) – Column of the categories to sort</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The index function</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.plot_centrality_transitions">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">plot_centrality_transitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centrality_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centrality_name_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'centrality'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_name_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'type_value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'threshold'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'popularity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.7777777777777777</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'svg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">median</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'std'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quartile1_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quartile-1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">median_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quartile3_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quartile-3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.6744897501960817</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.plot_centrality_transitions" title="Permalink to this definition"></a></dt>
+<dd><p>Plot centrality transitions for multiple graphs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>) – Centralities summary</p></li>
+<li><p><strong>centrality_name</strong> (<em>str</em>) – Name of the centrality to plot</p></li>
+<li><p><strong>cmap</strong> (<em>dict</em>) – Map from type names to plot colors</p></li>
+<li><p><strong>centrality_name_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the centrality names</p></li>
+<li><p><strong>graph_names</strong> (<em>sequence</em><em> of </em><em>str</em>) – Names of the graphs, the centralities of
+which to plot. If unspecified, plot centralities for all graphs
+in the dataframe</p></li>
+<li><p><strong>graph_name_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the graph names</p></li>
+<li><p><strong>type_name_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the type names</p></li>
+<li><p><strong>threshold_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the threshold values</p></li>
+<li><p><strong>threshold_attr</strong> (<em>str</em>) – Name of the attribute used for thresholding</p></li>
+<li><p><strong>norm</strong> (<em>str</em>) – If specified, divide the centrality column
+by the column with this name. Use this for normalization</p></li>
+<li><p><strong>logy</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, set the y-axis as logarithmic</p></li>
+<li><p><strong>aspect</strong> (<em>float</em>) – Aspect ratio of the figure for a 1-graph plot</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – Width of the figure</p></li>
+<li><p><strong>median</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), plot median and interquartile
+ranges. Otherwise, plot the mean and the range within <code class="xref py py-data docutils literal notranslate"><span class="pre">std_scale</span></code>
+times the standard deviation</p></li>
+<li><p><strong>mean_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the mean values</p></li>
+<li><p><strong>std_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the standard deviation values</p></li>
+<li><p><strong>quartile1_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the quartile 1 values</p></li>
+<li><p><strong>median_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the median (quartile 2) values</p></li>
+<li><p><strong>quartile3_key</strong> (<em>str</em>) – Name of the column in the dataframe
+with the quartile 3 values</p></li>
+<li><p><strong>std_scale</strong> (<em>float</em>) – Scale factor for the standard deviation range</p></li>
+<li><p><strong>fill_alpha</strong> (<em>float</em>) – Fill opacity for the interquartile range or the
+standard deviation range</p></li>
+<li><p><strong>fig</strong> – Figure onto which to plot</p></li>
+<li><p><strong>ax</strong> – Array of axes onto which to plot</p></li>
+<li><p><strong>save</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, save the figure to a file. If a string,
+save to the specific filepath</p></li>
+<li><p><strong>figext</strong> (<em>str</em>) – Extension of the figure file</p></li>
+<li><p><strong>legend_kw</strong> (<em>dict</em>) – Keyword arguments for legend</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.plot_distances">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">plot_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><span class="pre">BVGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'line'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.94</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdi_hs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdi_vs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdi_label_vs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.075</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdi_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kws</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.plot_distances" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the distribution of distances in the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="featgraph.jwebgraph.utils.html#featgraph.jwebgraph.utils.BVGraph" title="featgraph.jwebgraph.utils.BVGraph"><em>BVGraph</em></a>) – Graph whose distance distribution to plot</p></li>
+<li><p><strong>probability</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then normalize sum to 1.
+Otherwise plot absolute counts</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – Either <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;line&quot;</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;area&quot;</span></code>, or <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;both&quot;</span></code></p></li>
+<li><p><strong>hdi</strong> (<em>float</em>) – Density of the High-Density Interval</p></li>
+<li><p><strong>hdi_hs</strong> (<em>float</em>) – Horizontal spacing between HDI line and the edge labels</p></li>
+<li><p><strong>hdi_vs</strong> (<em>float</em>) – Vertical spacing between HDI line and the edge labels</p></li>
+<li><p><strong>hdi_label_vs</strong> (<em>float</em>) – Vertical spacing between HDI line and
+the percentage label</p></li>
+<li><p><strong>zorder</strong> (<em>int</em>) – Base zorder for the plots</p></li>
+<li><p><strong>line_kws</strong> (<em>dict</em>) – Keyword arguments for line plot</p></li>
+<li><p><strong>area_kws</strong> (<em>dict</em>) – Keyword arguments for area plot</p></li>
+<li><p><strong>hdi_kws</strong> (<em>dict</em>) – Keyword arguments for hdi line plot</p></li>
+<li><p><strong>text_kws</strong> (<em>dict</em>) – Keyword arguments for text</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for plot function</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.plot_posterior">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">plot_posterior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">es_rope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.plot_posterior" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the posterior distribution of the pair
+comparison from the inference data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Inference data</p></li>
+<li><p><strong>names</strong> (<em>couple</em><em> of </em><em>str</em>) – The names of the two populations to compare</p></li>
+<li><p><strong>es_rope</strong> (<em>copule</em><em> of </em><em>float</em>) – The boundaries of the ROPE
+on the effect size. Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">(-0.1,</span> <span class="pre">0.1)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.preprocessed_additions">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">preprocessed_additions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.preprocessed_additions" title="Permalink to this definition"></a></dt>
+<dd><p>Iterator for preprocessed versions of dataframe
+(meant as a helper for <a class="reference internal" href="#featgraph.plots.centrality_correlations" title="featgraph.plots.centrality_correlations"><code class="xref py py-func docutils literal notranslate"><span class="pre">centrality_correlations()</span></code></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>) – Centrality transitions dataframe</p></li>
+<li><p><strong>preps</strong> (<em>dict</em>) – Dictionary of preprocessing function and
+column name suffixes</p></li>
+<li><p><strong>raw</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then yield also
+the raw version of the dataframe</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.rope_matrix_plot">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">rope_matrix_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probs_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('x</span> <span class="pre">-</span> <span class="pre">y</span> <span class="pre">&lt;</span> <span class="pre">ROPE',</span> <span class="pre">'x</span> <span class="pre">-</span> <span class="pre">y</span> <span class="pre">in</span> <span class="pre">ROPE',</span> <span class="pre">'x</span> <span class="pre">-</span> <span class="pre">y</span> <span class="pre">&gt;</span> <span class="pre">ROPE')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.rope_matrix_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the ROPE probabilities as a RGB matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – ROPE probabilities dataframe</p></li>
+<li><p><strong>names</strong> (<em>sequence</em><em> of </em><em>str</em>) – Names of the different populations.
+If <code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code>, the names are inferred from the dataframe</p></li>
+<li><p><strong>order</strong> (<em>callable</em>) – Key function for sorting populations. Alternatively,
+if <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, the populations are sorted by decreasing difference
+of average probabilities above and below the ROPE</p></li>
+<li><p><strong>x_label</strong> (<em>str</em>) – Column name for first population names.
+Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code></p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) – Column name for second population names.
+Default is <code class="xref py py-data docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code></p></li>
+<li><p><strong>probs_labels</strong> (<em>triplet</em><em> of </em><em>str</em>) – Column names for the probabilities below,
+within and above the ROPE</p></li>
+<li><p><strong>th</strong> (<em>float</em>) – If specified, threshold hypoteses at the given value</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), normalize the RGB values.
+This results in brighter colors and better intelligibility</p></li>
+<li><p><strong>legend</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code>, plot a legend on the axis</p></li>
+<li><p><strong>legend_selectors</strong> (<em>sequence</em><em> of </em><em>int</em>) – Specifies which legend entries to keep</p></li>
+<li><p><strong>ticks</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), draw ticks and tick
+labels on both the x and y axis</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.scatter">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">scatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kendall_tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xscale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yscale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Axes</span></span></span><a class="headerlink" href="#featgraph.plots.scatter" title="Permalink to this definition"></a></dt>
+<dd><p>Scatterplot of two scores</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The first vector or a function that returns the first vector</p></li>
+<li><p><strong>y</strong> – The second vector or a function that returns the second vector</p></li>
+<li><p><strong>kendall_tau</strong> (<em>bool</em>) – If <code class="xref py py-data docutils literal notranslate"><span class="pre">True</span></code> (default), then compute Kendall’s
+<span class="math notranslate nohighlight">\(\tau\)</span></p></li>
+<li><p><strong>ax</strong> (<em>Axes</em>) – Plot axes</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em>) – Label for the x axis</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – Label for the y axis</p></li>
+<li><p><strong>xscale</strong> (<em>str</em>) – Scaling for the x axis</p></li>
+<li><p><strong>yscale</strong> (<em>str</em>) – Scaling for the y axis</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Label for the graph</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for <code class="xref py py-func docutils literal notranslate"><span class="pre">plt.scatter()</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Plot axes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.scatter_refs">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">scatter_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_artists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><span class="pre">Artist</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.scatter_refs" title="Permalink to this definition"></a></dt>
+<dd><p>Scatter plot values for reference artists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em><em> or </em><em>callable</em>) – x-coordinate values for all nodes</p></li>
+<li><p><strong>y</strong> (<em>array</em><em> or </em><em>callable</em>) – y-coordinate values for all nodes</p></li>
+<li><p><strong>ref_artist</strong> (<em>sequence</em><em> of </em><a class="reference internal" href="featgraph.metadata.html#featgraph.metadata.Artist" title="featgraph.metadata.Artist"><em>Artist</em></a>) – artists to include as references</p></li>
+<li><p><strong>legend_kw</strong> (<em>dict</em>) – Keyword arguments for the legend</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for the scatter plot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.translate_log_ticks">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">translate_log_ticks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_zero</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.translate_log_ticks" title="Permalink to this definition"></a></dt>
+<dd><p>Move xticks by a specified amount on a log scale axis. Please, add
+<code class="xref py py-data docutils literal notranslate"><span class="pre">{&quot;text.usetex&quot;:</span> <span class="pre">True,</span> <span class="pre">&quot;text.latex.preamble&quot;:</span> <span class="pre">r&quot;usepackage{amsmath}&quot;}</span></code>
+to your matplotlib rcparams before calling this function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>offset</strong> (<em>float</em>) – Offset amount between position and ticks (difference
+between the tick position and the tick label value)</p></li>
+<li><p><strong>ax</strong> – The axis. If not specified, the current axis is affected</p></li>
+<li><p><strong>add_zero</strong> (<em>bool</em>) – Add tick on the zero</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.violinplot_iterator">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">violinplot_iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vpl</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.violinplot_iterator" title="Permalink to this definition"></a></dt>
+<dd><p>Iterator over violinplot components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vpl</strong> – Output of violinplot</p>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple</em> – Violin body, median dot, whiskers line, box line</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="featgraph.plots.violinplot_set">
+<span class="sig-prename descclassname"><span class="pre">featgraph.plots.</span></span><span class="sig-name descname"><span class="pre">violinplot_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vpl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#featgraph.plots.violinplot_set" title="Permalink to this definition"></a></dt>
+<dd><p>Set values for violinplots</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vpl</strong> – Output of violinplot</p></li>
+<li><p><strong>zorder</strong> (<em>int</em>) – If specified, set this as the base
+zorder of the components</p></li>
+<li><p><strong>ec</strong> – Violin bodies edge color. If a callable, it should accept the facecolor
+as argument</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>vpl</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="featgraph.pathutils.html" class="btn btn-neutral float-left" title="featgraph.pathutils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="featgraph.report.html" class="btn btn-neutral float-right" title="featgraph.report module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Marco Tiraboschi and Giulia Clerici.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

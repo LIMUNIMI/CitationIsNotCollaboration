@@ -1,0 +1,7 @@
+featgraph.sgc module
+====================
+
+.. automodule:: featgraph.sgc
+   :members:
+   :undoc-members:
+   :show-inheritance:

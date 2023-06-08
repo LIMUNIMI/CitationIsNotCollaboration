@@ -1,0 +1,7 @@
+featgraph.misc module
+=====================
+
+.. automodule:: featgraph.misc
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+featgraph.plots module
+======================
+
+.. automodule:: featgraph.plots
+   :members:
+   :undoc-members:
+   :show-inheritance:

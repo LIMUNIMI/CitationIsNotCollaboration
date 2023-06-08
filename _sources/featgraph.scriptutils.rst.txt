@@ -1,0 +1,7 @@
+featgraph.scriptutils module
+============================
+
+.. automodule:: featgraph.scriptutils
+   :members:
+   :undoc-members:
+   :show-inheritance:

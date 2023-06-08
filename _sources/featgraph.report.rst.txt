@@ -1,0 +1,7 @@
+featgraph.report module
+=======================
+
+.. automodule:: featgraph.report
+   :members:
+   :undoc-members:
+   :show-inheritance:

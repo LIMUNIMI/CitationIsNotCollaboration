@@ -1,0 +1,7 @@
+featgraph.genre\_map module
+===========================
+
+.. automodule:: featgraph.genre_map
+   :members:
+   :undoc-members:
+   :show-inheritance:
