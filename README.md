@@ -18,7 +18,7 @@
   - [Data conversion](#data-conversion)
 
 ## Publications
-We published some of the results in the article *``Citation is not Collaboration: Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network''* at the 20th Sound and Music Computing Conference.
+We published some of the results in the article [*``Citation is not Collaboration: Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network''*](https://drive.google.com/file/d/13N-R4Lqg23EADIcq152MRpao-EgHUoxx) at the 20th Sound and Music Computing Conference.
 ```bibtex
 @inproceedings{clerici2023citation,
   author       = {Clerici, Giulia and Tiraboschi, Marco},
