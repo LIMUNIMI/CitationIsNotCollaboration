@@ -7,6 +7,8 @@
 
 ## Table of Contents <!-- omit in toc -->
 - [Publications](#publications)
+  - [Genre centrality plots](#genre-centrality-plots)
+- [Documentation](#documentation)
 - [Setup](#setup)
   - [Create environment](#create-environment)
   - [Add extra dependencies](#add-extra-dependencies)
@@ -29,6 +31,12 @@ We published some of the results in the article *``Citation is not Collaboration
   organization = {Sound and Music Computing Network},
 }
 ```
+
+### Genre centrality plots
+The plots for the genre-wide comparison of the centrality measures can be browsed at [chromaticisobar.github.io/CitationIsNotCollaborationStats](https://chromaticisobar.github.io/CitationIsNotCollaborationStats).
+
+## Documentation
+Documentation is generated with [sphinx](https://www.sphinx-doc.org) and is available at [limunimi.github.io/CitationIsNotCollaboration](https://limunimi.github.io/CitationIsNotCollaboration)
 
 ## Setup
 Some dependencies require [`conda`](https://conda.io).  
