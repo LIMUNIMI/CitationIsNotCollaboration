@@ -20,16 +20,21 @@ dist
 *.outdegrees
 *.stats
 *.ranks
+*.reciprocity.json
+*.scc
+*.sccsizes
+*.buckets
 
 # Misc
 *.txt
 *.csv
-!*requirements.txt
+!*requirements*.txt
 *.gz
 *.zip
 *.png
 *.svg
 *.pdf
+*.dat
 
 # LaTeX
 *.tex
@@ -65,6 +70,7 @@ docs/source
 
 # IDE
 .idea
+.vscode
 
 # Coverage
 .coverage*

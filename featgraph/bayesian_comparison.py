@@ -3,6 +3,9 @@ from featgraph import report
 from scipy import stats
 import pandas as pd
 import numpy as np
+# --- 🐒 ---------┐
+np.bool = bool  # |
+# ----------------┘
 import pymc3 as pm
 import copy
 from typing import Optional, Tuple, Sequence, List

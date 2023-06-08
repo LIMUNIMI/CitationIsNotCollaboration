@@ -11,14 +11,16 @@ on:
       - develop
 
 jobs:
-  test:
+  start:
+    if: ${{ !contains(github.event.head_commit.message, '[CI SKIP]') }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        pyversion: [
-          "3.7",
-          "3.8",
-        ]
+    steps:
+      - name: Echo
+        run: echo "Starting CI graph"
+
+  test:
+    needs: start
+    runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
     - uses: actions/checkout@v2
@@ -27,7 +29,15 @@ jobs:
     - name: Install conda-build
       run: conda install conda-build
     - name: Create environment
-      run: conda create --prefix ./venv python=${{ matrix.pyversion }} -c conda-forge -c chromaticisobar --file requirements.txt --file test-requirements.txt
+      run: |
+        conda create -p ./venv python=3.8
+        conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-3of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-4of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-5of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file test-requirements.txt -y
     - name: Log python version
       run: conda run --prefix ./venv python --version
     - name: Add featgraph
@@ -36,6 +46,7 @@ jobs:
       run: conda run --prefix ./venv python -m unittest -v
 
   coverage:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
@@ -45,7 +56,15 @@ jobs:
     - name: Install conda-build
       run: conda install conda-build
     - name: Create environment
-      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file test-requirements.txt
+      run: |
+        conda create -p ./venv python=3.8
+        conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-3of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-4of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-5of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file test-requirements.txt -y
     - name: Log python version
       run: conda run --prefix ./venv python --version
     - name: Run coverage
@@ -76,6 +95,7 @@ jobs:
         file_path: badge.svg
 
   lint:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
@@ -83,7 +103,15 @@ jobs:
     - name: Install java
       run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre
     - name: Create environment
-      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file style-requirements.txt
+      run: |
+        conda create -p ./venv python=3.8
+        conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-3of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-4of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-5of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file style-requirements.txt -y
     - name: Log python version
       run: conda run --prefix ./venv python --version
     - name: Run pylint
@@ -110,6 +138,7 @@ jobs:
         file_path: badge.svg
 
   sphinx:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
@@ -117,7 +146,15 @@ jobs:
     - name: Install java and make
       run: mkdir -p /usr/share/man/man1 && apt-get update && apt-get install -y default-jre build-essential
     - name: Create environment
-      run: conda create --prefix ./venv -c conda-forge -c chromaticisobar --file requirements.txt --file docs-requirements.txt
+      run: |
+        conda create -p ./venv python=3.8
+        conda install --prefix ./venv -c chromaticisobar --file requirements-0of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-1of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-2of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-3of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-4of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file requirements-5of6.txt -y
+        conda install --prefix ./venv -c conda-forge     --file docs-requirements.txt -y
     - name: Log python version
       run: conda run --prefix ./venv python --version
     - name: Build HTML

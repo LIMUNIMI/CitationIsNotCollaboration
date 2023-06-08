@@ -1,6 +1,8 @@
 """Miscellaneous functions and classes"""
+import pandas as pd
 import contextlib
-from typing import Union, Callable, Sequence, Iterator, ContextManager
+import functools
+from typing import Union, Callable, Sequence, Iterator, ContextManager, Optional
 
 VectorOrCallable = Union[Callable[[], Sequence], Sequence]
 
@@ -66,6 +68,16 @@ class IteratorWrapper:
     return v
 
 
+class NodeIteratorWrapper(IteratorWrapper):
+  """Wrapper for a node iterator
+
+  Args:
+    it: NodeIterator"""
+
+  def __init__(self, it, next_method: str = "nextInt", end_value=-1):
+    super().__init__(it, next_method=next_method, end_value=end_value)
+
+
 @contextlib.contextmanager
 def multicontext(it: Iterator[ContextManager]):
   """Context manager wrapper for multiple contexts managers
@@ -83,3 +95,83 @@ def multicontext(it: Iterator[ContextManager]):
     with cm as value:
       with multicontext(it) as values:
         yield (value, *values)
+
+
+def dataframe_filter(df: pd.DataFrame, **kwargs):
+  """Filter a dataframe by column values
+
+  Args:
+    df (DataFrame): The dataframe to process
+    kwargs: Key-value pairs. Only the rows for which the column with the key
+      has the specified values are returned
+
+    Returns:
+      array: Filtered values"""
+  return df[functools.reduce(
+      lambda x, y: x & y,
+      map(
+          lambda t: df[t[0]] == t[1],
+          kwargs.items(),
+      ),
+  )]
+
+
+def sorted_values(df: pd.DataFrame,
+                  key: str = "mean",
+                  norm: Optional[str] = None,
+                  sort_key: str = "threshold",
+                  **kwargs):
+  """Get the values of a dataframe column filtering
+  and sorting by other columns
+
+  Args:
+    df (DataFrame): The dataframe to process
+    key (str): The column name of the values to return
+    norm (str): If not :data:`None`, then normalize values by this column
+    sort_key (str): The name of the column to use for sorting
+    kwargs: Key-value pairs. Only the rows for which the column with the key
+      has the specified values are returned
+
+    Returns:
+      array: Sorted values"""
+  df_ = dataframe_filter(df, **kwargs).copy()
+  df_.sort_values(sort_key, inplace=True)
+  df_.reset_index(inplace=True)
+  a = df_[key]
+  if norm is not None:
+    a = a / df_[norm]
+  return a
+
+
+def switch_point(df: pd.DataFrame,
+                 k1,
+                 k2,
+                 x: str = "threshold",
+                 y: str = "mean",
+                 class_key: str = "type_value",
+                 **kwargs):
+  """Compute the switching point for a value between two groups
+
+  Args:
+    df (DataFrame): The dataframe of values
+    k1 (str): The class value for the first group
+    k2 (str): The class value for the second group
+    x (str): Column name for independent variable
+    y (str): Column name for dependent variable
+    class_key (str): Column name for classes
+    kwargs: Key-value pairs. Only the rows for which the column with the key
+      has the specified values are considered
+
+  Return:
+    The minimum value of column x for which the difference sign changes"""
+  dfs = pd.merge(
+      *tuple(
+          dataframe_filter(df, **kwargs, **{class_key: k})[[x, y]].rename(
+              columns={y: k}) for k in (k1, k2)),
+      how="inner",
+      on="threshold",
+  )
+  x_0 = dfs[x].min()
+  diffs = dfs[k1] - dfs[k2]
+  sign_0 = 1 if diffs[dfs[x] == x_0].min() >= 0 else -1
+  return dfs[diffs * sign_0 < 0][x].min()

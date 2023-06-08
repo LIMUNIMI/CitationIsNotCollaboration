@@ -59,6 +59,36 @@
     ],
     "subfolder" : "4x4000"
   },
+  "lin": {
+    "title": "Lin Centrality",
+    "subtitle": "",
+    "folder": "spotify-2018-centrality_stats/lin-centrality",
+    "pad": {
+      "left": 0.129,
+      "right": 0.103,
+      "top": 0.366,
+      "bottom": -0.135
+    },
+    "genres": [
+      "classical",
+      "hip-hop",
+      "soul-rnb",
+      "avant-garde",
+      "jazz",
+      "blues",
+      "electronic",
+      "caribbean",
+      "easy listening",
+      "latin",
+      "african",
+      "pop",
+      "rock",
+      "asian",
+      "folk",
+      "country"
+    ],
+    "subfolder" : "4x4000"
+  },
   "indegree": {
     "title": "Indegree",
     "subtitle": "on a logarithmic scale",

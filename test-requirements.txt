@@ -1,3 +1,2 @@
 pyfakefs
 coverage
-matplotlib

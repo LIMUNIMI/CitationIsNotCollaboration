@@ -5,6 +5,8 @@ import functools
 import itertools
 import jpype
 from featgraph import pathutils, metadata, genre_map
+from chromatictools import pickle
+import shutil
 import os
 import numpy as np
 import pandas as pd
@@ -182,6 +184,25 @@ class BVGraph:
       array of doubles: Array of outdegrees"""
     return load_as_doubles(self.path("stats", "outdegrees"))
 
+  def _copy_metadata(self,
+                     other: "BVGraph",
+                     suffixes=(
+                         ("followers", "txt"),
+                         ("genre", "txt"),
+                         ("ids", "txt"),
+                         ("name", "txt"),
+                         ("popularity", "txt"),
+                         ("type", "txt"),
+                     )):
+    """Copy metadata from one graph basename to another
+
+    Args:
+      other (BVGraph): The other graph
+      suffixes: Metadata file suffixes"""
+    for s in suffixes:
+      if os.path.isfile(self.path(*s)):
+        shutil.copyfile(self.path(*s), other.path(*s))
+
   def compute_transpose(self, overwrite: bool = False, log: bool = True):
     """Compute the transpose of the graph
 
@@ -192,6 +213,27 @@ class BVGraph:
     path = self.path("transpose")
     if overwrite or pathutils.notisglob(path + "*", log=log):
       webgraph.Transform.main(["transposeOffline", self.base_path, path])
+      self._copy_metadata(self.transposed())
+
+  def transposed(self) -> "BVGraph":
+    """Get the transpose of the graph (must be precomputed)"""
+    return type(self)(base_path=self.path("transpose"), sep=self.sep)
+
+  def compute_symmetrized(self, overwrite: bool = False, log: bool = True):
+    """Compute the symmetrized graph
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    path = self.path("symmetrized")
+    if overwrite or pathutils.notisglob(path + "*", log=log):
+      webgraph.Transform.main(["symmetrizeOffline", self.base_path, path])
+      self._copy_metadata(self.symmetrized())
+
+  def symmetrized(self) -> "BVGraph":
+    """Get the symmetrized graph (must be precomputed)"""
+    return type(self)(base_path=self.path("symmetrized"), sep=self.sep)
 
   def pagerank_path(self, *suffix: str, alpha: float = 0.85):
     r"""Path of PageRank files
@@ -322,6 +364,54 @@ class BVGraph:
       array of doubles: Array of Closeness Centralities"""
     return load_as_doubles(self.path("closenessc", "ranks"), "Float")
 
+  def compute_linc(self, **kwargs):
+    """Compute the Lin Centrality with HyperBall
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-L", path=self.path("linc", "ranks"), **kwargs)
+
+  def linc(self):
+    """Load the Lin Centrality vector from file
+
+    Returns:
+      array of doubles: Array of Lin Centralities"""
+    return load_as_doubles(self.path("linc", "ranks"), "Float")
+
+  def compute_reachable(self, **kwargs):
+    """Compute the reachable set sizes with HyperBall
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-r",
+                   path=self.path("reachable", "ranks"),
+                   transpose=False,
+                   **kwargs)
+
+  def reachable(self):
+    """Load the reachable set sizes vector from file
+
+    Returns:
+      array of doubles: Array of reachable set sizes"""
+    return load_as_doubles(self.path("reachable", "ranks"), "Float")
+
+  def compute_coreachable(self, **kwargs):
+    """Compute the coreachable set sizes with HyperBall.
+    The transposed graph must be precomputed
+
+    Args:
+      kwargs: Keyword arguments for :meth:`hyperball`"""
+    self.hyperball(command="-r",
+                   path=self.path("coreachable", "ranks"),
+                   **kwargs)
+
+  def coreachable(self):
+    """Load the reachable set sizes vector from file
+
+    Returns:
+      array of doubles: Array of coreachable set sizes"""
+    return load_as_doubles(self.path("coreachable", "ranks"), "Float")
+
   def transform_map(
       self,
       dest_path: str,
@@ -381,6 +471,15 @@ class BVGraph:
     Returns:
       The iterable of ids of each artist as strings"""
     with open(self.path("ids", "txt"), "r", encoding="utf-8") as f:
+      for s in f:
+        yield s.rstrip()
+
+  def names(self) -> Iterable[str]:
+    """Get the artists names from the metadata file
+
+    Returns:
+      The iterable of names of each artist as strings"""
+    with open(self.path("name", "txt"), "r", encoding="utf-8") as f:
       for s in f:
         yield s.rstrip()
 
@@ -494,3 +593,234 @@ class BVGraph:
     else:
       arg = arg[:n]
     return [self.artist(index=i) for i in arg]
+
+  def compute_reciprocity(self,
+                          overwrite: bool = False,
+                          tqdm: Optional = None,
+                          log: bool = True):
+    """Compute the reciprocity of the arcs of each node
+    by counting self-loops and reciprocated arc couples
+
+    Args:
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      tqdm: function to use for the progress bar
+      log (bool): If :data:`True`, then log if file was found"""
+    path = self.path("reciprocity", "dat")
+    if overwrite or pathutils.notisfile(path, log=log):
+      self_t = BVGraph(self.path("transpose"))
+
+      nit = self.nodeIterator()
+      nit_t = self_t.nodeIterator()
+      zit = zip(nit, nit_t)
+      if tqdm is not None:
+        zit = tqdm(zit, total=self.numNodes())
+
+      self_loops = np.zeros(self.numNodes(), dtype=bool)
+      couples = np.zeros(self.numNodes(), dtype=int)
+
+      # Check that the position is in the upper triangle of the
+      # adjacency matrix, optionally update count of self loops
+      def upper_triangle(r, c, update_loops: bool = False):
+        if update_loops and c == r:
+          nonlocal self_loops
+          self_loops[r] = True
+          return False
+        return c > r
+
+      # Get the iterator of current node successors that correspond
+      # to positions in the upper triangle of the adjacency matrix
+      def upper_triangle_it(n, it, update_loops: bool = False):
+        return filter(
+            functools.partial(upper_triangle, n, update_loops=update_loops),
+            featgraph.misc.NodeIteratorWrapper(it.successors()))
+
+      for i, _ in zit:
+        # assert i == _
+        # For each successor in the upper triangle of the matrix,
+        # check if it is also in the adjacent matrix
+        def in_adjacent(j,
+                        adj=tuple(
+                            upper_triangle_it(i, nit_t, update_loops=False))):
+          return j in adj
+
+        for j in filter(in_adjacent, upper_triangle_it(i,
+                                                       nit,
+                                                       update_loops=True)):
+          couples[i] += 1
+          couples[j] += 1
+      pickle.save_pickled(dict(
+          self_loops=self_loops,
+          couples=couples,
+      ), path)
+
+  def self_loops(self) -> np.ndarray:
+    """Load the self-loops per node from file.
+    The file is computed by :meth:`compute_reciprocity`
+
+    Returns:
+      array of bool: Self-loops per node"""
+    return pickle.read_pickled(self.path("reciprocity", "dat"))["self_loops"]
+
+  def arc_couples(self) -> int:
+    """Load the number of reciprocated arcs per node from file.
+    The file is computed by :meth:`compute_reciprocity`
+
+    Returns:
+      int: Number of reciprocated arc couples per node"""
+    return pickle.read_pickled(self.path("reciprocity", "dat"))["couples"]
+
+  def graph_reciprocity(self) -> float:
+    """Load the reciprocity stats from file and compute the correlation
+    coefficient for the entire graph. The file is computed by
+    :meth:`compute_reciprocity`
+
+    Returns:
+      float: Reciprocity of the graph"""
+    n_entries = self.numNodes() * (self.numNodes() - 1)
+    n_valid_arcs = self.numArcs() - self.self_loops().astype(int).sum()
+
+    a_avg = n_valid_arcs / n_entries
+    p_cnd = self.arc_couples().sum() / n_valid_arcs
+
+    return (p_cnd - a_avg) / (1 - a_avg)
+
+  def reciprocity(self, nullvalue: Optional[float] = None) -> np.ndarray:
+    """Load the reciprocity stats from file and compute the correlation
+    coefficient for each node. The file is computed by
+    :meth:`compute_reciprocity`. Also, the degrees of each node are needed:
+    they are computed by :meth:`compute_degrees`.
+
+    Args:
+      nullvalue (float): Value to replace NaNs and infinites with
+
+    Returns:
+      array of float: Reciprocity of each node"""
+    n_entries = self.numNodes() - 1
+    n_loops = self.self_loops().astype(int)
+    n_in = np.array(self.indegrees()).astype(int) - n_loops
+    n_out = np.array(self.outdegrees()).astype(int) - n_loops
+    del n_loops
+
+    a_avg_in = n_in / n_entries
+    a_avg_out = n_out / n_entries
+    p_cnd = self.arc_couples() / n_entries
+
+    r = (p_cnd - a_avg_in * a_avg_out) / np.sqrt(a_avg_in * a_avg_out *
+                                                 (1 - a_avg_in) *
+                                                 (1 - a_avg_out))
+    if nullvalue is not None:
+      for i, _ in itertools.filterfalse(lambda t: np.isfinite(t[1]),
+                                        enumerate(r)):
+        r[i] = nullvalue
+    return r
+
+  def compute_scc(self,
+                  sizes: bool = True,
+                  renumber: bool = True,
+                  buckets: bool = True,
+                  overwrite: bool = False,
+                  log: bool = True):
+    """Compute strongly connected components
+
+    Args:
+      sizes (bool): If :data:`True` (default), then compute component sizes
+      sizes (bool): If :data:`True` (default), then renumber components in
+        decreasing-size order
+      sizes (bool): If :data:`True` (default), then compute buckets (nodes
+        belonging to a bucket component, i.e.,
+        a terminal nondangling component)
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    args = []
+    paths = []
+    if sizes:
+      args.append("--sizes")
+      paths.append(self.path("scc"))
+      paths.append(self.path("sccsizes"))
+      paths.append(self.path("node_sccsizes", "dat"))
+    if renumber:
+      args.append("--renumber")
+    if buckets:
+      args.append("--buckets")
+      paths.append(self.path("buckets"))
+
+    if overwrite or pathutils.notisfile(
+        paths, lambda x: all(map(os.path.isfile, x)), log=log):
+      webgraph.algo.StronglyConnectedComponents.main([*args, self.base_path])
+      node_scc_sizes = np.array(list(
+          map(int, map(self.scc_sizes().__getitem__, map(int, self.scc())))),
+                                dtype=int)
+      pickle.save_pickled(node_scc_sizes, self.path("node_sccsizes", "dat"))
+
+  def scc(self):
+    """Load strongly connected components labels vector from file
+
+    Returns:
+      array of integers: Array of strongly connected components labels"""
+    return load_as_doubles(self.path("scc"), input_type="Integer")
+
+  def scc_sizes(self):
+    """Load strongly connected components sizes vector from file
+
+    Returns:
+      array of integers: Array of strongly connected components sizes"""
+    return load_as_doubles(self.path("sccsizes"), input_type="Integer")
+
+  def node_scc_sizes(self):
+    """Load the array of the strongly connected component size of each node
+
+    Returns:
+      array of integers: Array of strongly connected component sizes by node"""
+    return pickle.read_pickled(self.path("node_sccsizes", "dat"))
+
+  compute_node_scc_sizes = compute_scc
+
+  def compute_wcc(self,
+                  sizes: bool = True,
+                  renumber: bool = True,
+                  buckets: bool = True,
+                  overwrite: bool = False,
+                  log: bool = True):
+    """Compute weakly connected components.
+    Requires the symmetrized graph to be computed.
+
+    Args:
+      sizes (bool): If :data:`True` (default), then compute component sizes
+      sizes (bool): If :data:`True` (default), then renumber components in
+        decreasing-size order
+      sizes (bool): If :data:`True` (default), then compute buckets (nodes
+        belonging to a bucket component, i.e.,
+        a terminal nondangling component)
+      overwrite (bool): If :data:`False` (default), then skip if the
+        output file is found. Otherwise always run
+      log (bool): If :data:`True`, then log if file was found"""
+    self.symmetrized().compute_scc(sizes=sizes,
+                                   renumber=renumber,
+                                   buckets=buckets,
+                                   overwrite=overwrite,
+                                   log=log)
+
+  def wcc(self):
+    """Load weakly connected components labels vector from file
+
+    Returns:
+      array of integers: Array of weakly connected components labels"""
+    return self.symmetrized().scc()
+
+  def wcc_sizes(self):
+    """Load weakly connected components sizes vector from file
+
+    Returns:
+      array of integers: Array of weakly connected components sizes"""
+    return self.symmetrized().scc_sizes()
+
+  def node_wcc_sizes(self):
+    """Load the array of the weakly connected component size of each node
+
+    Returns:
+      array of integers: Array of weakly connected component sizes by node"""
+    return self.symmetrized().node_scc_sizes()
+
+  compute_node_wcc_sizes = compute_wcc

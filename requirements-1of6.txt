@@ -1,0 +1,5 @@
+more-itertools==9.1.0
+requests==2.31.0
+sortedcontainers==2.4.0
+tqdm==4.65.0
+

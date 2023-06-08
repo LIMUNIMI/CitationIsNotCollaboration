@@ -1,33 +1,67 @@
-# FeatGraph
-<!--[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/ChromaticIsobar/featgraph/main/main?event=push)](https://github.com/ChromaticIsobar/featgraph/actions?query=workflow%3Amain)-->
-[![Coverage](https://gist.githubusercontent.com/ChromaticIsobar/18a4dd9093b1c271ce6f9d117cc5ba40/raw/featgraph-coverage-badge.svg)](https://github.com/ChromaticIsobar/featgraph/actions?query=workflow%3Amain)
-[![Pylint](https://gist.githubusercontent.com/ChromaticIsobar/18a4dd9093b1c271ce6f9d117cc5ba40/raw/featgraph-pylint-badge.svg)](https://github.com/ChromaticIsobar/featgraph/actions?query=workflow%3Amain)
+# Citation is not Collaboration <!-- omit in toc -->
+*Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network*
+<!--[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/LIMUNIMI/CitationIsNotCollaboration/main/main?event=push)](https://github.com/LIMUNIMI/CitationIsNotCollaboration/actions?query=workflow%3Amain)-->
+[![Coverage](https://gist.githubusercontent.com/ChromaticIsobar/18a4dd9093b1c271ce6f9d117cc5ba40/raw/featgraph-coverage-badge.svg)](https://github.com/LIMUNIMI/CitationIsNotCollaboration/actions?query=workflow%3Amain)
+[![Pylint](https://gist.githubusercontent.com/ChromaticIsobar/18a4dd9093b1c271ce6f9d117cc5ba40/raw/featgraph-pylint-badge.svg)](https://github.com/LIMUNIMI/CitationIsNotCollaboration/actions?query=workflow%3Amain)
 <!--[![PyPI version](https://badge.fury.io/py/featgraph.svg)](https://badge.fury.io/py/featgraph)-->
 
-Musical collaborations graph analysis using WebGraph
+## Table of Contents <!-- omit in toc -->
+- [Publications](#publications)
+  - [Genre centrality plots](#genre-centrality-plots)
+- [Documentation](#documentation)
+- [Setup](#setup)
+  - [Create environment](#create-environment)
+  - [Add extra dependencies](#add-extra-dependencies)
+  - [Add FeatGraph](#add-featgraph)
+- [Notebooks](#notebooks)
+- [CLI](#cli)
+  - [Data conversion](#data-conversion)
+
+## Publications
+We published some of the results in the article [*``Citation is not Collaboration: Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network''*](https://drive.google.com/file/d/13N-R4Lqg23EADIcq152MRpao-EgHUoxx) at the 20th Sound and Music Computing Conference.
+```bibtex
+@inproceedings{clerici2023citation,
+  author       = {Clerici, Giulia and Tiraboschi, Marco},
+  title        = {{Citation is not Collaboration: Music-Genre Dependence of Graph-Related Metrics in a Music Credits Network}},
+  booktitle    = {Proceedings of the 20th Sound and Music Computing Conference},
+  year         = {2023},
+  series       = {SMC},
+  address      = {Stockholm, Sweden},
+  month        = {6},
+  organization = {Sound and Music Computing Network},
+}
+```
+
+### Genre centrality plots
+The plots for the genre-wide comparison of the centrality measures can be browsed at [chromaticisobar.github.io/CitationIsNotCollaborationStats](https://chromaticisobar.github.io/CitationIsNotCollaborationStats).
+
+## Documentation
+Documentation is generated with [sphinx](https://www.sphinx-doc.org) and is available at [limunimi.github.io/CitationIsNotCollaboration](https://limunimi.github.io/CitationIsNotCollaboration)
 
 ## Setup
-Some dependencies require [`conda`](https://conda.io).
-You should
- - [create a virtual environment](#create-environment)
- - [add extra dependencies](#add-extra-dependencies) (optional, for notebooks or for development)
- - [add the `featgraph` package](#add-featgraph)
-
+Some dependencies require [`conda`](https://conda.io).  
 The following instructions assume that you are working from the root directory of the repository
 
 ### Create environment
-To setup the working environment create a new environment using the yaml specifications
+There seems to be some issues with conda when trying to install too many packages.  
+So we spit the installation requirements in chunks.
 
+Create the environment
+```bash
+conda create -p ./venv python=3.8
 ```
-conda env create --prefix ./venv -f environment.yml
-```
-
-This will create a `conda` environment with runtime dependencies in the subfolder `venv` of your working directory.
-
-To activate the environment, run
-
-```
+Activate the enviroment
+```bash
 conda activate ./venv
+```
+Install packages in chunks
+```bash
+conda install -c chromaticisobar --file requirements-0of6.txt -y && \
+conda install -c conda-forge     --file requirements-1of6.txt -y && \
+conda install -c conda-forge     --file requirements-2of6.txt -y && \
+conda install -c conda-forge     --file requirements-3of6.txt -y && \
+conda install -c conda-forge     --file requirements-4of6.txt -y && \
+conda install -c conda-forge     --file requirements-5of6.txt -y
 ```
 
 ### Add extra dependencies
@@ -41,12 +75,6 @@ conda install --file <FILE> -c conda-forge
  - `docs-requirements.txt`: Docs generation dependencies
  - `style-requirements.txt`: Style check dependencies
  - `notebooks-requirements.txt`: Notebooks dependencies
-
-To install all dependencies, run
-
-```
-conda install -c conda-forge --file test-requirements.txt --file docs-requirements.txt --file style-requirements.txt --file notebooks-requirements.txt
-```
 
 ### Add FeatGraph
 To add the `featgraph` package, run
