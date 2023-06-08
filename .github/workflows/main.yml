@@ -11,7 +11,15 @@ on:
       - develop
 
 jobs:
+  start:
+    if: ${{ !contains(github.event.head_commit.message, '[CI SKIP]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "Starting CI graph"
+
   test:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
@@ -38,6 +46,7 @@ jobs:
       run: conda run --prefix ./venv python -m unittest -v
 
   coverage:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
@@ -86,6 +95,7 @@ jobs:
         file_path: badge.svg
 
   lint:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
@@ -128,6 +138,7 @@ jobs:
         file_path: badge.svg
 
   sphinx:
+    needs: start
     runs-on: ubuntu-latest
     container: continuumio/miniconda3
     steps:
